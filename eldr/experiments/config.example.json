@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "first_token_mode": "prefill",
+  "repo": "/srv/eldr",
+  "model": "qwen",
+  "model_path": "/srv/models/qwen3-30b-a3b",
+  "dataset": "/srv/data/task.eval.json",
+  "centroids": "/srv/data/qwen-task-k2-full.json",
+  "controller_address": "192.0.2.10",
+  "proxy_port": 10001,
+  "proxy_cpus": "0-7",
+  "client_cpus": "8-15",
+  "prefills": [
+    {"host": "prefill-host", "address": "192.0.2.11", "gpu": 0, "cpus": "0-31", "nic": "mlx5_0:1", "port": 20001, "side_channel_port": 5600, "internal_port": 28000}
+  ],
+  "decoders": [
+    {"host": "decode-host", "address": "192.0.2.12", "gpu": 0, "cpus": "0-31", "nic": "mlx5_0:1", "port": 22001, "side_channel_port": 5600, "internal_port": 28000},
+    {"host": "decode-host", "address": "192.0.2.12", "gpu": 1, "cpus": "0-31", "nic": "mlx5_1:1", "port": 22002, "side_channel_port": 5601, "internal_port": 28128}
+  ]
+}
