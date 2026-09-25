@@ -336,12 +336,7 @@ def execute(output, *, trials=None):
                         or status.get("signature")
                         != worker_group.config["signature_variant"]
                         or status.get("tau") != trial_protocol.get("tau", 0.1)
-                        or status.get("rule") != "locality_band_jsq_min2_v1"
-                        or status.get("minimum_candidates")
-                        != min(
-                            len(worker_group.config["decoders"]),
-                            2 if trial_protocol.get("tau", 0.1) > 0 else 1,
-                        )
+                        or status.get("rule") != "locality_band_jsq_v1"
                     ):
                         raise ValueError(
                             "Proxy signature/routing differs from the frozen recipe"

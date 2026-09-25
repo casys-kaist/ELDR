@@ -8,11 +8,8 @@ from eldr.serving.clustering import build_signature
 
 
 def locality_candidates(scores: np.ndarray, tau: float) -> np.ndarray:
-    """Cosine band with a nearest alternative; tau=0 is pure locality."""
-    candidates = np.flatnonzero(scores >= scores.max() - tau)
-    if tau > 0 and candidates.size == 1 and scores.size > 1:
-        candidates = np.sort(np.argsort(-scores, kind="stable")[:2])
-    return candidates
+    """Workers within tau of the best cosine score; singleton bands stay intact."""
+    return np.flatnonzero(scores >= scores.max() - tau)
 
 
 def route_jsq(centroid_data, counts, loads, tau=0.1):

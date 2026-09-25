@@ -54,8 +54,8 @@ bash eldr/scripts/fig10_main_task.sh
 ```
 
 The default is counts × IDF, a fixed layer mask, global L2 normalization, static
-centroids and locality-band JSQ with τ=0.1. A singleton band adds the second-nearest
-decoder; τ=0 retains pure locality without expansion. Fitting uses seed 1; traffic
+centroids and locality-band JSQ with τ=0.1. Only decoders within the locality band
+are eligible, even when the band contains just one. Fitting uses seed 1; traffic
 uses seed 1234 and 512 output tokens. Prefill routing is prefix-hash based.
 Deployments use 8P16D, except prefix cache (1P16D, four conditions, 12,000 requests
 each from a 2,000-prompt pool).

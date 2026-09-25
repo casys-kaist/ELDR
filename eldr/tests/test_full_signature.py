@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
 """Full signature and online JSQ regressions; no GPU or private inputs."""
 
 import contextlib
@@ -41,13 +43,13 @@ def full_fit():
 
 
 class FullSignatureTests(unittest.TestCase):
-    def test_singleton_expansion_preserves_zero_tau_and_existing_bands(self):
+    def test_locality_band_preserves_singletons_ties_and_homogeneous_scores(self):
         for scores, tau, expected in (
             ([0.9, 0.7, 0.2], 0, [0]),
-            ([0.9, 0.7, 0.2], 0.1, [0, 1]),
-            ([0.7, 0.9, 0.2], 0.1, [0, 1]),
+            ([0.9, 0.7, 0.2], 0.1, [0]),
+            ([0.7, 0.9, 0.2], 0.1, [1]),
             ([0.9, 0.85, 0.83, 0.2], 0.1, [0, 1, 2]),
-            ([0.9, 0.7, 0.7], 0.1, [0, 1]),
+            ([0.9, 0.7, 0.7], 0.1, [0]),
             ([0.9, 0.9, 0.7], 0, [0, 1]),
             ([0, 0, 0], 0.1, [0, 1, 2]),
             ([0.9], 0.1, [0]),
@@ -142,8 +144,7 @@ class FullSignatureTests(unittest.TestCase):
         ]
         with patch("sys.argv", argv):
             args = parse_args()
-        with patch.dict("sys.modules", {"eldr.serving.itl_observer": None}):
-            app = create_app(args)
+        app = create_app(args)
         router = app["online_jsq_router"]
         self.addCleanup(router.close)
         self.assertNotIn("itl_observer", app)
@@ -256,10 +257,21 @@ class FullSignatureTests(unittest.TestCase):
         self.assertIs(router._fit_future, pending)
         self.assertEqual(router.refits_started, 0)
 
+    def test_static_and_online_jsq_never_select_outside_singleton_band(self):
+        router = OnlineJSQRouter(["one", "two"], self.data["centroid_matrix"])
+        self.addCleanup(router.close)
+        counts = np.array([[1, 1, 1], [1, 3, 0]], dtype=np.int16)
+        loads = [3, 0]
+        with patch("eldr.serving.centroid_update.time.monotonic", return_value=0):
+            self.assertEqual(route_jsq(self.data, counts, loads), 0)
+            self.assertEqual(
+                router.route_transformed(build_signature(self.data, counts), loads), 0
+            )
+
 
 class JSQProxySafetyTests(unittest.IsolatedAsyncioTestCase):
-    async def test_routing_status_reports_zero_tau_control_and_minimum_two(self):
-        for tau, workers, minimum in ((0, 3, 1), (0.1, 3, 2), (0.1, 1, 1)):
+    async def test_routing_status_reports_original_locality_band(self):
+        for tau, workers in ((0, 3), (0.1, 3), (0.1, 1)):
             app = dict(
                 decode=list(range(workers)),
                 decode_inflight=dict.fromkeys(range(workers), 0),
@@ -268,8 +280,8 @@ class JSQProxySafetyTests(unittest.IsolatedAsyncioTestCase):
                 tau=tau,
             )
             status = json.loads((await routing_status(MagicMock(app=app))).text)
-            self.assertEqual(status["minimum_candidates"], minimum)
-            self.assertEqual(status["rule"], "locality_band_jsq_min2_v1")
+            self.assertEqual(status["tau"], tau)
+            self.assertEqual(status["rule"], "locality_band_jsq_v1")
 
     async def test_worker_mutation_is_rejected_before_state_change(self):
         app = dict(decode=["one", "two"], decode_inflight={"one": 0, "two": 0})

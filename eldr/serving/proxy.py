@@ -278,10 +278,9 @@ async def routing_status(request):
     policy = app["decode_router_name"]
     updater = app.get("online_jsq_router")
     status = dict(
-        rule="locality_band_jsq_min2_v1",
+        rule="locality_band_jsq_v1",
         centroid_mode="online" if updater is not None else "static",
         refit=updater.status() if updater is not None else None,
-        minimum_candidates=min(len(app["decode"]), 2 if app["tau"] > 0 else 1),
     )
     data = app["centroid_data"]
     return web.json_response(

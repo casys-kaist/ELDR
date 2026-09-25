@@ -298,8 +298,7 @@ class RunnerTests(unittest.TestCase):
                         selector="jsq",
                         signature="count_idf",
                         tau=protocol.get("tau", 0.1),
-                        rule="locality_band_jsq_min2_v1",
-                        minimum_candidates=2 if protocol.get("tau", 0.1) > 0 else 1,
+                        rule="locality_band_jsq_v1",
                         refit=dict(
                             last_error=None,
                             refits_completed=int(policy == "eldr"),

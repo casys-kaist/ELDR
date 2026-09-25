@@ -1,4 +1,6 @@
-"""Pure locality (tau=0) versus positive bands with at least two candidates."""
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+"""Compare pure locality (tau=0) with wider locality bands."""
 
 from eldr.experiments.runner.experiment import main, plan_worker_group
 

@@ -23,7 +23,7 @@ INTERNAL_PORT_SPAN = 128
 FIT_SEED = 1
 RUN_PROFILES = {
     "paper": dict(
-        recipe="full-jsq-min2-v1",
+        recipe="full-jsq-v1",
         seed=1234,
         shuffle=True,
         requests=7200,
@@ -36,7 +36,7 @@ RUN_PROFILES = {
         refit_seconds=2.5,
     ),
     "smoke": dict(
-        recipe="full-jsq-min2-v1",
+        recipe="full-jsq-v1",
         seed=1234,
         shuffle=True,
         requests=32,
