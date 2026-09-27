@@ -135,69 +135,82 @@ def collect(plan, root):
     return rows
 
 
-def write_report(rows, output, experiment):
-    import matplotlib.pyplot as plt
-
-    from eldr.experiments import plot_style
-
-    write_new_json(output / "summary.json", rows)
-    with (output / "summary.csv").open("x") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
-        writer.writeheader()
-        writer.writerows(rows)
-    plot_style.apply()
-    settings = list(dict.fromkeys(r["setting"] for r in rows))
-    variants = list(dict.fromkeys(r["variant"] for r in rows))
-    fig, axes = plt.subplots(
-        3,
-        len(settings),
-        squeeze=False,
-        figsize=(plot_style.WIDTH * max(1, len(settings) / 3), 6.4),
+def workload_label(plan):
+    # Display only: use the supplied input bundle's workload directory.
+    labels = {Path(f["source_site"]["dataset"]).parent.name for f in plan["fleets"]}
+    return (
+        next(iter(labels))
+        if len(labels) == 1 and labels <= {"task", "language"}
+        else "Workload"
     )
-    for column, setting in enumerate(settings):
-        rates = sorted({r["rate"] for r in rows if r["setting"] == setting})
-        for row, metric in enumerate(("tpot50_ms", "tpot99_ms", "ttft50_ms")):
-            ax = axes[row, column]
-            for index, variant in enumerate(variants):
-                values = sorted(
-                    [
-                        r
-                        for r in rows
-                        if r["setting"] == setting and r["variant"] == variant
-                    ],
-                    key=lambda r: r["rate"],
-                )
-                if not values:
-                    continue
-                ax.plot(
-                    [r["rate"] for r in values],
-                    [r[metric] for r in values],
-                    label=variant,
-                    linewidth=1.6,
-                    marker="o" if len(values) == 1 else None,
-                    color=(plot_style.BLUES + ["#595959", "#d62728"])[index % 7],
-                    linestyle="--" if variant == "rr" else "-",
-                )
-            ax.grid(alpha=0.2)
-            if len(rates) == 1:
-                ax.set_xticks(rates)
-            if column == 0:
-                ax.set_ylabel(
-                    {
-                        "tpot50_ms": "TPOT P50 (ms)",
-                        "tpot99_ms": "TPOT P99 (ms)",
-                        "ttft50_ms": "TTFT P50 (ms)",
-                    }[metric]
-                )
-            if row == 0:
-                ax.set_title(setting.replace("-", "\n", 1))
-            if row == 2:
-                ax.set_xlabel("Requests/s")
-    legend = {}
-    for ax in axes[0]:
-        handles, labels = ax.get_legend_handles_labels()
-        legend.update(zip(labels, handles))
-    fig.tight_layout()
-    plot_style.legend_top(fig, min(4, len(legend)), list(legend.values()), list(legend))
-    plot_style.save(fig, output / experiment)
-    plt.close(fig)
+
+
+def read_panels(source, experiment):
+    """Validate a completed panel, or both Task/Language panels for a paper figure."""
+    folders = (
+        {None: source}
+        if (source / "complete.json").is_file()
+        else {"task": source / "task", "language": source / "language"}
+    )
+    panels = {}
+    for label, folder in folders.items():
+        if not (folder / "complete.json").is_file():
+            raise ValueError(f"Missing completed experiment: {folder}")
+        plan = json.loads((folder / "plan.json").read_text())
+        if plan["study"] != experiment:
+            raise ValueError("Experiment type mismatch")
+        rows = collect(plan, folder)
+        if rows != json.loads((folder / "summary.json").read_text()):
+            raise ValueError("Raw data or metrics changed since completion")
+        panels[label or workload_label(plan)] = rows
+    return panels
+
+
+def write_report(panels, output, experiment, stem=None):
+    from eldr.experiments.plots import draw
+
+    for workload, rows in panels.items():
+        name = stem or "summary"
+        if len(panels) > 1:
+            name += "-" + workload
+        write_new_json(output / f"{name}.json", rows)
+        with (output / f"{name}.csv").open("x") as stream:
+            writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+            writer.writeheader()
+            writer.writerows(rows)
+    draw(panels, output / (stem or experiment), experiment)
+
+
+FIGURES = {
+    "fig10_main_task": "main_task",
+    "fig11_main_language": "main_language",
+    "fig13_signature": "signature_ablation",
+    "fig14_cluster_balance": "cluster_balance",
+    "fig15_locality_band": "locality_band",
+    "fig16_prefix_cache": "prefix_cache",
+}
+
+
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Validate and redraw all six paper figures."
+    )
+    parser.add_argument("run_dir", type=Path)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink():
+        parser.error("--output must be a new directory")
+    panels = {}
+    for figure, experiment in FIGURES.items():
+        print(f"Validating {figure}: {args.run_dir / figure}", flush=True)
+        panels[figure] = read_panels(args.run_dir / figure, experiment)
+    args.output.mkdir(parents=True)
+    for figure, experiment in FIGURES.items():
+        write_report(panels[figure], args.output, experiment, stem=figure)
+    print(f"All plots and summaries: {args.output.resolve()}")
+
+
+if __name__ == "__main__":
+    main()

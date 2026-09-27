@@ -99,8 +99,12 @@ To redraw all completed experiments without GPUs:
 bash eldr/scripts/plot_all.sh RUN_DIR
 ```
 
-Plots go to `eldr/artifacts/figures/all-<timestamp>/`. For one experiment, use its
-matching `plot_fig*.sh` script with that experiment's result directory.
+The six paper-style PDF/PNG figures and summaries are saved directly in
+`eldr/artifacts/figures/all-<timestamp>/`, without subfolders.
+Signature, cluster-balance and locality-band plots show mean per-rate changes
+relative to matched RR measurements; negative percentages are better.
+For one figure, use its matching `plot_fig*.sh` script with that figure's result
+directory (the parent containing both `task/` and `language/` for Figures 13–15).
 
 ## Code and tests
 

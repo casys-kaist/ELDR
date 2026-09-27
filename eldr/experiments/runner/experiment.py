@@ -12,7 +12,12 @@ from pathlib import Path
 
 from eldr.experiments.runner.config import RUN_PROFILES, file_sha256, load_config
 from eldr.experiments.runner.fit import training_dataset
-from eldr.experiments.runner.results import collect, write_report
+from eldr.experiments.runner.results import (
+    collect,
+    read_panels,
+    workload_label,
+    write_report,
+)
 from eldr.experiments.runner.run import execute
 from eldr.experiments.runner.workers import prepare, source_files, write_new_json
 
@@ -230,7 +235,7 @@ def run_experiment(plan, output):
         prepare(config, run, plan["profile"])
         execute(run, trials=worker_group["trials"])
     rows = collect(plan, output)
-    write_report(rows, output, plan["study"])
+    write_report({workload_label(plan): rows}, output, plan["study"])
     write_new_json(output / "complete.json", dict(measurements=len(rows)))
 
 
@@ -284,17 +289,9 @@ def main(experiment):
         ):
             parser.error("--replay uses saved settings; accepts only --output")
         source = args.replay.resolve()
-        if not (source / "complete.json").is_file():
-            parser.error("Replay requires a complete experiment")
-        plan = json.loads((source / "plan.json").read_text())
-        if plan["study"] != experiment:
-            parser.error("Experiment type mismatch")
-        rows = collect(plan, source)
-        previous = json.loads((source / "summary.json").read_text())
-        if rows != previous:
-            parser.error("Raw data or metrics changed since the completed experiment")
+        panels = read_panels(source, experiment)
         output.mkdir(parents=True)
-        write_report(rows, output, experiment)
+        write_report(panels, output, experiment)
         return
     if not args.config:
         parser.error("At least one --config is required")

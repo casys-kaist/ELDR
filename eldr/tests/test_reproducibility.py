@@ -509,88 +509,109 @@ class ReproducibilityTests(unittest.TestCase):
             self.assertTrue(
                 all(args[1] == "eldr.experiments.signature_ablation" for args in calls)
             )
-            self.assertTrue(all("--execute" not in args for args in calls))
 
-    def test_plot_all_validates_inputs_and_stops_without_overwriting(self):
-        scripts = Path(__file__).resolve().parents[1] / "scripts"
-        entries = (
-            "fig10_main_task",
-            "fig11_main_language",
-            "fig13_signature/task",
-            "fig13_signature/language",
-            "fig14_cluster_balance/task",
-            "fig14_cluster_balance/language",
-            "fig15_locality_band/task",
-            "fig15_locality_band/language",
-            "fig16_prefix_cache",
-        )
+    def test_plot_all_validates_inputs_and_writes_six_flat_paper_figures(self):
+        from eldr.experiments.runner.results import FIGURES, collect
+
+        script = Path(__file__).resolve().parents[1] / "scripts/plot_all.sh"
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory) / "checkout with spaces"
-            target = root / "eldr/scripts"
-            target.mkdir(parents=True)
-            shutil.copyfile(scripts / "plot_all.sh", target / "plot_all.sh")
-            for entry in entries:
-                path = root / "saved run" / entry
-                path.mkdir(parents=True)
-                (path / "complete.json").write_text("{}")
-                (target / ("plot_" + entry.split("/")[0] + ".sh")).write_text(
-                    '#!/bin/bash\nset -eu\nprintf "%s\\n" "$1" "$3" >> calls.txt\n'
-                    'if [[ $1 == *"${ELDR_TEST_FAIL:-never}"* ]]; then exit 19; fi\n'
-                    'mkdir -p -- "$3"\nprintf "test plot\\n" > "$3/plot.pdf"\n'
+            root = Path(directory)
+            source = root / "saved run"
+            for figure, experiment in FIGURES.items():
+                workloads = (
+                    ("task", "language")
+                    if figure.startswith(("fig13", "fig14", "fig15"))
+                    else (None,)
                 )
-            trace = root / "calls.txt"
-            marker = root / "saved run/fig16_prefix_cache/complete.json"
-            for mode in ("missing", "failure", "success"):
-                output = root / ("plots " + mode)
-                trace.write_text("")
+                for workload in workloads:
+                    folder = source / figure
+                    if workload:
+                        folder /= workload
+                    groups = {
+                        "main_task": {"qwen": ("rr", "eldr-static")},
+                        "main_language": {"qwen": ("rr", "eldr-static")},
+                        "signature_ablation": {
+                            f"qwen-{v}": ("rr", v)
+                            for v in ("count_idf", "gate_prob_all")
+                        },
+                        "cluster_balance": {"qwen": ("rr", "balanced", "vanilla")},
+                        "locality_band": {
+                            "qwen": ("rr", "tau-0", "tau-0.1", "tau-0.2", "tau-0.3")
+                        },
+                        "prefix_cache": {
+                            f"gptoss-cache-{c}": ("rr", "eldr-static") for c in (0, 1)
+                        },
+                    }[experiment]
+                    plan = dict(study=experiment, fleets=[])
+                    for setting, variants in groups.items():
+                        run = folder / setting / "run"
+                        trials = []
+                        for variant in variants:
+                            trial = [
+                                variant,
+                                "rr" if variant == "rr" else "eldr-static",
+                                dict(
+                                    request_rate=60,
+                                    requests=2,
+                                    output_tokens=4,
+                                    variant=variant,
+                                ),
+                            ]
+                            trials.append(trial)
+                            path = run / variant / "measure"
+                            path.mkdir(parents=True)
+                            raw = raw_result()
+                            raw["request_rate"] = 60
+                            (path / "raw.json").write_text(json.dumps(raw))
+                        for name, value in (
+                            ("complete", {}),
+                            ("cleanup", dict(remaining=[])),
+                            ("trials", trials),
+                        ):
+                            (run / f"{name}.json").write_text(json.dumps(value))
+                        plan["fleets"].append(
+                            dict(
+                                key=setting,
+                                trials=trials,
+                                source_site=dict(
+                                    dataset=f"{workload or 'task'}/evaluation.json"
+                                ),
+                            )
+                        )
+                    (folder / "plan.json").write_text(json.dumps(plan))
+                    (folder / "summary.json").write_text(
+                        json.dumps(collect(plan, folder))
+                    )
+                    (folder / "complete.json").write_text("{}")
+            before = {p: p.read_bytes() for p in source.rglob("*") if p.is_file()}
+            marker = source / "fig16_prefix_cache/complete.json"
+            summary = source / "fig11_main_language/summary.json"
+            for mode in ("missing", "changed", "success"):
+                marker.write_bytes(before[marker])
+                summary.write_bytes(before[summary])
                 if mode == "missing":
                     marker.unlink()
-                else:
-                    marker.write_text("{}")
-                command = [
-                    "bash",
-                    str(target / "plot_all.sh"),
-                    "saved run",
-                    "--output",
-                    str(output),
-                ]
+                elif mode == "changed":
+                    summary.write_text("[]")
+                output = root / f"plots {mode}"
+                command = ["bash", str(script), str(source), "--output", str(output)]
                 result = subprocess.run(
-                    command,
-                    cwd=directory,
-                    capture_output=True,
-                    text=True,
-                    env=dict(
-                        os.environ,
-                        ELDR_TEST_FAIL=(
-                            "fig11_main_language" if mode == "failure" else "never"
-                        ),
-                    ),
-                    timeout=20,
+                    command, cwd=root, capture_output=True, text=True, timeout=120
                 )
                 self.assertEqual(
-                    result.returncode,
-                    {"missing": 1, "failure": 19, "success": 0}[mode],
-                    result.stderr,
+                    result.returncode, 0 if mode == "success" else 1, result.stderr
                 )
-                calls = trace.read_text().splitlines()
-                if mode == "missing":
-                    self.assertEqual(calls, [])
+                if mode != "success":
                     self.assertFalse(output.exists())
                     continue
-                selected = entries[:2] if mode == "failure" else entries
-                self.assertEqual(
-                    calls,
-                    [
-                        item
-                        for entry in selected
-                        for item in (f"saved run/{entry}", str(output / entry))
-                    ],
-                )
+                self.assertEqual({p.stem for p in output.glob("*.pdf")}, set(FIGURES))
+                self.assertEqual(len(list(output.glob("*.png"))), 6)
+                self.assertFalse(any(p.is_dir() for p in output.iterdir()))
                 again = subprocess.run(command, capture_output=True, timeout=20)
                 self.assertEqual(again.returncode, 2)
-                self.assertEqual(trace.read_text().splitlines(), calls)
-                if mode == "success":
-                    self.assertEqual(len(list(output.rglob("*.pdf"))), len(entries))
+            self.assertEqual(
+                before, {p: p.read_bytes() for p in source.rglob("*") if p.is_file()}
+            )
 
     def test_token_not_event_denominator(self):
         tpot, ttft = request_metrics(raw_result(), 2, 4)

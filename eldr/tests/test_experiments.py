@@ -473,50 +473,92 @@ class ExperimentTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Incomplete"):
                 collect(plan, relocated)
 
-    def test_report_preserves_values_and_labels_all_signature_variants(self):
+    def test_paper_signature_bars_preserve_matched_controls_and_layout(self):
         from eldr.experiments import plot_style
         from eldr.experiments.runner.results import write_report
 
-        rows = [
-            dict(
-                setting=f"{model}-{variant}",
-                variant=variant,
-                rate=60,
-                tpot50_ms=10 + index,
-                tpot99_ms=20 + index,
-                ttft50_ms=30 + index,
-            )
-            for index, (model, variant) in enumerate(
-                (model, variant)
-                for model in ("qwen", "gptoss", "gemma")
-                for variant in ("count_idf", "gate_prob_all")
-            )
-        ]
+        panels = {}
+        for workload in ("task", "language"):
+            rows = []
+            for model in ("qwen", "gptoss", "gemma"):
+                for variant, baseline, scale in (
+                    ("count_idf", 10, 0.9),
+                    ("gate_prob_all", 50, 1.2),
+                ):
+                    for policy, factor in (("rr", 1), (variant, scale)):
+                        rows.append(
+                            dict(
+                                setting=f"{model}-{variant}",
+                                variant=policy,
+                                rate=60,
+                                tpot50_ms=baseline * factor,
+                                tpot99_ms=2 * baseline * factor,
+                                ttft50_ms=30,
+                            )
+                        )
+            panels[workload] = rows
+        original = copy.deepcopy(panels)
         with (
             tempfile.TemporaryDirectory() as directory,
             patch("eldr.experiments.plot_style.save") as save,
         ):
             output = Path(directory)
-            write_report(rows, output, "signature_ablation")
-            self.assertEqual(json.loads((output / "summary.json").read_text()), rows)
+            write_report(panels, output, "signature_ablation")
+            for workload, rows in panels.items():
+                self.assertEqual(
+                    json.loads((output / f"summary-{workload}.json").read_text()), rows
+                )
+        self.assertEqual(original, panels)
         fig = save.call_args.args[0]
         self.assertEqual(
             [text.get_text() for text in fig.legends[0].get_texts()],
-            ["count_idf", "gate_prob_all"],
+            [r"count$\cdot$idf", "gate-prob"],
         )
-        self.assertAlmostEqual(fig.get_figwidth(), 2 * plot_style.WIDTH)
-        self.assertEqual(
-            [ax.get_title() for ax in fig.axes[:6]],
-            [row["setting"].replace("-", "\n", 1) for row in rows],
-        )
-        for metric, axes in zip(
-            ("tpot50_ms", "tpot99_ms", "ttft50_ms"),
-            np.asarray(fig.axes).reshape(3, 6),
+        self.assertEqual(tuple(fig.get_size_inches()), (plot_style.WIDTH, 4.6))
+        self.assertEqual(len(fig.axes), 6)
+        self.assertTrue(fig.axes[0].get_ylabel().startswith("Task"))
+        self.assertTrue(fig.axes[3].get_ylabel().startswith("Language"))
+        for ax in fig.axes:
+            np.testing.assert_allclose(
+                [bar.get_height() for bar in ax.patches], [-10, -10, 20, 20]
+            )
+
+    def test_paper_ablation_averages_rate_deltas_not_latencies(self):
+        from eldr.experiments.plots import draw
+
+        for experiment, variants, renderer in (
+            ("cluster_balance", ("balanced", "vanilla"), "plot_ablation"),
+            (
+                "locality_band",
+                ("tau-0", "tau-0.1", "tau-0.2", "tau-0.3"),
+                "plot_locality_band",
+            ),
         ):
-            for row, ax in zip(rows, axes):
-                np.testing.assert_array_equal(ax.get_xticks(), [60])
-                np.testing.assert_array_equal(ax.lines[0].get_xdata(), [60])
-                np.testing.assert_array_equal(ax.lines[0].get_ydata(), [row[metric]])
+            rows = []
+            for rate, baseline, scale in ((20, 10, 0.8), (100, 100, 1.1)):
+                for variant in ("rr", *variants):
+                    value = baseline * (1 if variant == "rr" else scale)
+                    rows.append(
+                        dict(
+                            setting="qwen",
+                            variant=variant,
+                            rate=rate,
+                            tpot50_ms=value,
+                            tpot99_ms=value,
+                        )
+                    )
+            with patch(f"eldr.experiments.plots.{renderer}") as plot:
+                draw({"task": rows}, Path("unused"), experiment)
+                data = plot.call_args.args[0]["qwen", "task"]
+                if experiment == "cluster_balance":
+                    np.testing.assert_allclose(data, [[-5, -5], [-5, -5]])
+                else:
+                    for values in data.values():
+                        np.testing.assert_allclose(list(values.values()), [-5] * 4)
+                with self.assertRaises(ValueError):
+                    draw({"task": [*rows, rows[0]]}, Path("unused"), experiment)
+                with self.assertRaises(KeyError):
+                    draw({"task": rows[1:]}, Path("unused"), experiment)
 
     def test_domain_control_uses_calibration_not_evaluation_frequencies(self):
         pairs = [[str(i), "a" if i < 8 else "b"] for i in range(10)]
