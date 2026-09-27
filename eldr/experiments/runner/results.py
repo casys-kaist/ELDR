@@ -149,9 +149,13 @@ def write_report(rows, output, experiment):
     settings = list(dict.fromkeys(r["setting"] for r in rows))
     variants = list(dict.fromkeys(r["variant"] for r in rows))
     fig, axes = plt.subplots(
-        3, len(settings), squeeze=False, figsize=(plot_style.WIDTH, 6.4)
+        3,
+        len(settings),
+        squeeze=False,
+        figsize=(plot_style.WIDTH * max(1, len(settings) / 3), 6.4),
     )
     for column, setting in enumerate(settings):
+        rates = sorted({r["rate"] for r in rows if r["setting"] == setting})
         for row, metric in enumerate(("tpot50_ms", "tpot99_ms", "ttft50_ms")):
             ax = axes[row, column]
             for index, variant in enumerate(variants):
@@ -175,6 +179,8 @@ def write_report(rows, output, experiment):
                     linestyle="--" if variant == "rr" else "-",
                 )
             ax.grid(alpha=0.2)
+            if len(rates) == 1:
+                ax.set_xticks(rates)
             if column == 0:
                 ax.set_ylabel(
                     {
@@ -184,11 +190,14 @@ def write_report(rows, output, experiment):
                     }[metric]
                 )
             if row == 0:
-                ax.set_title(setting)
+                ax.set_title(setting.replace("-", "\n", 1))
             if row == 2:
                 ax.set_xlabel("Requests/s")
-    handles, labels = axes[0, 0].get_legend_handles_labels()
+    legend = {}
+    for ax in axes[0]:
+        handles, labels = ax.get_legend_handles_labels()
+        legend.update(zip(labels, handles))
     fig.tight_layout()
-    plot_style.legend_top(fig, min(4, len(labels)), handles, labels)
+    plot_style.legend_top(fig, min(4, len(legend)), list(legend.values()), list(legend))
     plot_style.save(fig, output / experiment)
     plt.close(fig)

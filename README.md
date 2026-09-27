@@ -74,6 +74,21 @@ are in `<worker-group>/run/<trial>/measure/raw.json`. Runs stop on error and nev
 overwrite earlier results. Send the printed log and `cleanup.json` to the authors
 if a run fails; do not reconnect worker SSH sessions or kill shared jobs.
 
+After the cause is resolved, resume from the printed run directory:
+
+```bash
+bash eldr/scripts/run_all.sh --resume RUN_DIR
+```
+
+This reuses the saved experiment selection and settings, validates and skips
+completed experiments, and restarts the interrupted experiment from its warmup
+before continuing. Earlier attempts are preserved in `*.interrupted-*/results/`;
+logs are appended, not overwritten. Task and Language panels are separate
+experiments for this purpose. Resume requires unchanged code/inputs and confirmed
+worker cleanup; otherwise contact the authors. Errors are not automatically
+retried. `--resume RUN_DIR --plan` checks locally without accessing the cluster.
+Older runs without resume metadata require author-assisted recovery.
+
 Metrics are TPOT P50/P95/P99 and TTFT P50. TTFT ends when the prefill-generated
 first token reaches the client. Tail latency can vary across runs; report
 substantial or persistent discrepancies to the authors.

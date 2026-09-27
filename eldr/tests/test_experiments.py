@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
 """Experiment plan/replay checks; none of these tests launch GPU containers."""
 
 import copy
@@ -309,7 +311,7 @@ class ExperimentTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "2,000"):
                     prefix_cache.prepare(groups[0])
 
-    def test_new_experiment_runs_recomputes_and_renders_every_cell(self):
+    def test_experiment_resume_preserves_failures_and_validates_completed_results(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             config, path = self.config(root)
@@ -332,15 +334,43 @@ class ExperimentTests(unittest.TestCase):
                 run.mkdir()
 
             def run_fake(run, *, trials):
+                write_new_json(run / "started.json", {})
                 write_new_json(run / "trials.json", trials)
+                write_new_json(run / "cleanup.json", {"remaining": []})
                 for label, _, protocol in trials:
                     folder = run / label / "measure"
                     folder.mkdir(parents=True)
                     raw = raw_result()
                     raw["request_rate"] = protocol["request_rate"]
                     write_new_json(folder / "raw.json", raw)
+                    if execute.call_count == 1:
+                        write_new_json(
+                            run / "failed.json", {"error": "test interruption"}
+                        )
+                        raise RuntimeError("test interruption")
                 write_new_json(run / "complete.json", {})
-                write_new_json(run / "cleanup.json", {"remaining": []})
+
+            def resume(*flags):
+                with (
+                    patch(
+                        "sys.argv",
+                        [
+                            "main_task",
+                            "--config",
+                            str(path),
+                            "--output",
+                            str(output),
+                            "--resume",
+                            *flags,
+                        ],
+                    ),
+                    patch("builtins.print"),
+                    patch(
+                        "eldr.experiments.runner.experiment.plan_experiment",
+                        return_value=plan,
+                    ),
+                ):
+                    experiment_main("main_task")
 
             with (
                 patch(
@@ -353,9 +383,66 @@ class ExperimentTests(unittest.TestCase):
                 ),
                 patch(
                     "eldr.experiments.runner.experiment.execute", side_effect=run_fake
+                ) as execute,
+                patch(
+                    "eldr.experiments.runner.remote.Remote.run",
+                    side_effect=AssertionError("No cluster access in this test"),
                 ),
             ):
-                run_experiment(plan, output)
+                with self.assertRaisesRegex(RuntimeError, "test interruption"):
+                    run_experiment(plan, output)
+                preserved = {
+                    p.relative_to(output): p.read_bytes()
+                    for p in output.rglob("*")
+                    if p.is_file()
+                }
+                cleanup = output / "qwen/run/cleanup.json"
+                for value in (None, {"remaining": [{"host": "unreachable"}]}):
+                    if value is None:
+                        cleanup.unlink()
+                    else:
+                        cleanup.write_text(json.dumps(value))
+                    with self.assertRaisesRegex(ValueError, "Cleanup is not confirmed"):
+                        resume("--execute")
+                    self.assertEqual(execute.call_count, 1)
+                    self.assertEqual(list(root.glob("out.interrupted-*")), [])
+                cleanup.write_bytes(preserved[Path("qwen/run/cleanup.json")])
+                resume()  # Dry validation must not archive or run anything.
+                self.assertEqual(execute.call_count, 1)
+                self.assertEqual(list(root.glob("out.interrupted-*")), [])
+                resume("--execute")
+                self.assertEqual(execute.call_count, 2)
+                (archive,) = root.glob("out.interrupted-*/results")
+                self.assertEqual(
+                    {
+                        p.relative_to(archive): p.read_bytes()
+                        for p in archive.rglob("*")
+                        if p.is_file()
+                    },
+                    preserved,
+                )
+                resume("--execute")  # Completed results are validated, not rerun.
+                self.assertEqual(execute.call_count, 2)
+                summary = output / "summary.json"
+                summary_bytes = summary.read_bytes()
+                summary.write_text("[]")
+                with self.assertRaisesRegex(ValueError, "metrics changed"):
+                    resume("--execute")
+                summary.write_bytes(summary_bytes)
+                saved_sources = (output / "sources.json").read_bytes()
+                (output / "sources.json").write_text('{"changed-source": "changed"}')
+                with self.assertRaisesRegex(ValueError, "Source changed"):
+                    resume("--execute")
+                (output / "sources.json").write_bytes(saved_sources)
+                changed_plan = copy.deepcopy(plan)
+                changed_plan["profile"] = "paper"
+                (output / "plan.json").write_text(json.dumps(changed_plan))
+                with self.assertRaisesRegex(
+                    ValueError, "same checkout, inputs and settings"
+                ):
+                    resume("--execute")
+                (output / "plan.json").write_text(json.dumps(plan))
+                self.assertEqual(execute.call_count, 2)
             rows = collect(plan, output)
             self.assertEqual(len(rows), 3)
             self.assertAlmostEqual(rows[0]["tpot95_ms"], 39.0)
@@ -385,6 +472,51 @@ class ExperimentTests(unittest.TestCase):
             (relocated / "qwen/run/complete.json").unlink()
             with self.assertRaisesRegex(ValueError, "Incomplete"):
                 collect(plan, relocated)
+
+    def test_report_preserves_values_and_labels_all_signature_variants(self):
+        from eldr.experiments import plot_style
+        from eldr.experiments.runner.results import write_report
+
+        rows = [
+            dict(
+                setting=f"{model}-{variant}",
+                variant=variant,
+                rate=60,
+                tpot50_ms=10 + index,
+                tpot99_ms=20 + index,
+                ttft50_ms=30 + index,
+            )
+            for index, (model, variant) in enumerate(
+                (model, variant)
+                for model in ("qwen", "gptoss", "gemma")
+                for variant in ("count_idf", "gate_prob_all")
+            )
+        ]
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch("eldr.experiments.plot_style.save") as save,
+        ):
+            output = Path(directory)
+            write_report(rows, output, "signature_ablation")
+            self.assertEqual(json.loads((output / "summary.json").read_text()), rows)
+        fig = save.call_args.args[0]
+        self.assertEqual(
+            [text.get_text() for text in fig.legends[0].get_texts()],
+            ["count_idf", "gate_prob_all"],
+        )
+        self.assertAlmostEqual(fig.get_figwidth(), 2 * plot_style.WIDTH)
+        self.assertEqual(
+            [ax.get_title() for ax in fig.axes[:6]],
+            [row["setting"].replace("-", "\n", 1) for row in rows],
+        )
+        for metric, axes in zip(
+            ("tpot50_ms", "tpot99_ms", "ttft50_ms"),
+            np.asarray(fig.axes).reshape(3, 6),
+        ):
+            for row, ax in zip(rows, axes):
+                np.testing.assert_array_equal(ax.get_xticks(), [60])
+                np.testing.assert_array_equal(ax.lines[0].get_xdata(), [60])
+                np.testing.assert_array_equal(ax.lines[0].get_ydata(), [row[metric]])
 
     def test_domain_control_uses_calibration_not_evaluation_frequencies(self):
         pairs = [[str(i), "a" if i < 8 else "b"] for i in range(10)]

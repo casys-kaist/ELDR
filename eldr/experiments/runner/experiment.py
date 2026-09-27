@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import importlib
 import json
+import tempfile
 from collections import Counter
 from pathlib import Path
 
@@ -180,17 +181,45 @@ def prepare_experiment_inputs(worker_group, experiment):
     return load_config(config_path, profile="smoke")
 
 
+def source_hashes(plan):
+    return {
+        str(path): file_sha256(path)
+        for root in {f["site"]["repo"] for f in plan["fleets"]}
+        for path in source_files(Path(root))
+    }
+
+
+def check_resume(plan, output):
+    """Validate before any cluster access; never silently replace a complete run."""
+    saved = json.loads((output / "plan.json").read_text())
+    if saved != json.loads(json.dumps(plan)):
+        raise ValueError("Resume requires the same checkout, inputs and settings")
+    if json.loads((output / "sources.json").read_text()) != source_hashes(plan):
+        raise ValueError("Source changed; use a new run instead of mixing versions")
+    for group in plan["fleets"]:
+        run = output / group["key"] / "run"
+        cleanup = run / "cleanup.json"
+        if ((run / "started.json").exists() or cleanup.exists()) and (
+            not cleanup.is_file() or json.loads(cleanup.read_text())["remaining"]
+        ):
+            raise ValueError(
+                f"Cleanup is not confirmed: {run}. Contact the authors before resuming."
+            )
+    if (output / "complete.json").is_file():
+        if collect(plan, output) != json.loads((output / "summary.json").read_text()):
+            raise ValueError("Raw data or metrics changed since completion")
+        print(f"SKIP (validated): {output}")
+        return True
+    return False
+
+
 def run_experiment(plan, output):
     for source, expected in plan["inputs"].items():
         if file_sha256(source) != expected:
             raise ValueError("Experiment input changed: " + source)
     output.mkdir(parents=True, exist_ok=False)
     write_new_json(output / "plan.json", plan)
-    sources = {
-        str(path): file_sha256(path)
-        for root in {f["site"]["repo"] for f in plan["fleets"]}
-        for path in source_files(Path(root))
-    }
+    sources = source_hashes(plan)
     write_new_json(output / "sources.json", sources)
     for worker_group in plan["fleets"]:
         for path, expected in (sources | plan["inputs"]).items():
@@ -218,6 +247,11 @@ def main(experiment):
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Skip validated output; with --execute restart incomplete output",
+    )
+    parser.add_argument(
         "--profile", choices=RUN_PROFILES, help="Run size (default: paper)"
     )
     parser.add_argument("--rates", nargs="+", type=int)
@@ -239,8 +273,10 @@ def main(experiment):
         "--replay", type=Path, help="Completed experiment directory; no cluster access"
     )
     args = parser.parse_args()
+    if args.resume and (args.replay or args.output.is_symlink()):
+        parser.error("--resume cannot use --replay or a symlink output")
     output = args.output.resolve()
-    if output.exists():
+    if output.exists() and not args.resume:
         parser.error("--output must be a new directory")
     if args.replay:
         if args.config or any(
@@ -270,6 +306,17 @@ def main(experiment):
         [2] if profile == "smoke" else list(load_experiment(experiment).RATES)
     )
     plan = plan_experiment(experiment, args.config, output, profile, rates, policies)
+    if args.resume and output.exists():
+        if check_resume(plan, output):
+            return
+        if not args.execute:
+            print(f"RESTART (after validation): {output}")
+            return
+        archive = Path(
+            tempfile.mkdtemp(prefix=output.name + ".interrupted-", dir=output.parent)
+        )
+        output.rename(archive / "results")
+        print(f"Previous attempt preserved: {archive / 'results'}", flush=True)
     print(json.dumps(plan, indent=2))
     if args.execute:
         run_experiment(plan, output)

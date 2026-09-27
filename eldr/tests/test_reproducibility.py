@@ -236,7 +236,7 @@ class ReproducibilityTests(unittest.TestCase):
                     *(
                         [(["saved", "--execute", "--output", directory], 2)]
                         if plotting
-                        else []
+                        else [(["--resume", ""], 2), (["--resume", directory], 2)]
                     ),
                 ):
                     with self.subTest(script=script.name, arguments=arguments):
@@ -278,7 +278,15 @@ class ReproducibilityTests(unittest.TestCase):
                     if os.environ.get('ELDR_TEST_FAIL') in args:
                         sys.exit(19)
                     if 'configure' in args:
-                        Path(args[args.index('--output') + 1]).mkdir(parents=True)
+                        output = Path(args[args.index('--output') + 1])
+                        output.mkdir(parents=True)
+                        for model in ('qwen', 'gptoss', 'gemma'):
+                            for workload in ('task', 'language', 'task-prefix'):
+                                (output / f'{model}-{workload}.json').write_text('{}')
+                    elif '--execute' in args:
+                        output = Path(args[args.index('--output') + 1])
+                        output.mkdir(parents=True)
+                        (output / 'complete.json').write_text('{}')
                     print('fixture: no GPU or SSH commands')
                     """)
             )
@@ -400,6 +408,108 @@ class ReproducibilityTests(unittest.TestCase):
                 )
                 self.assertEqual(again.returncode, 2)
                 self.assertEqual(len(trace.read_text().splitlines()), len(calls))
+
+            # Resume the interrupted suite without recreating configs or rerunning
+            # Main Task. The failed log remains as the prefix of the appended log.
+            output = root / "output failure"
+            failed_log = output / "fig11_main_language-language.log"
+            old_log = failed_log.read_bytes()
+            # Add a marker because the injected failure above exits before printing.
+            failed_log.write_bytes(old_log + b"original failure\n")
+            old_log = failed_log.read_bytes()
+            config_bytes = (output / "configs/qwen-task.json").read_bytes()
+            for mode in (
+                "changed-config",
+                "check-failure",
+                "plan",
+                "resume",
+                "already-complete",
+            ):
+                trace.write_text("")
+                if mode == "changed-config":
+                    (output / "configs/qwen-task.json").write_text("changed")
+                cmd = [
+                    "bash",
+                    str(root / "eldr/scripts/run_all.sh"),
+                    "--resume",
+                    str(output),
+                ]
+                if mode == "plan":
+                    cmd.append("--plan")
+                result = subprocess.run(
+                    cmd,
+                    cwd=directory,
+                    text=True,
+                    capture_output=True,
+                    timeout=20,
+                    env=dict(
+                        os.environ,
+                        PATH=str(binaries) + os.pathsep + os.environ["PATH"],
+                        ELDR_TEST_FAIL="eldr.experiments.main_language"
+                        if mode == "check-failure"
+                        else "",
+                    ),
+                )
+                self.assertEqual(
+                    result.returncode,
+                    19
+                    if mode == "check-failure"
+                    else 1
+                    if mode == "changed-config"
+                    else 0,
+                    result.stderr,
+                )
+                calls = [json.loads(row) for row in trace.read_text().splitlines()]
+                if mode == "changed-config":
+                    self.assertEqual(calls, [])
+                    (output / "configs/qwen-task.json").write_bytes(config_bytes)
+                    continue
+                self.assertFalse(any("configure" in args for args in calls))
+                launches = [args for args in calls if "--execute" in args]
+                bootstrap = [args for args in calls if "bootstrap" in args]
+                self.assertEqual(len(bootstrap), 1 if mode == "resume" else 0)
+                self.assertEqual(len(launches), 8 if mode == "resume" else 0)
+                if mode == "resume":
+                    self.assertEqual(
+                        [args[1] for args in launches],
+                        ["eldr.experiments." + module for module, _ in expected[1:]],
+                    )
+                for args in calls:
+                    if "bootstrap" not in args:
+                        self.assertIn("--resume", args)
+                        self.assertEqual(args[args.index("--profile") + 1], "smoke")
+                self.assertEqual(
+                    (output / "configs/qwen-task.json").read_bytes(), config_bytes
+                )
+                self.assertTrue(failed_log.read_bytes().startswith(old_log))
+                if mode == "check-failure":
+                    self.assertIn("--resume", result.stderr)
+
+            # Saved selection also applies to a figure-specific run; no bootstrap
+            # or GPU work is needed when all of its panels already completed.
+            trace.write_text("")
+            result = subprocess.run(
+                [
+                    "bash",
+                    str(root / "eldr/scripts/run_all.sh"),
+                    "--resume",
+                    str(root / "output single"),
+                ],
+                cwd=directory,
+                text=True,
+                capture_output=True,
+                timeout=20,
+                env=dict(
+                    os.environ, PATH=str(binaries) + os.pathsep + os.environ["PATH"]
+                ),
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            calls = [json.loads(row) for row in trace.read_text().splitlines()]
+            self.assertEqual(len(calls), 2)
+            self.assertTrue(
+                all(args[1] == "eldr.experiments.signature_ablation" for args in calls)
+            )
+            self.assertTrue(all("--execute" not in args for args in calls))
 
     def test_plot_all_validates_inputs_and_stops_without_overwriting(self):
         scripts = Path(__file__).resolve().parents[1] / "scripts"

@@ -290,6 +290,49 @@ class PrefillFirstTests(unittest.TestCase):
 
 
 class BenchmarkFailureTests(unittest.IsolatedAsyncioTestCase):
+    async def test_fragmented_sse_preserves_json_and_generated_text(self):
+        from vllm.benchmarks.lib.endpoint_request_func import (
+            RequestFuncInput,
+            async_request_openai_completions,
+        )
+
+        wire = (
+            'data: {"choices":[{"text":"hello world 한글"}]}\n\n'
+            'data: {"choices":[{"text":" a b"}]}\n\n'
+            'data: {"usage":{"completion_tokens":2}}\n\n'
+            "data: [DONE]\n\n"
+        ).encode()
+        partitions = [[wire[:i], wire[i:]] for i in range(1, len(wire))]
+        partitions += [
+            [wire[i : i + size] for i in range(0, len(wire), size)]
+            for size in (1, 2, 3, 7, 19, 64)
+        ]
+        for parts in partitions:
+            with self.subTest(chunk_lengths=[len(p) for p in parts]):
+
+                async def chunks(parts=parts):
+                    for part in parts:
+                        yield part
+
+                response = NS(status=200, content=NS(iter_any=chunks))
+                manager = MagicMock()
+                manager.__aenter__ = AsyncMock(return_value=response)
+                manager.__aexit__ = AsyncMock(return_value=False)
+                result = await async_request_openai_completions(
+                    RequestFuncInput(
+                        prompt="x",
+                        api_url="http://test/v1/completions",
+                        prompt_len=1,
+                        output_len=2,
+                        model="test",
+                    ),
+                    NS(post=MagicMock(return_value=manager)),
+                )
+                self.assertTrue(result.success, result.error)
+                self.assertEqual(result.generated_text, "hello world 한글 a b")
+                self.assertEqual(result.output_tokens, 2)
+                self.assertEqual(len(result.itl), 1)
+
     async def test_ttft_and_itl_use_the_same_first_token_timestamp(self):
         from vllm.benchmarks.lib.endpoint_request_func import (
             RequestFuncInput,
