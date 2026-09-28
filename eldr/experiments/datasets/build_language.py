@@ -88,9 +88,9 @@ for lang in LANG_ORDER:
     fullitems += by_lang[lang]
 # Sidecar -- positional partition matching the file's lang order.
 write_json([[lang, lang_counts[lang]] for lang in LANG_ORDER], D / "lang.counts.json")
-# Hash -> lang map for the FULL set (figures + general lookup).
+# Preserve source order in the hash sidecar; prompt selection is unchanged.
 write_json(
-    {hashlib.md5(p.encode()).hexdigest()[:16]: lang for p, lang in fullitems},
+    {hashlib.md5(p.encode()).hexdigest()[:16]: lang for p, lang in pool},
     CAPTURE_DIR / "wildchat_full_hash2lang.json",
 )
 

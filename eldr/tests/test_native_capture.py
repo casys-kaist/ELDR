@@ -8,6 +8,8 @@ from pathlib import Path
 from types import SimpleNamespace as NS
 from unittest.mock import patch
 
+import numpy as np
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -19,6 +21,50 @@ def module(name):
 
 
 class NativeCaptureTests(unittest.TestCase):
+    def test_calibration_request_alignment_and_token_accounting(self):
+        capture = module("calibration").Capture(2, 4)
+        ids = np.array([[[0, 1], [1, 2]], [[2, 3], [0, 3]]])
+        probabilities = np.full((2, 4), 0.5, dtype=np.float32)
+        for request in ("1-abcdefgh", "0-12345678"):
+            # Capture arrives in the opposite order to the prompt list.
+            capture.add(request, [10, 11], 0, ids, probabilities)
+            capture.add(request, [10, 11], 2, ids[:, :1], None)
+            capture.add(request, [10, 11], 3, ids[:, 1:], None)
+        requests = [
+            dict(
+                id=str(i),
+                prompt_ids=[10, 11],
+                output_ids=[1, 2, 3],
+                prompt_sha256=str(i) * 64,
+            )
+            for i in range(2)
+        ]
+        arrays = capture.arrays(requests, 3)
+        np.testing.assert_array_equal(arrays["request_ids"], ["0" * 64, "1" * 64])
+        expected = [[1, 2, 1, 0], [1, 0, 1, 2]]
+        for name in ("prefill_counts", "decode_counts"):
+            np.testing.assert_array_equal(arrays[name], [expected, expected])
+        with self.assertRaisesRegex(ValueError, "Incomplete"):
+            capture.arrays(requests[:1], 3)
+        requests[0]["prompt_ids"] = [20, 21]
+        with self.assertRaisesRegex(ValueError, "mismatch"):
+            capture.arrays(requests, 3)
+
+        capture = module("calibration").Capture(2, 4)
+        capture.add("0-12345678", [10, 11], 0, ids[:, :1], probabilities / 2)
+        capture.add("0-12345678", [10, 11], 1, ids[:, 1:], probabilities / 2)
+        for computed, tokens, probs in (
+            (1, ids[:, :1], None),
+            (2, ids[:, :1], probabilities),
+            (2, ids - 1, None),
+        ):
+            with self.assertRaises(ValueError):
+                capture.add("0-12345678", [10, 11], computed, tokens, probs)
+        with self.assertRaisesRegex(ValueError, "first prompt token"):
+            capture.add("missing-12345678", [10, 11], 1, ids[:, :1], probabilities / 2)
+        with self.assertRaisesRegex(ValueError, "probability sums"):
+            capture.add("invalid-12345678", [10, 11], 0, ids, probabilities * 2)
+
     def test_gc_only_changes_explicit_benchmark_processes(self):
         benchmark = module("benchmark")
         with (

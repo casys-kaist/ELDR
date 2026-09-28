@@ -6,7 +6,7 @@ activations and worker load, without changing expert selection.
 
 ## Run
 
-Ask the authors for SSH access and the input/calibration bundle. On the supplied
+Ask the authors for SSH access. On the supplied
 controller (**node1**), clone into your own directory; replace `ReviewerA` with
 your reviewer name:
 
@@ -18,33 +18,37 @@ git clone https://github.com/casys-kaist/ELDR.git eldr
 cd eldr
 ```
 
-Place the supplied inputs, `manifest.json` and `cluster.json` in `eldr/inputs/`,
-then run all six experiments and generate their plots:
+Prepare inputs, then run all six experiments and generate their plots:
 
 ```bash
+bash eldr/scripts/prepare_data.sh
 bash eldr/scripts/run_all.sh
 ```
 
 Scripts install CPU dependencies, verify inputs, and automatically synchronize
-serving code to **node2, node3 and node4**. Models and inputs are not in Git.
+serving code to **node2, node3 and node4**. Data and calibration are generated
+locally; only code and the hosted cluster configuration are in Git.
 The authors prepare the models, serving image, Docker/ROCm/RDMA, uv, rsync and
 SSH control connections. Reviewers share the cluster and must run one at a time.
 Allow **1–2 days** for the full suite, including model loading and compilation.
 
-## Prepare datasets
+## Prepare inputs
 
-To regenerate prompts from the pinned public sources, run these separately from
-the experiments. Both use the Qwen tokenizer, as in the original data preparation:
+`prepare_data.sh` downloads pinned public datasets, builds Task and Language
+prompts with fixed filters and disjoint calibration/evaluation splits, then runs
+each model on its calibration prompts. It collects matched prefill counts, gate
+probabilities and decode counts, and fits IDF weights, a layer mask and 16
+centroids with seed 1. It never imports archived activations or fits.
 
-```bash
-bash eldr/scripts/prepare_data.sh task --tokenizer /mnt/md0/models/qwen3-30b-a3b --output eldr/artifacts/datasets/task
-bash eldr/scripts/prepare_data.sh language --tokenizer /mnt/md0/models/qwen3-30b-a3b --output eldr/artifacts/datasets/language
-```
+Generated prompts, calibration and their checksums are saved in `eldr/inputs/`;
+preparation logs are in `eldr/artifacts/preparation/`. Internet access and the
+supplied GPUs/models are required. Calibration generates 128 tokens per prompt;
+the main experiments generate 512. To prepare one setting first, use
+`--setting qwen-task`; rerun without this flag to complete all six settings.
 
-The script installs the data dependencies and writes fit/evaluation JSON files
-and label sidecars to a **new** directory. It does not overwrite `eldr/inputs/`
-or regenerate expert captures and centroids. Compare regenerated prompts with
-the calibration inputs before replacing a frozen AE bundle.
+Rerunning the command verifies and reuses complete inputs. Interrupted preparation
+can be rerun; changed inputs are rejected, never overwritten. For another cluster,
+pass `--config CLUSTER_JSON` to both preparation and experiment scripts.
 
 ## Experiments
 
@@ -77,7 +81,7 @@ each from a 2,000-prompt pool).
 
 Use `--output NEW_DIR` to choose a new result directory, `--plan` to validate
 without starting GPU experiments, or `--config CLUSTER_JSON` for another cluster.
-Update the supplied `cluster.json` with that cluster's hosts, model paths,
+Update `eldr/experiments/cluster.json` with that cluster's hosts, model paths,
 GPU/CPU/NIC mappings and ports. Required models, image and SSH connections must
 be prepared there too. Each script supports `--help`.
 
@@ -131,8 +135,8 @@ eldr/tests/         CPU and opt-in GPU tests
 vllm/eldr/          Gate capture, block counts and signature transport
 ```
 
-Other source directories are upstream vLLM. `eldr/inputs/` contains separately
-supplied data; `eldr/artifacts/` holds generated results and caches.
+Other source directories are upstream vLLM. `eldr/inputs/` holds generated inputs;
+`eldr/artifacts/` holds results and caches. Neither directory is committed.
 CPU tests require neither inputs nor GPUs:
 
 ```bash
@@ -157,5 +161,6 @@ Based on [vLLM](https://github.com/vllm-project/vllm) commit
 `d801ae8c2650b590438f3d9794dd7a47abd86c9a`, under [Apache 2.0](LICENSE).
 Modified upstream files are marked; original license and copyright notices are
 retained. Please also cite the [vLLM paper](https://arxiv.org/abs/2309.06180).
-Models and datasets retain their own licenses; see the supplied input bundle's
-`README.md` for provenance and redistribution restrictions.
+Models and datasets retain their own licenses. Dataset sources, pinned revisions
+and extraction/filtering rules are in [the dataset builders](eldr/experiments/datasets/).
+Downloading inputs does not grant permission to redistribute their contents.

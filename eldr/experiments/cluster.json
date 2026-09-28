@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "first_token_mode": "prefill",
+  "controller_address": "10.11.0.4",
+  "proxy_port": 25100,
+  "proxy_cpus": "4",
+  "client_cpus": "8-15",
+  "tiktoken_cache": "/mnt/md0/eldr-rerun-20260917/runtime/harmony",
+  "model_paths": {
+    "qwen": "/mnt/md0/models/qwen3-30b-a3b",
+    "gptoss": "/mnt/md0/models/gpt-oss-120b-mxfp4",
+    "gemma": "/mnt/md0/models/gemma-4-26b-a4b"
+  },
+  "prefills": [
+    {"host":"node3","address":"10.11.0.9","gpu":0,"cpus":"0-47","nic":"mlx5_0:1","port":25001,"side_channel_port":5700,"internal_port":28000},
+    {"host":"node3","address":"10.11.0.9","gpu":1,"cpus":"0-47","nic":"mlx5_1:1","port":25002,"side_channel_port":5701,"internal_port":28128},
+    {"host":"node3","address":"10.11.0.9","gpu":2,"cpus":"0-47","nic":"mlx5_2:1","port":25003,"side_channel_port":5702,"internal_port":28256},
+    {"host":"node3","address":"10.11.0.9","gpu":3,"cpus":"0-47","nic":"mlx5_3:1","port":25004,"side_channel_port":5703,"internal_port":28384},
+    {"host":"node3","address":"10.11.0.9","gpu":4,"cpus":"48-95","nic":"mlx5_4:1","port":25005,"side_channel_port":5704,"internal_port":28512},
+    {"host":"node3","address":"10.11.0.9","gpu":5,"cpus":"48-95","nic":"mlx5_5:1","port":25006,"side_channel_port":5705,"internal_port":28640},
+    {"host":"node3","address":"10.11.0.9","gpu":6,"cpus":"48-95","nic":"mlx5_6:1","port":25007,"side_channel_port":5706,"internal_port":28768},
+    {"host":"node3","address":"10.11.0.9","gpu":7,"cpus":"48-95","nic":"mlx5_7:1","port":25008,"side_channel_port":5707,"internal_port":28896}
+  ],
+  "decoders": [
+    {"host":"node4","address":"10.11.0.10","gpu":0,"cpus":"0-47","nic":"mlx5_0:1","port":25001,"side_channel_port":5700,"internal_port":28000},
+    {"host":"node4","address":"10.11.0.10","gpu":1,"cpus":"0-47","nic":"mlx5_1:1","port":25002,"side_channel_port":5701,"internal_port":28128},
+    {"host":"node4","address":"10.11.0.10","gpu":2,"cpus":"0-47","nic":"mlx5_2:1","port":25003,"side_channel_port":5702,"internal_port":28256},
+    {"host":"node4","address":"10.11.0.10","gpu":3,"cpus":"0-47","nic":"mlx5_3:1","port":25004,"side_channel_port":5703,"internal_port":28384},
+    {"host":"node4","address":"10.11.0.10","gpu":4,"cpus":"48-95","nic":"mlx5_4:1","port":25005,"side_channel_port":5704,"internal_port":28512},
+    {"host":"node4","address":"10.11.0.10","gpu":5,"cpus":"48-95","nic":"mlx5_5:1","port":25006,"side_channel_port":5705,"internal_port":28640},
+    {"host":"node4","address":"10.11.0.10","gpu":6,"cpus":"48-95","nic":"mlx5_6:1","port":25007,"side_channel_port":5706,"internal_port":28768},
+    {"host":"node4","address":"10.11.0.10","gpu":7,"cpus":"48-95","nic":"mlx5_7:1","port":25008,"side_channel_port":5707,"internal_port":28896},
+    {"host":"node2","address":"10.11.0.6","gpu":0,"cpus":"0-47","nic":"mlx5_0:1","port":25001,"side_channel_port":5700,"internal_port":28000},
+    {"host":"node2","address":"10.11.0.6","gpu":1,"cpus":"0-47","nic":"mlx5_1:1","port":25002,"side_channel_port":5701,"internal_port":28128},
+    {"host":"node2","address":"10.11.0.6","gpu":2,"cpus":"0-47","nic":"mlx5_2:1","port":25003,"side_channel_port":5702,"internal_port":28256},
+    {"host":"node2","address":"10.11.0.6","gpu":3,"cpus":"0-47","nic":"mlx5_3:1","port":25004,"side_channel_port":5703,"internal_port":28384},
+    {"host":"node2","address":"10.11.0.6","gpu":4,"cpus":"48-95","nic":"mlx5_4:1","port":25005,"side_channel_port":5704,"internal_port":28512},
+    {"host":"node2","address":"10.11.0.6","gpu":5,"cpus":"48-95","nic":"mlx5_5:1","port":25006,"side_channel_port":5705,"internal_port":28640},
+    {"host":"node2","address":"10.11.0.6","gpu":6,"cpus":"48-95","nic":"mlx5_6:1","port":25007,"side_channel_port":5706,"internal_port":28768},
+    {"host":"node2","address":"10.11.0.6","gpu":7,"cpus":"48-95","nic":"mlx5_7:1","port":25008,"side_channel_port":5707,"internal_port":28896}
+  ]
+}

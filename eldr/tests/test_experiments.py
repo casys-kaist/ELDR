@@ -72,7 +72,7 @@ class ExperimentTests(unittest.TestCase):
                 dict(
                     directory="unused-output",
                     source_site=dict(
-                        training_signatures="unused-counts",
+                        activations="unused-counts",
                         centroids="unused-transform",
                         model="qwen",
                         decoders=[None] * 16,
@@ -205,8 +205,7 @@ class ExperimentTests(unittest.TestCase):
             centroids=str(root / "fit.json"),
             training_prompts=str(root / "train.json"),
             labels=str(root / "labels.json"),
-            training_signatures=str(root / "counts.npy"),
-            paired_signatures=str(root / "counts.npy"),  # Plan-only fixture.
+            activations=str(root / "counts.npy"),  # Plan-only signature fixture.
             first_token_mode="prefill",
         )
         write_new_json(root / "config.json", config)

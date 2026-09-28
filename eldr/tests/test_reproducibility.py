@@ -15,10 +15,12 @@ from unittest.mock import patch
 
 import numpy as np
 
+from eldr.experiments.prepare_data import file_record, prepare
 from eldr.experiments.runner.inputs import configure_inputs
 from eldr.experiments.runner.results import (
     checked_path,
     request_metrics,
+    verify,
 )
 
 
@@ -50,29 +52,30 @@ def raw_result():
 
 class ReproducibilityTests(unittest.TestCase):
     def test_input_bundle_relocation_validation_and_no_cluster_access(self):
-        fields = (
-            "dataset",
-            "centroids",
-            "training_prompts",
-            "labels",
-            "training_signatures",
-            "paired_signatures",
-        )
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             source = root / "original"
             source.mkdir()
-            payload = b'{"seed": 1}'  # Other content parsers are tested separately.
-            (source / "data.bin").write_bytes(payload)
+            pairs = [[f"prompt-{i}", "label"] for i in range(16)]
+            (source / "training.json").write_text(json.dumps(pairs))
+            (source / "activations.npz").write_bytes(b"validated separately")
+            capture_hash = hashlib.sha256(b"validated separately").hexdigest()
+            centroid = dict(seed=1, n_fit=16, training_sha256=capture_hash)
+            (source / "centroids.json").write_text(json.dumps(centroid))
+            fields = dict(
+                dataset="training.json",
+                labels="training.json",
+                training_prompts="training.json",
+                centroids="centroids.json",
+                activations="activations.npz",
+            )
             manifest = dict(
-                schema_version=1,
-                files=[
-                    dict(path="data.bin", sha256=hashlib.sha256(payload).hexdigest())
-                ],
+                schema_version=2,
+                files=[file_record(source, p) for p in sorted(source.iterdir())],
                 settings={
-                    f"{model}-{workload}": dict.fromkeys(fields, "data.bin")
-                    for model in ("qwen", "gptoss", "gemma")
-                    for workload in ("task", "language")
+                    f"{m}-{w}": fields
+                    for m in ("qwen", "gptoss", "gemma")
+                    for w in ("task", "language")
                 },
             )
             (source / "manifest.json").write_text(json.dumps(manifest))
@@ -90,6 +93,14 @@ class ReproducibilityTests(unittest.TestCase):
                     )
                 )
             )
+            capture = dict(
+                request_ids=[hashlib.sha256(p.encode()).hexdigest() for p, _ in pairs],
+                metadata=dict(
+                    training_sha256=hashlib.sha256(
+                        (source / "training.json").read_bytes()
+                    ).hexdigest()
+                ),
+            )
             with (
                 patch(
                     "eldr.experiments.runner.config.load_config",
@@ -97,16 +108,11 @@ class ReproducibilityTests(unittest.TestCase):
                 ),
                 patch(
                     "eldr.experiments.runner.experiment.load_labeled_inputs",
-                    return_value=([], [None] * 16, {}),
+                    return_value=([], pairs, {}),
                 ),
                 patch(
-                    "eldr.experiments.runner.fit.read_capture",
-                    return_value=np.ones((16, 2, 2)),
-                ) as counts,
-                patch(
-                    "eldr.experiments.signature_ablation.read_paired_capture",
-                    return_value=(np.ones((16, 2, 2)),) * 3,
-                ),
+                    "eldr.experiments.runner.fit.read_activations", return_value=capture
+                ) as reader,
                 patch(
                     "eldr.experiments.runner.remote.Remote.run",
                     side_effect=AssertionError("No SSH allowed"),
@@ -118,9 +124,10 @@ class ReproducibilityTests(unittest.TestCase):
                 )
                 for path in output.glob("*.json"):
                     config = json.loads(path.read_text())
-                    self.assertEqual(config["dataset"], str(inputs / "data.bin"))
+                    self.assertEqual(config["dataset"], str(inputs / "training.json"))
                     self.assertEqual(
-                        config["dataset_sha256"], manifest["files"][0]["sha256"]
+                        config["training_prompts_sha256"],
+                        capture["metadata"]["training_sha256"],
                     )
                     self.assertEqual(
                         len(config["prefills"]),
@@ -129,21 +136,26 @@ class ReproducibilityTests(unittest.TestCase):
                     self.assertEqual(len(config["decoders"]), 16)
                 with self.assertRaisesRegex(ValueError, "already exists"):
                     configure_inputs(inputs, cluster, output)
-                counts.return_value = np.ones((15, 2, 2))
-                with self.assertRaisesRegex(ValueError, "row-count mismatch"):
+                reader.return_value = dict(
+                    capture, request_ids=capture["request_ids"][:-1]
+                )
+                with self.assertRaisesRegex(ValueError, "alignment mismatch"):
                     configure_inputs(inputs, cluster, root / "invalid-count")
                 self.assertFalse((root / "invalid-count").exists())
-                counts.return_value = np.ones((16, 2, 2))
-                (inputs / "data.bin").write_bytes(b'{"seed": 0}')
+                reader.return_value = capture
+                (inputs / "centroids.json").write_text(
+                    json.dumps(dict(centroid, seed=0))
+                )
                 wrong_seed = copy.deepcopy(manifest)
-                wrong_seed["files"][0]["sha256"] = hashlib.sha256(
-                    (inputs / "data.bin").read_bytes()
-                ).hexdigest()
+                wrong_seed["files"] = [
+                    file_record(inputs, inputs / row["path"])
+                    for row in manifest["files"]
+                ]
                 (inputs / "manifest.json").write_text(json.dumps(wrong_seed))
                 with self.assertRaisesRegex(ValueError, "fitting seed 1"):
                     configure_inputs(inputs, cluster, root / "invalid-seed")
                 self.assertFalse((root / "invalid-seed").exists())
-                (inputs / "data.bin").write_bytes(payload)
+                (inputs / "centroids.json").write_text(json.dumps(centroid))
                 for bad in (
                     dict(manifest, files=manifest["files"] * 2),
                     dict(manifest, settings={}),
@@ -161,7 +173,7 @@ class ReproducibilityTests(unittest.TestCase):
                         configure_inputs(inputs, cluster, root / "invalid")
                     self.assertFalse((root / "invalid").exists())
                 (inputs / "manifest.json").write_text(json.dumps(manifest))
-                (inputs / "data.bin").write_bytes(payload + b"changed")
+                (inputs / "activations.npz").write_bytes(b"changed")
                 with self.assertRaisesRegex(ValueError, "SHA-256"):
                     configure_inputs(inputs, cluster, root / "invalid")
 
@@ -223,24 +235,31 @@ class ReproducibilityTests(unittest.TestCase):
                             else ["--figure", stem, *arguments],
                         )
 
-    def test_prepare_data_delegates_to_existing_parsers(self):
+    def test_prepare_data_without_arguments_and_with_custom_cluster(self):
         script = Path(__file__).resolve().parents[1] / "scripts/prepare_data.sh"
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "checkout with spaces"
             target = root / "eldr/scripts/prepare_data.sh"
             target.parent.mkdir(parents=True)
             shutil.copyfile(script, target)
+            (root / "eldr/experiments").mkdir()
+            (root / "eldr/experiments/cluster.json").write_text("{}")
+            (root / "cluster with spaces.json").write_text("{}")
             binaries = root / ".venv/bin"
             binaries.mkdir(parents=True)
             (binaries / "uv").write_text("#!/bin/sh\nexit 0\n")
             (binaries / "uv").chmod(0o755)
+            (binaries / "flock").write_text("#!/bin/sh\nexit 0\n")
+            (binaries / "flock").chmod(0o755)
             interpreter = binaries / "python"
             interpreter.write_text('#!/bin/sh\nprintf "%s\\n" "$PWD" "$@"\nexit 19\n')
             interpreter.chmod(0o755)
-            for workload in ("task", "language"):
-                arguments = ["--tokenizer", "model with spaces", "--output", "new data"]
+            for arguments, config in (
+                ([], "eldr/experiments/cluster.json"),
+                (["--config", "cluster with spaces.json"], "cluster with spaces.json"),
+            ):
                 result = subprocess.run(
-                    ["bash", str(target), workload, *arguments],
+                    ["bash", str(target), *arguments],
                     cwd=directory,
                     capture_output=True,
                     text=True,
@@ -255,14 +274,14 @@ class ReproducibilityTests(unittest.TestCase):
                     [
                         str(root),
                         "-m",
-                        f"eldr.experiments.datasets.build_{workload}",
-                        *arguments,
+                        "eldr.experiments.prepare_data",
+                        "--config",
+                        config,
                     ],
                 )
             for arguments, expected in (
-                ([], 2),
                 (["unknown"], 2),
-                (["task"], 2),
+                (["--config"], 2),
                 (["--help"], 0),
             ):
                 result = subprocess.run(
@@ -270,10 +289,110 @@ class ReproducibilityTests(unittest.TestCase):
                 )
                 self.assertEqual(result.returncode, expected)
 
+    def test_fresh_preparation_resume_and_no_old_calibration(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            inputs = root / "inputs"
+            cluster = root / "cluster.json"
+            cluster.write_text(
+                json.dumps(
+                    dict(
+                        model_paths=dict.fromkeys(
+                            ("qwen", "gptoss", "gemma"), str(root)
+                        ),
+                        decoders=[{}] * 16,
+                    )
+                )
+            )
+
+            def build(stage, models):
+                target = stage / "data/task"
+                target.mkdir(parents=True)
+                (target / "training.json").write_text('[["new prompt", "label"]]')
+                (target / "evaluation.json").write_text("[]")
+                (target / "labels.json").write_text("{}")
+
+            def capture(config, training, output):
+                self.assertEqual(json.loads(training.read_text())[0][0], "new prompt")
+                output.mkdir(parents=True)
+                path = output / "activations.npz"
+                path.write_bytes(b"new GPU capture")
+                return path
+
+            def fit(source, output, *args, **kwargs):
+                self.assertEqual(source.read_bytes(), b"new GPU capture")
+                output.write_text('{"seed": 1}')
+
+            with (
+                patch("eldr.experiments.prepare_data.ROOT", root),
+                patch(
+                    "eldr.experiments.prepare_data.generation_spec",
+                    return_value={"seed": 1},
+                ),
+                patch(
+                    "eldr.experiments.prepare_data.build_prompts", side_effect=build
+                ) as builder,
+                patch("eldr.experiments.prepare_data.training_dataset"),
+                patch(
+                    "eldr.experiments.prepare_data.load_config",
+                    side_effect=lambda p, **kw: json.loads(p.read_text()),
+                ),
+                patch("eldr.experiments.prepare_data.deploy") as deploy,
+                patch(
+                    "eldr.experiments.prepare_data.capture", side_effect=capture
+                ) as gpu,
+                patch("eldr.experiments.prepare_data.fit_signature", side_effect=fit),
+            ):
+                # Parser failures publish neither partial data nor a manifest.
+                builder.side_effect = subprocess.CalledProcessError(1, "dataset parser")
+                with self.assertRaises(subprocess.CalledProcessError):
+                    prepare(inputs, cluster, ("qwen-task",))
+                self.assertEqual(list(inputs.iterdir()), [])
+                builder.side_effect = build
+                # Failed GPU jobs preserve parsed data and are rerunnable.
+                gpu.side_effect = RuntimeError("GPU failed")
+                with self.assertRaisesRegex(RuntimeError, "GPU failed"):
+                    prepare(inputs, cluster, ("qwen-task",))
+                self.assertEqual(
+                    json.loads((inputs / "manifest.json").read_text())["settings"], {}
+                )
+                self.assertFalse((inputs / "calibration/qwen-task").exists())
+                builder.reset_mock()
+                gpu.side_effect = capture
+                prepare(inputs, cluster, ("qwen-task",))
+                builder.assert_not_called()
+                manifest = json.loads((inputs / "manifest.json").read_text())
+                verify(dict(measurements=manifest["files"]), inputs)
+                gpu.reset_mock()
+                deploy.reset_mock()
+                prepare(inputs, cluster, ("qwen-task",))
+                gpu.assert_not_called()
+                deploy.assert_not_called()
+                # Reject a changed capture before launching or overwriting anything.
+                path = inputs / "calibration/qwen-task/activations.npz"
+                path.write_bytes(b"changed")
+                with self.assertRaisesRegex(ValueError, "SHA-256"):
+                    prepare(inputs, cluster, ("qwen-task",))
+                gpu.assert_not_called()
+                self.assertEqual(path.read_bytes(), b"changed")
+                old = root / "old-inputs"
+                old.mkdir()
+                (old / "manifest.json").write_text('{"schema_version": 1}')
+                with self.assertRaisesRegex(ValueError, "old/different"):
+                    prepare(old, cluster, ("qwen-task",))
+                unrecognized = root / "unrecognized"
+                unrecognized.mkdir()
+                (unrecognized / "calibration.tar.xz").write_bytes(b"old archive")
+                with self.assertRaisesRegex(ValueError, "Unrecognized nonempty"):
+                    prepare(unrecognized, cluster, ("qwen-task",))
+                builder.assert_not_called()
+
     def test_figure_scripts_help_missing_arguments_and_overwrite_guards(self):
         scripts = Path(__file__).resolve().parents[1] / "scripts"
         with tempfile.TemporaryDirectory() as directory:
             for script in scripts.glob("*.sh"):
+                if script.name == "prepare_data.sh":
+                    continue  # Its verified reuse and CLI are tested above.
                 plotting = script.name.startswith("plot_")
                 inputs = ["saved"] if plotting else ["--config", "config.json"]
                 for arguments, code in (
@@ -302,8 +421,8 @@ class ReproducibilityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "checkout with spaces"
             shutil.copytree(scripts, root / "eldr/scripts")
-            (root / "eldr/inputs").mkdir()
-            (root / "eldr/inputs/cluster.json").write_text("{}")
+            (root / "eldr/experiments").mkdir()
+            (root / "eldr/experiments/cluster.json").write_text("{}")
             (root / "cluster with spaces.json").write_text("{}")
             binaries = root / "bin"
             binaries.mkdir()

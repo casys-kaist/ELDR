@@ -39,12 +39,12 @@ if [[ -n $resume ]]; then
     fi
     output=$resume profile=${saved[0]} figure=${saved[1]}
 else
-    config=${config:-eldr/inputs/cluster.json}
+    config=${config:-eldr/experiments/cluster.json}
     profile=${profile:-paper}
     output=${output:-eldr/artifacts/runs/$figure-$profile-$(date -u +%Y%m%dT%H%M%S)-$BASHPID}
     if [[ ! -f $config || -e $output || -L $output ]]; then
         usage >&2
-        printf 'Provide eldr/inputs/cluster.json (or --config) and a new output directory.\n' >&2
+        printf 'Provide eldr/experiments/cluster.json (or --config) and a new output directory.\n' >&2
         exit 2
     fi
 fi

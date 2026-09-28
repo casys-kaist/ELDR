@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
 """Balanced versus vanilla spherical K-means, same frozen signature and seed."""
 
 from pathlib import Path
@@ -19,7 +21,7 @@ def configure(config, output, policies):
         for name in CLUSTERINGS
     ]
     worker_group = plan_worker_group(
-        config, folder, variants, inputs=("training_signatures", "training_prompts")
+        config, folder, variants, inputs=("activations", "training_prompts")
     )
     worker_group["site"]["centroids"] = str(folder / "balanced.json")
     worker_group["site"].pop("centroids_sha256", None)
@@ -30,7 +32,7 @@ def prepare(worker_group):
     config, folder = worker_group["source_site"], Path(worker_group["directory"])
     for name in CLUSTERINGS:
         fit_centroids(
-            Path(config["training_signatures"]),
+            Path(config["activations"]),
             folder / f"{name}.json",
             config["model"],
             len(config["decoders"]),
