@@ -178,7 +178,7 @@ class ReproducibilityTests(unittest.TestCase):
         self.assertEqual(
             {p.name for p in scripts.glob("*.sh")},
             {f"{prefix}{stem}.sh" for stem in figures for prefix in ("", "plot_")}
-            | {"run_all.sh", "plot_all.sh"},
+            | {"run_all.sh", "plot_all.sh", "prepare_data.sh"},
         )
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "checkout with spaces"
@@ -222,6 +222,53 @@ class ReproducibilityTests(unittest.TestCase):
                             if prefix
                             else ["--figure", stem, *arguments],
                         )
+
+    def test_prepare_data_delegates_to_existing_parsers(self):
+        script = Path(__file__).resolve().parents[1] / "scripts/prepare_data.sh"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "checkout with spaces"
+            target = root / "eldr/scripts/prepare_data.sh"
+            target.parent.mkdir(parents=True)
+            shutil.copyfile(script, target)
+            binaries = root / ".venv/bin"
+            binaries.mkdir(parents=True)
+            (binaries / "uv").write_text("#!/bin/sh\nexit 0\n")
+            (binaries / "uv").chmod(0o755)
+            interpreter = binaries / "python"
+            interpreter.write_text('#!/bin/sh\nprintf "%s\\n" "$PWD" "$@"\nexit 19\n')
+            interpreter.chmod(0o755)
+            for workload in ("task", "language"):
+                arguments = ["--tokenizer", "model with spaces", "--output", "new data"]
+                result = subprocess.run(
+                    ["bash", str(target), workload, *arguments],
+                    cwd=directory,
+                    capture_output=True,
+                    text=True,
+                    timeout=15,
+                    env=dict(
+                        os.environ, PATH=str(binaries) + os.pathsep + os.environ["PATH"]
+                    ),
+                )
+                self.assertEqual(result.returncode, 19, result.stderr)
+                self.assertEqual(
+                    result.stdout.splitlines(),
+                    [
+                        str(root),
+                        "-m",
+                        f"eldr.experiments.datasets.build_{workload}",
+                        *arguments,
+                    ],
+                )
+            for arguments, expected in (
+                ([], 2),
+                (["unknown"], 2),
+                (["task"], 2),
+                (["--help"], 0),
+            ):
+                result = subprocess.run(
+                    ["bash", str(target), *arguments], capture_output=True, timeout=15
+                )
+                self.assertEqual(result.returncode, expected)
 
     def test_figure_scripts_help_missing_arguments_and_overwrite_guards(self):
         scripts = Path(__file__).resolve().parents[1] / "scripts"

@@ -31,6 +31,21 @@ The authors prepare the models, serving image, Docker/ROCm/RDMA, uv, rsync and
 SSH control connections. Reviewers share the cluster and must run one at a time.
 Allow **1–2 days** for the full suite, including model loading and compilation.
 
+## Prepare datasets
+
+To regenerate prompts from the pinned public sources, run these separately from
+the experiments. Both use the Qwen tokenizer, as in the original data preparation:
+
+```bash
+bash eldr/scripts/prepare_data.sh task --tokenizer /mnt/md0/models/qwen3-30b-a3b --output eldr/artifacts/datasets/task
+bash eldr/scripts/prepare_data.sh language --tokenizer /mnt/md0/models/qwen3-30b-a3b --output eldr/artifacts/datasets/language
+```
+
+The script installs the data dependencies and writes fit/evaluation JSON files
+and label sidecars to a **new** directory. It does not overwrite `eldr/inputs/`
+or regenerate expert captures and centroids. Compare regenerated prompts with
+the calibration inputs before replacing a frozen AE bundle.
+
 ## Experiments
 
 Run scripts are in [eldr/scripts/](eldr/scripts/); each also generates its plots.

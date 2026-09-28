@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
 """Build disjoint Language fit/evaluation prompts from pinned WildChat-1M.
 
 Extract the first user turn, deduplicate, and keep prompts of 4–1024 tokens.
 Write lang.fit.json, lang.eval.json and label sidecars under --output.
-Run with: .venv/bin/python -m eldr.experiments.datasets.build_lang --help
+Run with: .venv/bin/python -m eldr.experiments.datasets.build_language --help
 """
 
 import hashlib
