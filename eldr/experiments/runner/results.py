@@ -11,8 +11,6 @@ import numpy as np
 
 from eldr.experiments.runner.workers import write_new_json
 
-QUANTILES = (50, 95, 99)
-
 
 def checked_path(root: Path, row: dict) -> Path:
     relative = Path(row["path"])

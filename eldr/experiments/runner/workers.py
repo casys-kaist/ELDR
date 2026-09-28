@@ -42,7 +42,7 @@ def http(url, body=None, timeout=10):
 
 
 def source_files(root):
-    """Serving source, native extensions and runtime assets; no private capsules."""
+    """Serving/experiment sources and runtime assets; no private inputs or results."""
     paths = []
     for prefix in (
         "vllm",
@@ -60,8 +60,8 @@ def source_files(root):
             )
             and not any(part.startswith(".") for part in p.relative_to(root).parts)
         )
-    paths.extend(root / p for p in ("eldr/__init__.py", "eldr/serving/clustering.py"))
-    paths.append(root / "eldr/experiments/__init__.py")
+    paths.extend((root / "eldr/scripts").glob("*.sh"))
+    paths.extend(root / p for p in ("eldr/__init__.py", "eldr/requirements.txt"))
     return sorted(set(p for p in paths if p.exists() and "__pycache__" not in p.parts))
 
 

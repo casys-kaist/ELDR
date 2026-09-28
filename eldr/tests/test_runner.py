@@ -43,11 +43,15 @@ class RunnerTests(unittest.TestCase):
             "vllm/entrypoints/serve/instrumentator/static/swagger-ui.css",
             "vllm/entrypoints/serve/instrumentator/static/swagger-ui-bundle.js",
             "eldr/serving/proxy.py",
+            "eldr/scripts/run_all.sh",
+            "eldr/scripts/fig10_main_task.sh",
+            "eldr/requirements.txt",
         )
         excluded = (
             "vllm/__pycache__/cached.pyc",
             "vllm/.cache/profile.json",
             "eldr/experiments/private-cluster.json",
+            "eldr/scripts/private-cluster.json",
             "eldr/artifacts/data.json",
         )
         with tempfile.TemporaryDirectory() as directory:

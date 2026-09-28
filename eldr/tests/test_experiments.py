@@ -22,6 +22,7 @@ from eldr.experiments.runner.experiment import (
     build_domain_mapping,
     collect,
     plan_experiment,
+    plan_worker_group,
     prompt_hash,
     run_experiment,
 )
@@ -35,6 +36,16 @@ from eldr.tests.test_reproducibility import raw_result
 
 
 class ExperimentTests(unittest.TestCase):
+    def test_worker_group_preserves_explicit_prefix_cache_setting(self):
+        for config in ({}, {"prefix_cache": False}, {"prefix_cache": True}):
+            with self.subTest(config=config):
+                original = dict(config)
+                group = plan_worker_group(config, Path("unused"), [])
+                self.assertEqual(
+                    group["site"]["prefix_cache"], config.get("prefix_cache", True)
+                )
+                self.assertEqual(config, original)
+
     def test_public_experiments_are_exactly_the_six_ae_experiments(self):
         self.assertEqual(
             set(EXPERIMENTS),
@@ -315,6 +326,13 @@ class ExperimentTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             config, path = self.config(root)
+            resume_sources = [
+                root / "eldr/scripts/run_all.sh",
+                root / "eldr/requirements.txt",
+            ]
+            for source in resume_sources:
+                source.parent.mkdir(parents=True, exist_ok=True)
+                source.write_text("original\n")
             output = root / "out"
             with patch(
                 "eldr.experiments.runner.experiment.load_config", return_value=config
@@ -434,6 +452,12 @@ class ExperimentTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "Source changed"):
                     resume("--execute")
                 (output / "sources.json").write_bytes(saved_sources)
+                for source in resume_sources:
+                    with self.subTest(source=source):
+                        source.write_text("changed\n")
+                        with self.assertRaisesRegex(ValueError, "Source changed"):
+                            resume("--execute")
+                        source.write_text("original\n")
                 changed_plan = copy.deepcopy(plan)
                 changed_plan["profile"] = "paper"
                 (output / "plan.json").write_text(json.dumps(changed_plan))

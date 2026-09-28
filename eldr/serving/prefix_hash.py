@@ -1,11 +1,12 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
 """Stateless prefix-hash router for prefill workers.
 
 Algorithm:
   1. Hash the first N bytes of the request's prompt key (deterministic).
   2. Consistent-hash-ring lookup over worker URLs picks an "initial" worker.
   3. Keep that worker if its load <= avg_load * load_factor.
-  4. Otherwise select the least-loaded worker under the threshold.
-  5. If all exceed the threshold, retain the initial worker.
+  4. Otherwise select the least-loaded worker (always under the threshold).
 
 Properties:
   - Stateless: same prompt bytes -> same worker, every run, every variant.
@@ -17,6 +18,7 @@ Reference: SGLang's prefix-hash policy (sgl-model-gateway/src/policies/prefix_ha
 
 import bisect
 import hashlib
+import math
 from collections.abc import Sequence
 
 
@@ -57,8 +59,8 @@ class PrefixHashRouter:
             raise ValueError("worker_urls must be non-empty")
         if prefix_byte_count <= 0:
             raise ValueError("prefix_byte_count must be positive")
-        if load_factor < 1.0:
-            raise ValueError("load_factor must be >= 1.0")
+        if not math.isfinite(load_factor) or load_factor < 1.0:
+            raise ValueError("load_factor must be finite and >= 1.0")
 
         self.worker_urls = list(worker_urls)
         self.prefix_byte_count = int(prefix_byte_count)
@@ -109,13 +111,8 @@ class PrefixHashRouter:
         if loads[initial] <= threshold:
             return initial
 
-        # 4) Initial overloaded -> least-loaded among workers still under threshold.
-        candidates = [i for i in workers if loads[i] <= threshold]
-        if candidates:
-            return min(candidates, key=lambda i: (loads[i], i))
-
-        # 5) All overloaded -> stick with the initial.
-        return initial
+        # The minimum is <= average, and load_factor >= 1 keeps it eligible.
+        return min(workers, key=lambda i: (loads[i], i))
 
     # ----- helpers -----
 

@@ -256,7 +256,13 @@ async def handle(request):
                 await stream_response.write(chunk)
             await stream_response.write_eof()
             return stream_response
-    except Exception:
+    except Exception as error:
+        if isinstance(
+            error, (aiohttp.ClientConnectorError, aiohttp.ConnectionTimeoutError)
+        ):
+            # No request reached D. Response timeouts/cancellation are ambiguous:
+            # leave those transfers to D or the upstream expiry path.
+            submitted = False
         if stream_response is not None:
             # Never turn a partial completion into an apparently successful one.
             await stream_response.write(
@@ -268,9 +274,11 @@ async def handle(request):
         if decoder is not None:
             app["decode_inflight"][decoder] -= 1
         if not submitted:
-            # EOS, a one-token budget, routing error, or an early disconnect:
-            # release P's pinned KV through upstream's pre-aborted D request.
-            await release_prefill(session, app["decode"][0], transfer)
+            # Release through another D when the selected endpoint could not connect.
+            release_decoder = next(
+                (url for url in app["decode"] if url != decoder), app["decode"][0]
+            )
+            await release_prefill(session, release_decoder, transfer)
 
 
 async def routing_status(request):

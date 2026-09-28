@@ -3,6 +3,7 @@
 """Fixed-fleet baselines preserve deterministic placement and load guards."""
 
 import unittest
+from itertools import product
 from unittest.mock import patch
 
 from eldr.serving.baselines import BaselineRouter
@@ -74,3 +75,20 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(router.select(b"", [2, 1, 1]), 1)
         with self.assertRaises(ValueError):
             router.select(b"prompt", [0])
+        for factor in (0.5, float("nan"), float("inf")):
+            with self.subTest(factor=factor), self.assertRaises(ValueError):
+                PrefixHashRouter(["a"], load_factor=factor)
+
+    def test_prefix_fallback_matches_threshold_filtered_minimum(self):
+        for factor in (1.0, 1.25, 2.0):
+            router = PrefixHashRouter(["a", "b", "c"], load_factor=factor)
+            initial = router.select(b"prefix", [0, 0, 0])
+            for loads in product(range(4), repeat=3):
+                threshold = (sum(loads) + 1) / 3 * factor
+                eligible = [i for i in range(3) if loads[i] <= threshold]
+                expected = (
+                    initial
+                    if loads[initial] <= threshold
+                    else min(eligible, key=lambda i: (loads[i], i))
+                )
+                self.assertEqual(router.select(b"prefix", loads), expected)

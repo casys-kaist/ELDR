@@ -9,7 +9,12 @@ import unittest
 from types import SimpleNamespace as NS
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from aiohttp import web
+from aiohttp import (
+    ClientConnectorError,
+    ConnectionTimeoutError,
+    ServerTimeoutError,
+    web,
+)
 
 from eldr.serving.proxy import handle, make_decode_router
 
@@ -149,6 +154,53 @@ class ProxyStreamTests(unittest.IsolatedAsyncioTestCase):
         last = self.output.write.await_args_list[-1].args[0]
         self.assertIn(b'"error"', last)
         self.assertEqual(self.app["decode_inflight"], {"d": 0})
+
+    async def test_only_known_connection_failures_release_prefill_via_another_decoder(
+        self,
+    ):
+        failures = (
+            (
+                ClientConnectorError(
+                    NS(host="d", port=80, ssl=False), OSError(111, "refused")
+                ),
+                True,
+            ),
+            (ConnectionTimeoutError("connect timed out"), True),
+            (ServerTimeoutError("response timed out"), False),
+            (asyncio.CancelledError(), False),
+        )
+        for streaming in (False, True):
+            for error, released in failures:
+                with self.subTest(streaming=streaming, error=type(error).__name__):
+                    self.setUp()
+                    self.body["stream"] = streaming
+                    self.app["decode"].append("other")
+                    self.app["decode_inflight"]["other"] = 0
+                    self.app["decode_router"] = make_decode_router(
+                        "rr", self.app["decode"], 0
+                    )
+                    connection = context(None)
+                    connection.__aenter__.side_effect = error
+                    self.session.post.side_effect = [
+                        context(self.prefill),
+                        connection,
+                        context(self.decode),
+                    ]
+                    with (
+                        patch(
+                            "eldr.serving.proxy.web.StreamResponse",
+                            return_value=self.output,
+                        ),
+                        self.assertRaises(type(error)),
+                    ):
+                        await handle(self.request)
+                    self.assertEqual(
+                        [call.args[0] for call in self.session.post.call_args_list],
+                        ["p/v1/completions", "d/v1/completions"]
+                        + (["other/v1/kv_transfer/release"] if released else []),
+                    )
+                    self.assertEqual(self.app["prefill_inflight"], {"p": 0})
+                    self.assertEqual(self.app["decode_inflight"], {"d": 0, "other": 0})
 
     async def test_cancellation_releases_decode_load(self):
         self.output.write.side_effect = [None, asyncio.CancelledError()]

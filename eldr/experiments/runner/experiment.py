@@ -45,7 +45,7 @@ def plan_worker_group(config, folder, variants, *, inputs=()):
         key=folder.name,
         directory=str(folder),
         source_site=config,
-        site=dict(config, prefix_cache=True),
+        site={"prefix_cache": True, **config},
         variants=variants,
         extra_inputs=inputs,
     )
