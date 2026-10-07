@@ -1,3 +1,4 @@
+# Modified for ELDR: removed GitHub Actions dependency updates.
 version: 2
 updates:
   - package-ecosystem: "pip"
