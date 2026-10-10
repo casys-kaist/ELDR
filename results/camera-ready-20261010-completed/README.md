@@ -2,15 +2,17 @@
 
 Fresh measurements from `run-2cpu-rr-eldr` and its matching
 `run-2cpu-baselines` supplement, using two proxy CPU cores.
+The separate 100 req/s prefix-cache measurements come from
+`run-2cpu-ablations100/fig16_prefix_cache`.
 Unless varied by an ablation, ELDR uses Full signatures (counts × IDF,
 calibrated layer mask, L2 normalization), locality-band JSQ (tau = 0.1),
 and online centroid refitting with a 5-second history and 1-second interval.
 Outputs are capped at 512 tokens.
 Raw requests, input/source hashes and worker cleanup were checked before plotting.
 
-The existing paper-style renderers were reused. The prefix-cache TTFT axis is
-0–160 ms to fit these measurements; no data are clipped. These are result previews;
-the paper and the artifact's main branch are unchanged.
+The existing paper-style renderers were reused. Prefix-cache TTFT axes are
+0–160 ms at 60 req/s and 0–240 ms at 100 req/s; no data are clipped.
+Publishing these previews does not update the paper or the artifact's main branch.
 The approved Main Task and Main Language layouts use shared P50/P99 axis limits
 and ticks within each model, with at least three integer TTFT ticks per model.
 
@@ -25,11 +27,13 @@ and ticks within each model, with at least three integer TTFT ticks per model.
 | Signature | Task and Language | [PDF](fig13_signature.pdf) | [PNG](fig13_signature.png) |
 | Cluster balance | Task and Language | [PDF](fig14_cluster_balance.pdf) | [PNG](fig14_cluster_balance.png) |
 | Locality band | Task and Language | [PDF](fig15_locality_band.pdf) | [PNG](fig15_locality_band.png) |
-| Prefix cache | GPT-OSS Task, cache off/on | [PDF](fig16_prefix_cache.pdf) | [PNG](fig16_prefix_cache.png) |
+| Prefix cache, 60 req/s | GPT-OSS Task, cache off/on | [PDF](fig16_prefix_cache.pdf) | [PNG](fig16_prefix_cache.png) |
+| Prefix cache, 100 req/s | GPT-OSS Task, cache off/on, four new measurements | [PDF](prefix_cache_100reqs.pdf) | [PNG](prefix_cache_100reqs.png) |
 
-Main figures use 20/40/60/80/100 requests/s on 8P16D. Ablations use 60 requests/s;
-prefix cache uses 1P16D. Main plots show TPOT P50/P99 and TTFT P50. Ablation bars
-and heatmaps show latency change relative to matched RR: **negative is better**.
+Main figures use 20/40/60/80/100 requests/s on 8P16D. Other ablations use 60 requests/s;
+Prefix cache has separate 60 and 100 req/s results on 1P16D. Main plots show
+TPOT P50/P99 and TTFT P50. Ablation bars and heatmaps show latency change
+relative to matched RR: **negative is better**.
 All results are single measurements per configuration, not confidence intervals.
 
 Each complete six-policy Main figure combines 30 RR/ELDR measurements from
@@ -41,3 +45,5 @@ No earlier paused run or reviewer results are used.
 
 Adjacent CSV files contain the plotted measurements, TPOT P95, and raw-result
 SHA-256 hashes. Task/Language ablation summaries are separate CSV files.
+The 100 req/s prefix-cache provenance file records its source run, inputs and
+renderer hashes; the preserved 60 req/s results are not replaced or averaged with it.
