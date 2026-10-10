@@ -1,0 +1,115 @@
+{
+  "created_utc": "2026-10-10T06:13:16.515205+00:00",
+  "sources": {
+    "run-2cpu-rr-eldr": {
+      "experiment": "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig11_main_language",
+      "plan_sha256": "592793e51d844ef85490a4cf38938963cccfbe4c499ecfcb84262768c25056bc",
+      "sources_sha256": "2ccc0ea5065fe5007b76a54d32a339347c02622db24325901bea6c09be2afa4e",
+      "summary_sha256": "a4f730931017f02a4ec38cd3e72abb86aebb957239975b96c3655f88c9127388"
+    },
+    "run-2cpu-baselines": {
+      "experiment": "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-baselines/fig11_main_language",
+      "plan_sha256": "f9b414ceb2aab6a0b341310484d1f0f3a17faa322e0d36718ec41a19fee35881",
+      "sources_sha256": "2ccc0ea5065fe5007b76a54d32a339347c02622db24325901bea6c09be2afa4e",
+      "summary_sha256": "e533127b9ae513125fb3d2b0259773d5bba2325950d74293ec93611e53e1306e"
+    }
+  },
+  "measurement_count": 90,
+  "models": [
+    "qwen",
+    "gptoss",
+    "gemma"
+  ],
+  "policies": [
+    "random",
+    "rr",
+    "jsq",
+    "p2c",
+    "domain",
+    "eldr"
+  ],
+  "rates": [
+    20,
+    40,
+    60,
+    80,
+    100
+  ],
+  "plotter_sha256": "392ca7d5fcfb8048c4aa994d3c84db10efff962bacff7ba1825ec43ffb992887",
+  "style_sha256": "f3f1eee50e59bf6491563d63f2f57ca7366c2b9fbb341d84d2d75660bffa28d7",
+  "validation": "All 90 raw hashes, counts, metrics, saved source/input hashes and cleanup verified.",
+  "notes": "30 RR/Full-online ELDR plus 60 matched two-core baseline measurements. No paused run or reviewer data. Original renderer with approved shared P50/P99 axes and integer TTFT ticks; measurements unchanged.",
+  "axes": [
+    {
+      "model": "qwen",
+      "tpot_limits": [
+        13.135250654835216,
+        30.4439005886775
+      ],
+      "tpot_ticks": [
+        10.0,
+        15.0,
+        20.0,
+        25.0,
+        30.0,
+        35.0
+      ],
+      "ttft_limits": [
+        58.301034243777394,
+        71.22593637555838
+      ],
+      "ttft_ticks": [
+        60.0,
+        65.0,
+        70.0
+      ]
+    },
+    {
+      "model": "gptoss",
+      "tpot_limits": [
+        20.44924110770608,
+        58.846810733911866
+      ],
+      "tpot_ticks": [
+        20.0,
+        30.0,
+        40.0,
+        50.0,
+        60.0
+      ],
+      "ttft_limits": [
+        84.40575966378674,
+        162.27036487311125
+      ],
+      "ttft_ticks": [
+        90.0,
+        120.0,
+        150.0
+      ]
+    },
+    {
+      "model": "gemma",
+      "tpot_limits": [
+        9.041714711582248,
+        28.192436679454843
+      ],
+      "tpot_ticks": [
+        5.0,
+        10.0,
+        15.0,
+        20.0,
+        25.0,
+        30.0
+      ],
+      "ttft_limits": [
+        53.709835023619235,
+        64.48974929749966
+      ],
+      "ttft_ticks": [
+        56.0,
+        60.0,
+        64.0
+      ]
+    }
+  ]
+}

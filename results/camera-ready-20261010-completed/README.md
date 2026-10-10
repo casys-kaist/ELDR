@@ -11,15 +11,15 @@ Raw requests, input/source hashes and worker cleanup were checked before plottin
 The existing paper-style renderers were reused. The prefix-cache TTFT axis is
 0–160 ms to fit these measurements; no data are clipped. These are result previews;
 the paper and the artifact's main branch are unchanged.
-The approved Main Task layout uses shared P50/P99 axis limits and ticks within
-each model, with integer TTFT ticks. The completed-model Language preview uses
-the same layout.
+The approved Main Task and Main Language layouts use shared P50/P99 axis limits
+and ticks within each model, with at least three integer TTFT ticks per model.
 
 | Figure | Scope | PDF | PNG |
 | --- | --- | --- | --- |
 | Main Task | Three models; all six policies, 90 measurements | [PDF](main_task_all_policies.pdf) | [PNG](main_task_all_policies.png) |
 | Main Task, RR/ELDR preview | Three models; RR and ELDR only | [PDF](fig10_main_task.pdf) | [PNG](fig10_main_task.png) |
-| Main Language, completed models | Qwen and GPT-OSS; all six policies, 60 measurements | [PDF](main_language_qwen_gptoss_all_policies.pdf) | [PNG](main_language_qwen_gptoss_all_policies.png) |
+| Main Language | Three models; all six policies, 90 measurements | [PDF](main_language_all_policies.pdf) | [PNG](main_language_all_policies.png) |
+| Main Language, earlier two-model preview | Qwen and GPT-OSS; all six policies, 60 measurements | [PDF](main_language_qwen_gptoss_all_policies.pdf) | [PNG](main_language_qwen_gptoss_all_policies.png) |
 | Main Language, RR/ELDR preview | Three models; RR and ELDR only | [PDF](fig11_main_language.pdf) | [PNG](fig11_main_language.png) |
 | Qwen Task | All six policies, completed | [PDF](main_task_qwen_all_policies.pdf) | [PNG](main_task_qwen_all_policies.png) |
 | Signature | Task and Language | [PDF](fig13_signature.pdf) | [PNG](fig13_signature.png) |
@@ -32,13 +32,11 @@ prefix cache uses 1P16D. Main plots show TPOT P50/P99 and TTFT P50. Ablation bar
 and heatmaps show latency change relative to matched RR: **negative is better**.
 All results are single measurements per configuration, not confidence intervals.
 
-The Main Task six-policy figure combines 30 completed RR/ELDR measurements with
-60 supplementary measurements from `run-2cpu-baselines`, using identical source,
-inputs, topology, CPU allocation and traffic settings. Its CSV explicitly identifies
-both source runs. The earlier Qwen-only preview is retained above. The completed-model
-Language preview likewise combines 20 RR/ELDR measurements with 40 supplementary
-measurements for Qwen and GPT-OSS. Gemma's baseline supplement is still running
-and is excluded from this preview.
+Each complete six-policy Main figure combines 30 RR/ELDR measurements from
+`run-2cpu-rr-eldr` with 60 measurements from `run-2cpu-baselines`, using identical
+source, inputs, topology, CPU allocation and traffic settings. Their CSV/JSON files
+identify each row's `source_run`; the Language provenance file also records the
+validated plans, source manifests and plotter hashes. Earlier previews are retained.
 No earlier paused run or reviewer results are used.
 
 Adjacent CSV files contain the plotted measurements, TPOT P95, and raw-result
