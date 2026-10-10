@@ -1,6 +1,7 @@
 # Completed camera-ready experiment previews — 2026-10-10
 
-Fresh measurements from `run-2cpu-rr-eldr`, using two proxy CPU cores.
+Fresh measurements from `run-2cpu-rr-eldr` and its matching
+`run-2cpu-baselines` supplement, using two proxy CPU cores.
 Unless varied by an ablation, ELDR uses Full signatures (counts × IDF,
 calibrated layer mask, L2 normalization), locality-band JSQ (tau = 0.1),
 and online centroid refitting with a 5-second history and 1-second interval.
@@ -13,7 +14,8 @@ the paper and the artifact's main branch are unchanged.
 
 | Figure | Scope | PDF | PNG |
 | --- | --- | --- | --- |
-| Main Task | Three models; RR and ELDR only | [PDF](fig10_main_task.pdf) | [PNG](fig10_main_task.png) |
+| Main Task | Three models; all six policies, 90 measurements | [PDF](main_task_all_policies.pdf) | [PNG](main_task_all_policies.png) |
+| Main Task, RR/ELDR preview | Three models; RR and ELDR only | [PDF](fig10_main_task.pdf) | [PNG](fig10_main_task.png) |
 | Main Language | Three models; RR and ELDR only | [PDF](fig11_main_language.pdf) | [PNG](fig11_main_language.png) |
 | Qwen Task | All six policies, completed | [PDF](main_task_qwen_all_policies.pdf) | [PNG](main_task_qwen_all_policies.png) |
 | Signature | Task and Language | [PDF](fig13_signature.pdf) | [PNG](fig13_signature.png) |
@@ -26,11 +28,12 @@ prefix cache uses 1P16D. Main plots show TPOT P50/P99 and TTFT P50. Ablation bar
 and heatmaps show latency change relative to matched RR: **negative is better**.
 All results are single measurements per configuration, not confidence intervals.
 
-The Qwen Task six-policy figure combines the completed RR/ELDR measurements with
-20 supplementary measurements from `run-2cpu-baselines`, using identical source,
+The Main Task six-policy figure combines 30 completed RR/ELDR measurements with
+60 supplementary measurements from `run-2cpu-baselines`, using identical source,
 inputs, topology, CPU allocation and traffic settings. Its CSV explicitly identifies
-both source runs. Supplementary baselines for other model–workload settings are
-still running and are not shown. No earlier paused run or reviewer results are used.
+both source runs. The earlier Qwen-only preview is retained above. The complete
+Main Language baseline supplement is still running and is not plotted here.
+No earlier paused run or reviewer results are used.
 
 Adjacent CSV files contain the plotted measurements, TPOT P95, and raw-result
 SHA-256 hashes. Task/Language ablation summaries are separate CSV files.
