@@ -33,10 +33,11 @@ Overleaf compiles the generated PDFs; Python runs locally, not inside Overleaf.
 and red distinguish ablation alternatives and the ELDR configuration,
 respectively. ELDR bars and legend entries are on the right in the signature
 and cluster-balance comparisons, with configuration-only legend labels.
-The signature-quality table lists five transformations' six-cell means in
+The signature-quality table lists four transformations' six-cell means in
 ascending order, with the highest mean in bold and no min/max whiskers.
-Gate-logit results remain in `data/rho_transform.json` but are omitted from
-the compact table; gate probability remains the continuous comparison.
+Gate-logit and square-root-count results remain in `data/rho_transform.json`
+but are omitted from the compact table; gate probability remains the
+continuous comparison.
 Blue/red cell colors in the locality
 heatmap denote signed improvement/regression, not policy identity; all
 band-width ticks use the same neutral styling. Task/Language and domain colors

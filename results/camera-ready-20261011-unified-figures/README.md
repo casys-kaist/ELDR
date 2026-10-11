@@ -9,7 +9,7 @@ TTFT ticks. RR curves and markers are drawn above overlapping baseline curves.
 ELDR configurations are red/right and comparison configurations blue/left in
 the signature and cluster-balance bar charts and legends; legend labels give
 only the configuration names, without an "ELDR" suffix. The signature-quality
-comparison is now a native LaTeX table of five transformations' six-cell means
+comparison is now a native LaTeX table of four transformations' six-cell means
 in ascending order, with the highest mean in bold. Locality-band heatmap colors retain
 their signed-value meaning; all band-width ticks use the same neutral styling.
 Fig. 4 uses blue mixed-domain and red same-domain curves, with extra space
@@ -40,7 +40,7 @@ The figure is about 10% shorter without reducing font sizes;
 the signature-return and KV-transfer labels are separated. The fixed transform
 is explained in the paper text, not inside the router box.
 Paper update:
-[`f1820f5`](https://github.com/fzheart/ELDR-ATC26/commit/f1820f522b522bc28216b1c2c53d5ce40560fb28).
+[`ef01a24`](https://github.com/fzheart/ELDR-ATC26/commit/ef01a24a1763f32898933bf6e91eb0d2f0ea3308).
 
 ## Locality band: newly validated five-rate results
 
@@ -77,13 +77,14 @@ This publication neither launches experiments nor changes the running queue.
 ![Mean signature quality](tables/signature_quality.png)
 
 Equal-weight means across three models and two workloads; no request pooling.
-The compact table displays five transformations and retains gate probability
-as the continuous comparison. Gate-logit measurements remain in the unchanged
-input file but are not displayed. All headers fit on one line; the caption
-states the metric and averaging scope without the ordering sentence.
+The compact table displays four transformations and retains gate probability
+as the continuous comparison. Gate-logit and square-root-count measurements
+remain in the unchanged input file but are not displayed. All headers fit on
+one line; the caption states the metric and averaging scope without the
+ordering sentence.
 The preview is cropped from the compiled paper's native LaTeX table, using
 the same font, booktabs rules and caption spacing as the other paper tables.
-The five values are generated from the unchanged [inputs](plots/data/rho_transform.json)
+The four values are generated from the unchanged [inputs](plots/data/rho_transform.json)
 by [plot_sig_transform.py](plots/plot_sig_transform.py) into
 [sig_transform_table.tex](plots/sig_transform_table.tex). The former bar chart
 remains recoverable in Git history. Subsequent figure and table numbers follow
