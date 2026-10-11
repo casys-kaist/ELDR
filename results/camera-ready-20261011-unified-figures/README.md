@@ -2,7 +2,8 @@
 
 All 19 paper figures redrawn from their plotting code or HTML diagrams, with
 embedded DejaVu Sans text. No PDF-to-vector conversion or text outlining is used.
-RR is orange and ELDR is red in policy comparisons. The approved main-result
+RR is blue (`#1f77b4`) and ELDR is red (`#d62728`) in policy comparisons;
+P2C is orange (`#ff7f0e`) in the main figures. The approved main-result
 axes are preserved: matching P50/P99 axes per model, and at least three integer
 TTFT ticks. ACM document spacing is unchanged.
 
@@ -11,9 +12,11 @@ exact PDFs. Plotting sources, compact inputs and font-license notices are in
 [`plots/`](plots/README.md). See [`font-audit.json`](font-audit.json): all 19
 figures have embedded, searchable text and no Type 3 fonts. The updated paper
 also compiled successfully to 16 pages with no Type 3 or unembedded fonts.
-An independent redraw from a clean copy of the bundled sources matched all
-19 paper figures pixel-for-pixel. Paper update:
-[`2268f8a`](https://github.com/fzheart/ELDR-ATC26/commit/2268f8a7065000dc9882ba9c602351d270e68013).
+The palette revision was checked against the previous PDFs: all drawing
+geometry, labels and ticks are identical, with only the requested RR/P2C
+colors changed. Clustering and signed heatmap palettes are unchanged.
+Paper update:
+[`ed04802`](https://github.com/fzheart/ELDR-ATC26/commit/ed048021983ee5ac74ab7dfaa99bcd5af6fa81aa).
 
 ## Locality band: newly validated five-rate results
 

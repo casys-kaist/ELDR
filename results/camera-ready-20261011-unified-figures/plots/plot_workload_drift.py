@@ -18,7 +18,7 @@ import figstyle as plot_style
 
 METHODS = ("rr", "static", "online")
 LABELS = ("RR", "Static ELDR", "Online ELDR")
-# Match the paper's main plots: RR orange, ELDR red.
+# Match the paper's main plots: RR blue, ELDR red.
 # Static ELDR is the additional neutral comparator in this figure.
 COLORS = (plot_style.RR_COLOR, "#7f7f7f", plot_style.ELDR_COLOR)
 MARKERS = ("s", "D", "o")

@@ -3,7 +3,7 @@ import csv
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-from figstyle import apply, save, WIDTH, DATA, OUTPUT
+from figstyle import apply, save, WIDTH, DATA, OUTPUT, RR_COLOR, ELDR_COLOR
 from matplotlib.ticker import MaxNLocator
 
 OUT = OUTPUT / "06_evaluation"
@@ -15,11 +15,11 @@ PRETTY = {"qwen": "Qwen3-30B-A3B",
 
 ROUTERS = [
     ("random", "Random",       "#7f7f7f", "-", "v"),
-    ("rr",     "RR",           "#ff7f0e", "-", "s"),
+    ("rr",     "RR",           RR_COLOR,  "-", "s"),
     ("jsq",    "JSQ",          "#2ca02c", "-", "^"),
-    ("p2c",    "P2C",          "#1f77b4", "-", "D"),
+    ("p2c",    "P2C",          "#ff7f0e", "-", "D"),
     ("domain", "Domain",       "#9467bd", "-", "P"),
-    ("eldr",   "ELDR",         "#d62728", "-", "o"),
+    ("eldr",   "ELDR",         ELDR_COLOR, "-", "o"),
 ]
 
 METRICS = [

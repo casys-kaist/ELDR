@@ -25,8 +25,9 @@ Overleaf compiles the generated PDFs; Python runs locally, not inside Overleaf.
 
 ## Shared presentation
 
-`figstyle.py` defines typography, palette and legend styling. RR is orange and
-ELDR is red in policy comparisons, matching the approved main figures. Blue
+`figstyle.py` defines typography, palette and legend styling. RR is blue
+(`#1f77b4`) and ELDR is red (`#d62728`) in policy comparisons. P2C is orange
+(`#ff7f0e`) in the main figures so each policy has a distinct color. Blue
 shades distinguish signature/clustering variants; blue/red in the locality
 heatmap denotes signed improvement/regression, not policy identity. Legends
 use square light-gray frames. Dense multipanel figures retain compact text

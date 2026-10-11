@@ -1,7 +1,7 @@
 """fig_qwen235_2p8d — Qwen3-235B-A22B 2P8D × TP=4 × EP=4 WildChat τ=0.1.
 
 Two-panel TPOT P50 / P99, matching the original paper figure:
-WIDTH × 2.8 flat, DejaVu 15/14, RR=orange square, ELDR=red circle,
+WIDTH × 2.8 flat, DejaVu 15/14, RR=blue square, ELDR=red circle,
 lw=2 ms=6, boxed centered legend above, 600dpi.
 """
 import json

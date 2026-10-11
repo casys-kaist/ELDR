@@ -26,7 +26,7 @@ WIDTH = 7.4                                   # 2-column paper width (inches)
 BLUES = ["#08519c", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef"]   # dark -> light
 GREYS = ["#d9d9d9", "#f0f0f0"]
 FONT, LABEL, TICK, LEG = 16, 16, 14, 14       # the size convention
-RR_COLOR, ELDR_COLOR = "#ff7f0e", "#d62728"
+RR_COLOR, ELDR_COLOR = "#1f77b4", "#d62728"
 
 
 def apply():
