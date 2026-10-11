@@ -43,11 +43,9 @@
   <div class="phase" style="left:4px;top:4px;width:312px;height:62px;"></div>
   <div class="tab" style="left:11px;top:9px;">Centroid fitting
       <span style="font-size:8.5px;font-weight:normal;letter-spacing:0;">(initial + async refitting)</span></div>
-  <div class="b acc" style="left:18px;top:28px;width:98px;height:30px;">
+  <div class="b acc" style="left:18px;top:28px;width:90px;height:32px;">
       <span>Expert<br>signatures</span></div>
-  <div class="b acc" style="left:134px;top:28px;width:70px;height:30px;">
-      <span>Balanced</span><span><i>K</i>-means</span></div>
-  <div class="b acc" style="left:228px;top:28px;width:74px;height:30px;">
+  <div class="b acc" style="left:212px;top:28px;width:90px;height:32px;">
       <span><i>K</i> centroids</span><span class="sub note">One per decoder</span></div>
 
   <!-- Request serving: step numbers match the five steps in the text. -->
@@ -76,8 +74,7 @@
     </defs>
     <!-- request / response flow: solid -->
     <g stroke="#222A33" stroke-width="1" fill="none">
-      <line x1="116" y1="43" x2="134" y2="43" marker-end="url(#mf)"/>
-      <line x1="204" y1="43" x2="228" y2="43" marker-end="url(#mf)"/>
+      <line x1="108" y1="44" x2="212" y2="44" marker-end="url(#mf)"/>
       <line x1="150" y1="110" x2="150" y2="125" marker-end="url(#mf)"/>
       <line x1="170" y1="125" x2="170" y2="110" marker-end="url(#mf)"/>
       <line x1="93" y1="159" x2="67" y2="190" marker-end="url(#mf)"/>
@@ -90,9 +87,11 @@
     </g>
     <!-- The router reads current centroids without waiting for refitting. -->
     <g stroke="#222A33" stroke-width="1.1" fill="none" stroke-dasharray="1,2.5" stroke-linecap="round">
-      <path d="M265,58 V142 H238" marker-end="url(#mf)"/>
+      <path d="M257,60 V142 H238" marker-end="url(#mf)"/>
     </g>
   </svg>
+
+  <div class="lab labc" style="left:160px;top:29px;">Balanced <i>K</i>-means</div>
 
   <!-- client I/O -->
   <div class="lab labr" style="left:142px;top:112px;">Request</div>
