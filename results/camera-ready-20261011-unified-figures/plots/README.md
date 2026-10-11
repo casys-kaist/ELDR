@@ -52,7 +52,10 @@ One "Expert signatures" input covers both calibration and recent signatures;
 initial fitting and asynchronous refitting share one balanced K-means stage.
 Only the centroid-to-router state arrow is drawn; the collection of signatures
 for background fitting is explained in the paper text. Its router box is
-labeled only "ELDR Router". IDF and the fixed layer mask are described in
+labeled only "ELDR router". Standalone labels use sentence case, the Decode
+box omits the redundant token-generation label, and the centroid-update
+arrow is black and dotted. Vertical spacing is compacted without reducing
+font sizes. IDF and the fixed layer mask are described in
 the paper text rather than inside that box.
 ACM class settings and document float/caption spacing are not changed.
 

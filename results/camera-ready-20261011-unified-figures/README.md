@@ -27,15 +27,17 @@ geometry, labels, ticks and colors are identical; only stacking order changed.
 Ablation checks confirm unchanged measurements, bar heights, whiskers, axes
 and heatmap cells despite the color/order updates. No new results are substituted.
 Fig. 6 combines initialization and asynchronous refitting in "Centroid fitting",
-with one "Expert signatures" input into balanced K-means. A single dotted
+with one "Expert signatures" input into balanced K-means. A single black dotted
 arrow starts at the bottom center of the centroid box and supplies the resulting
 centroids to the router; the feedback arrow from
 the router to the signature input is omitted. The other region is "Request serving".
-Its router box is labeled only "ELDR Router";
+Its router box is labeled only "ELDR router". Standalone labels use sentence
+case, and the Decode box no longer has the token-generation annotation.
+The figure is about 10% shorter without reducing font sizes;
 the signature-return and KV-transfer labels are separated. The fixed transform
 is explained in the paper text, not inside the router box.
 Paper update:
-[`fe31f99`](https://github.com/fzheart/ELDR-ATC26/commit/fe31f99fd3106ca37a5c4908fbad7d8e8cd2b05e).
+[`21e209e`](https://github.com/fzheart/ELDR-ATC26/commit/21e209e394426a6a58e81b8266f54eab1cdf4780).
 
 ## Locality band: newly validated five-rate results
 
