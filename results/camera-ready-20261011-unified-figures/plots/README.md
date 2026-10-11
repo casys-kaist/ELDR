@@ -1,7 +1,9 @@
 # Paper figure sources
 
-Plotting code and compact inputs for all 19 figures included in `main.tex`.
-The scripts write directly to `../figure/`. They do not run GPU experiments,
+Plotting code and compact inputs for all 18 figures and the signature-quality
+table included in `main.tex`. Figure scripts write directly to `../figure/`;
+`plot_sig_transform.py` writes the native LaTeX `sig_transform_table.tex`.
+They do not run GPU experiments,
 launch measurements, convert PDFs, or outline text.
 
 With Python 3.12, [uv](https://docs.astral.sh/uv/getting-started/installation/),
@@ -30,9 +32,9 @@ Overleaf compiles the generated PDFs; Python runs locally, not inside Overleaf.
 (`#ff7f0e`) in the main figures so each policy has a distinct color. Blue
 and red distinguish ablation alternatives and the ELDR configuration,
 respectively. ELDR bars and legend entries are on the right in the signature
-and cluster-balance comparisons, with configuration-only legend labels;
-the signature-quality chart also places
-ELDR's count·idf transform last. Blue/red cell colors in the locality
+and cluster-balance comparisons, with configuration-only legend labels.
+The signature-quality table lists six-cell means in ascending order, with
+the highest mean in bold and no min/max whiskers. Blue/red cell colors in the locality
 heatmap denote signed improvement/regression, not policy identity; all
 band-width ticks use the same neutral styling. Task/Language and domain colors
 retain their separate meanings. Legends
@@ -45,8 +47,9 @@ The batch-locality figure uses blue for mixed-domain batches and red for
 same-domain batches, with extra space between the legend and model titles.
 The layer-selection figure uses blue for Task and red for Language; its shared
 y-axis spans 0.58–0.90 without clipping any measured values.
-The overview separates initialization, the numbered
-request path and asynchronous background refitting; its router box is
+The overview has two regions, "Centroid fitting" and "Request serving".
+Calibration signatures initialize the centroids and recent signatures refresh
+them asynchronously through the same balanced K-means stage. Its router box is
 labeled only "ELDR Router". IDF and the fixed layer mask are described in
 the paper text rather than inside that box.
 ACM class settings and document float/caption spacing are not changed.
@@ -57,7 +60,7 @@ ACM class settings and document float/caption spacing are not changed.
 | MoE latency | `plot_moe_latency.py` | `u2_*.log` |
 | Active experts vs. batch size | `plot_active_experts.py` | `opportunity_*.json` |
 | Language distribution | `plot_language_mix.py` | `wc_langdist.json` |
-| Signature transform | `plot_sig_transform.py` | `rho_transform.json` |
+| Signature-quality table (native LaTeX) | `plot_sig_transform.py` | `rho_transform.json` |
 | Layer selection | `plot_sig_layers.py` | `sig_layers.json` |
 | Signature PCA | `plot_cluster_pca.py` | `cluster_pca.json` |
 | Main Task/Language | `plot_main.py` | `main_task.csv`, `main_lang.csv` |

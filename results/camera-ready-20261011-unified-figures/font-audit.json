@@ -384,17 +384,17 @@
   {
     "figure": 6,
     "path": "figure/04_design/fig_overview.pdf",
-    "paper_page": 6,
+    "paper_page": 5,
     "fonts": [
       {
         "name": "UWGIWA+DejaVu-Sans-Bold",
         "type": "Type0",
-        "embedded_program_bytes": 34864
+        "embedded_program_bytes": 33736
       },
       {
         "name": "XKQQSR+DejaVu-Sans",
         "type": "Type0",
-        "embedded_program_bytes": 33976
+        "embedded_program_bytes": 34524
       },
       {
         "name": "XVXMKB+DejaVu-Sans-Italic",
@@ -408,14 +408,14 @@
       }
     ],
     "has_type3": false,
-    "text_spans": 41,
+    "text_spans": 35,
     "raster_images": 0,
     "paper_width_pt": 240.04483188044836,
     "font_spans_at_paper_scale": [
       {
         "font": "DejaVu-Sans-Bold",
         "size_pt": 7.13,
-        "count": 3
+        "count": 2
       },
       {
         "font": "DejaVu-Sans",
@@ -423,23 +423,18 @@
         "count": 6
       },
       {
-        "font": "DejaVu-Sans-Italic",
-        "size_pt": 8.25,
-        "count": 2
-      },
-      {
         "font": "DejaVu-Sans",
         "size_pt": 6.38,
-        "count": 2
+        "count": 3
       },
       {
         "font": "DejaVu-Sans",
-        "size_pt": 7.13,
-        "count": 13
+        "size_pt": 7.5,
+        "count": 1
       },
       {
         "font": "DejaVu-Sans-Italic",
-        "size_pt": 7.13,
+        "size_pt": 8.25,
         "count": 2
       },
       {
@@ -459,8 +454,8 @@
       },
       {
         "font": "DejaVu-Sans",
-        "size_pt": 7.5,
-        "count": 1
+        "size_pt": 7.13,
+        "count": 9
       },
       {
         "font": "DejaVu-Sans-Bold",
@@ -473,25 +468,25 @@
         "stroke": "None",
         "fill": "(0.1333329975605011, 0.1647060066461563, 0.20000000298023224)",
         "paper_width_pt": 0.0,
-        "count": 13
-      },
-      {
-        "stroke": "(0.6039220094680786, 0.6509799957275391, 0.6980389952659607)",
-        "fill": "None",
-        "paper_width_pt": 0.75,
-        "count": 12
-      },
-      {
-        "stroke": "None",
-        "fill": "(0.18431399762630463, 0.4352940022945404, 0.6588240265846252)",
-        "paper_width_pt": 0.0,
-        "count": 8
+        "count": 14
       },
       {
         "stroke": "(0.1333329975605011, 0.1647060066461563, 0.20000000298023224)",
         "fill": "None",
         "paper_width_pt": 0.75,
+        "count": 9
+      },
+      {
+        "stroke": "(0.6039220094680786, 0.6509799957275391, 0.6980389952659607)",
+        "fill": "None",
+        "paper_width_pt": 0.75,
         "count": 8
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.18431399762630463, 0.4352940022945404, 0.6588240265846252)",
+        "paper_width_pt": 0.0,
+        "count": 7
       },
       {
         "stroke": "None",
@@ -533,111 +528,12 @@
         "stroke": "(0.18431399762630463, 0.4352940022945404, 0.6588240265846252)",
         "fill": "None",
         "paper_width_pt": 0.825,
-        "count": 3
+        "count": 2
       }
     ]
   },
   {
     "figure": 7,
-    "path": "figure/04_design/sig_transform.pdf",
-    "paper_page": 7,
-    "fonts": [
-      {
-        "name": "GCWXDV+DejaVuSans-Oblique",
-        "type": "Type0",
-        "embedded_program_bytes": 3072
-      },
-      {
-        "name": "BMQQDV+DejaVuSans",
-        "type": "Type0",
-        "embedded_program_bytes": 10336
-      }
-    ],
-    "has_type3": false,
-    "text_spans": 20,
-    "raster_images": 0,
-    "paper_width_pt": 228.0425902864259,
-    "font_spans_at_paper_scale": [
-      {
-        "font": "DejaVuSans",
-        "size_pt": 6.06,
-        "count": 12
-      },
-      {
-        "font": "DejaVuSans",
-        "size_pt": 5.63,
-        "count": 6
-      },
-      {
-        "font": "DejaVuSans",
-        "size_pt": 6.93,
-        "count": 1
-      },
-      {
-        "font": "DejaVuSans-Oblique",
-        "size_pt": 6.93,
-        "count": 1
-      }
-    ],
-    "drawing_styles": [
-      {
-        "stroke": "(0.0, 0.0, 0.0)",
-        "fill": "(0.0, 0.0, 0.0)",
-        "paper_width_pt": 0.346,
-        "count": 12
-      },
-      {
-        "stroke": "(0.06668192893266678, 0.06668192893266678, 0.06668192893266678)",
-        "fill": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
-        "paper_width_pt": 0.736,
-        "count": 12
-      },
-      {
-        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
-        "fill": "None",
-        "paper_width_pt": 0.217,
-        "count": 6
-      },
-      {
-        "stroke": "(0.06668192893266678, 0.06668192893266678, 0.06668192893266678)",
-        "fill": "None",
-        "paper_width_pt": 0.736,
-        "count": 6
-      },
-      {
-        "stroke": "(0.0, 0.0, 0.0)",
-        "fill": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
-        "paper_width_pt": 0.346,
-        "count": 5
-      },
-      {
-        "stroke": "(0.0, 0.0, 0.0)",
-        "fill": "None",
-        "paper_width_pt": 0.303,
-        "count": 4
-      },
-      {
-        "stroke": "None",
-        "fill": "(1.0, 1.0, 1.0)",
-        "paper_width_pt": 0.0,
-        "count": 2
-      },
-      {
-        "stroke": "None",
-        "fill": "(0.0, 0.0, 0.0)",
-        "paper_width_pt": 0.0,
-        "count": 1
-      },
-      {
-        "stroke": "(0.0, 0.0, 0.0)",
-        "fill": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
-        "paper_width_pt": 0.346,
-        "count": 1
-      }
-    ]
-  },
-  {
-    "figure": 8,
     "path": "figure/04_design/sig_layers.pdf",
     "paper_page": 8,
     "fonts": [
@@ -731,7 +627,7 @@
     ]
   },
   {
-    "figure": 9,
+    "figure": 8,
     "path": "figure/04_design/cluster_pca.pdf",
     "paper_page": 8,
     "fonts": [
@@ -851,7 +747,7 @@
     ]
   },
   {
-    "figure": 10,
+    "figure": 9,
     "path": "figure/04_design/fig_prefix_coherence.pdf",
     "paper_page": 9,
     "fonts": [
@@ -1023,7 +919,7 @@
     ]
   },
   {
-    "figure": 11,
+    "figure": 10,
     "path": "figure/06_evaluation/fig_main_task.pdf",
     "paper_page": 10,
     "fonts": [
@@ -1178,7 +1074,7 @@
     ]
   },
   {
-    "figure": 12,
+    "figure": 11,
     "path": "figure/06_evaluation/fig_main_lang.pdf",
     "paper_page": 10,
     "fonts": [
@@ -1333,7 +1229,7 @@
     ]
   },
   {
-    "figure": 13,
+    "figure": 12,
     "path": "figure/06_evaluation/fig_expert_reduction.pdf",
     "paper_page": 11,
     "fonts": [
@@ -1405,7 +1301,7 @@
     ]
   },
   {
-    "figure": 14,
+    "figure": 13,
     "path": "figure/06_evaluation/fig_transform_ablation.pdf",
     "paper_page": 12,
     "fonts": [
@@ -1493,7 +1389,7 @@
     ]
   },
   {
-    "figure": 15,
+    "figure": 14,
     "path": "figure/06_evaluation/fig_cluster_ablation.pdf",
     "paper_page": 12,
     "fonts": [
@@ -1591,7 +1487,7 @@
     ]
   },
   {
-    "figure": 16,
+    "figure": 15,
     "path": "figure/06_evaluation/fig_tau_ablation.pdf",
     "paper_page": 12,
     "fonts": [
@@ -1654,7 +1550,7 @@
     ]
   },
   {
-    "figure": 17,
+    "figure": 16,
     "path": "figure/06_evaluation/fig_prefix_cache_gptoss_task.pdf",
     "paper_page": 12,
     "fonts": [
@@ -1731,7 +1627,7 @@
     ]
   },
   {
-    "figure": 18,
+    "figure": 17,
     "path": "figure/06_evaluation/fig_workload_drift.pdf",
     "paper_page": 13,
     "fonts": [
@@ -1857,7 +1753,7 @@
     ]
   },
   {
-    "figure": 19,
+    "figure": 18,
     "path": "figure/06_evaluation/fig_qwen235_2p8d.pdf",
     "paper_page": 13,
     "fonts": [
