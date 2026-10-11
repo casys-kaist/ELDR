@@ -13,7 +13,7 @@ for ax, (tag, name) in zip(axes, [
     ("gemma", "Gemma-4-26B-A4B"),
 ]):
     for key, label, color in [
-        ("task", "Task", fs.BLUES[0]), ("lang", "Language", "#e6550d"),
+        ("task", "Task", fs.RR_COLOR), ("lang", "Language", fs.ELDR_COLOR),
     ]:
         cum = data[tag][key]
         ax.plot(np.arange(1, len(cum) + 1), cum, "-", color=color,
@@ -29,7 +29,8 @@ for ax, (tag, name) in zip(axes, [
     for sp in ax.spines.values():
         sp.set_linewidth(0.7)
 axes[0].set_ylabel(r"Cumulative $\rho$")
-axes[0].set_ylim(0.5, 1.0)
+axes[0].set_ylim(0.58, 0.90)
+axes[0].set_yticks([0.6, 0.7, 0.8, 0.9])
 h, labels = axes[0].get_legend_handles_labels()
 fig.subplots_adjust(top=0.78, bottom=0.17, left=0.085, right=0.99, wspace=0.08)
 fig.legend(h, labels, ncol=2, fontsize=fs.LEG, frameon=True,

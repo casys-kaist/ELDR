@@ -11,7 +11,9 @@ the signature and cluster-balance bar charts and legends; legend labels give
 only the configuration names, without an "ELDR" suffix. The signature-quality
 chart also places count·idf last in red. Locality-band heatmap colors retain
 their signed-value meaning; all band-width ticks use the same neutral styling.
-Fig. 4 uses blue mixed-domain and red same-domain curves.
+Fig. 4 uses blue mixed-domain and red same-domain curves, with extra space
+between the legend and model titles. Fig. 8 uses blue for Task and red for
+Language, with a shared 0.58–0.90 y-axis and all measured values and peaks retained.
 ACM document spacing is unchanged.
 
 The PDFs below are the paper assets; the PNGs are previews rendered from those
@@ -28,7 +30,7 @@ background centroid refitting. Its router box is labeled only "ELDR Router";
 the signature-return and KV-transfer labels are separated. The fixed transform
 is explained in the paper text, not inside the router box.
 Paper update:
-[`c82d13a`](https://github.com/fzheart/ELDR-ATC26/commit/c82d13a7deb4f92e6f8fb85f470a1fd127460515).
+[`3f082a8`](https://github.com/fzheart/ELDR-ATC26/commit/3f082a8fa50be4883282aaadb0aa256992610239).
 
 ## Locality band: newly validated five-rate results
 

@@ -42,7 +42,10 @@ figures retain their approved shared P50/P99 axes and integer TTFT ticks.
 RR curves and markers are drawn above the other policies without changing
 the legend order, line widths, colors or data.
 The batch-locality figure uses blue for mixed-domain batches and red for
-same-domain batches. The overview separates initialization, the numbered
+same-domain batches, with extra space between the legend and model titles.
+The layer-selection figure uses blue for Task and red for Language; its shared
+y-axis spans 0.58–0.90 without clipping any measured values.
+The overview separates initialization, the numbered
 request path and asynchronous background refitting; its router box is
 labeled only "ELDR Router". IDF and the fixed layer mask are described in
 the paper text rather than inside that box.

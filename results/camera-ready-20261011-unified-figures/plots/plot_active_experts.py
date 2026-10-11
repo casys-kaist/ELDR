@@ -39,7 +39,7 @@ for i, (rlab, mph, pph) in enumerate(rows):
         ax.set_ylim(28, 124); ax.set_xlim(12, 148)   # x-margin so edge %-labels don't collide
 for j in range(3): axes[1, j].set_xlabel("Batch size", fontsize=14)
 h, l = axes[0, 0].get_legend_handles_labels()
-fig.legend(h, l, loc="upper center", ncol=2, frameon=True, bbox_to_anchor=(0.5, 1.03), fontsize=14)
+fig.legend(h, l, loc="upper center", ncol=2, frameon=True, bbox_to_anchor=(0.5, 1.10), fontsize=14)
 fig.subplots_adjust(left=0.13, right=0.91, top=0.85, bottom=0.10, wspace=0.08, hspace=0.18)
 fig.supylabel("Active experts per decode step", fontsize=14, x=0.045)   # units on the LEFT
 for i, rlab in [(0, "Task"), (1, "Language")]:                   # row identifiers on the RIGHT
