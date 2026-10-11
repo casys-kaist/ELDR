@@ -12,7 +12,7 @@ fs.apply()
 R = str(fs.DATA)
 MODELS = [("qwen", "Qwen3-30B-A3B"), ("gptoss", "GPT-OSS-120B"), ("gemma", "Gemma-4-26B-A4B")]
 BS = [32, 64, 128]
-MIX, PURE = "#e8702a", "#1f4e8c"   # orange (mixed) vs blue (same-domain) -- distinct
+MIX, PURE = fs.RR_COLOR, fs.ELDR_COLOR   # blue (mixed), red (same-domain)
 
 data = {m: json.load(open(f"{R}/opportunity_{m}.json")) for m, _ in MODELS}
 

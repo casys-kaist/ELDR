@@ -285,14 +285,14 @@
         "count": 24
       },
       {
-        "stroke": "(0.9098039269447327, 0.43921568989753723, 0.16470588743686676)",
-        "fill": "(0.9098039269447327, 0.43921568989753723, 0.16470588743686676)",
+        "stroke": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
+        "fill": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
         "paper_width_pt": 0.458,
         "count": 19
       },
       {
-        "stroke": "(0.12156862765550613, 0.30588236451148987, 0.5490196347236633)",
-        "fill": "(0.12156862765550613, 0.30588236451148987, 0.5490196347236633)",
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
         "paper_width_pt": 0.458,
         "count": 19
       },
@@ -303,13 +303,13 @@
         "count": 7
       },
       {
-        "stroke": "(0.9098039269447327, 0.43921568989753723, 0.16470588743686676)",
+        "stroke": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
         "fill": "None",
         "paper_width_pt": 0.917,
         "count": 7
       },
       {
-        "stroke": "(0.12156862765550613, 0.30588236451148987, 0.5490196347236633)",
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
         "fill": "None",
         "paper_width_pt": 0.917,
         "count": 7
@@ -394,7 +394,7 @@
       {
         "name": "XKQQSR+DejaVu-Sans",
         "type": "Type0",
-        "embedded_program_bytes": 34264
+        "embedded_program_bytes": 33976
       },
       {
         "name": "XVXMKB+DejaVu-Sans-Italic",
@@ -408,7 +408,7 @@
       }
     ],
     "has_type3": false,
-    "text_spans": 42,
+    "text_spans": 41,
     "raster_images": 0,
     "paper_width_pt": 240.04483188044836,
     "font_spans_at_paper_scale": [
@@ -430,7 +430,7 @@
       {
         "font": "DejaVu-Sans",
         "size_pt": 6.38,
-        "count": 3
+        "count": 2
       },
       {
         "font": "DejaVu-Sans",
@@ -1412,7 +1412,7 @@
       {
         "name": "BMQQDV+DejaVuSans",
         "type": "Type0",
-        "embedded_program_bytes": 15476
+        "embedded_program_bytes": 15120
       }
     ],
     "has_type3": false,
@@ -1505,7 +1505,7 @@
       {
         "name": "BMQQDV+DejaVuSans",
         "type": "Type0",
-        "embedded_program_bytes": 13624
+        "embedded_program_bytes": 13280
       }
     ],
     "has_type3": false,
@@ -1596,11 +1596,6 @@
     "paper_page": 12,
     "fonts": [
       {
-        "name": "EVICAO+DejaVuSans-Bold",
-        "type": "Type0",
-        "embedded_program_bytes": 4424
-      },
-      {
         "name": "GCWXDV+DejaVuSans-Oblique",
         "type": "Type0",
         "embedded_program_bytes": 3020
@@ -1619,12 +1614,7 @@
       {
         "font": "DejaVuSans",
         "size_pt": 5.65,
-        "count": 18
-      },
-      {
-        "font": "DejaVuSans-Bold",
-        "size_pt": 5.65,
-        "count": 2
+        "count": 20
       },
       {
         "font": "DejaVuSans-Oblique",

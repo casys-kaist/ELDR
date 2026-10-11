@@ -126,7 +126,7 @@ def main():
         Patch(facecolor=c_gate, edgecolor="black", linewidth=0.5,
               label="gate-prob"),
         Patch(facecolor=c_count, edgecolor="black", linewidth=0.5,
-              label=r"count$\cdot$idf (ELDR)"),
+              label=r"count$\cdot$idf"),
     ]
     # Compute layout with tight_layout first, then explicitly nudge the axes
     # top down and anchor the legend just above it — this guarantees the

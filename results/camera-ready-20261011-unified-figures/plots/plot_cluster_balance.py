@@ -125,7 +125,7 @@ def main():
         Patch(facecolor=c_kmpure, edgecolor="black", linewidth=0.5,
               label="$K$-means"),
         Patch(facecolor=c_kmbal,  edgecolor="black", linewidth=0.5,
-              label="balanced $K$-means (ELDR)"),
+              label="balanced $K$-means"),
     ]
     plt.tight_layout()
     plt.subplots_adjust(top=0.80, bottom=0.10,

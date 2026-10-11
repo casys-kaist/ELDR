@@ -30,18 +30,22 @@ Overleaf compiles the generated PDFs; Python runs locally, not inside Overleaf.
 (`#ff7f0e`) in the main figures so each policy has a distinct color. Blue
 and red distinguish ablation alternatives and the ELDR configuration,
 respectively. ELDR bars and legend entries are on the right in the signature
-and cluster-balance comparisons; the signature-quality chart also places
+and cluster-balance comparisons, with configuration-only legend labels;
+the signature-quality chart also places
 ELDR's count·idf transform last. Blue/red cell colors in the locality
-heatmap denote signed improvement/regression, not policy identity; only
-the default 0.1 tick is highlighted in red. Task/Language and domain colors
+heatmap denote signed improvement/regression, not policy identity; all
+band-width ticks use the same neutral styling. Task/Language and domain colors
 retain their separate meanings. Legends
 use square light-gray frames. Dense multipanel figures retain compact text
 sizes, while titles, labels and ticks keep a consistent hierarchy. The main
 figures retain their approved shared P50/P99 axes and integer TTFT ticks.
 RR curves and markers are drawn above the other policies without changing
 the legend order, line widths, colors or data.
-The overview separates initialization, the numbered request path and
-asynchronous background refitting; IDF and the layer mask stay fixed.
+The batch-locality figure uses blue for mixed-domain batches and red for
+same-domain batches. The overview separates initialization, the numbered
+request path and asynchronous background refitting; its router box is
+labeled only "ELDR Router". IDF and the fixed layer mask are described in
+the paper text rather than inside that box.
 ACM class settings and document float/caption spacing are not changed.
 
 | Figure content | Source | Input in `data/` |
