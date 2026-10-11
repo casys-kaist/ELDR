@@ -48,8 +48,10 @@ same-domain batches, with extra space between the legend and model titles.
 The layer-selection figure uses blue for Task and red for Language; its shared
 y-axis spans 0.58–0.90 without clipping any measured values.
 The overview has two regions, "Centroid fitting" and "Request serving".
-Calibration signatures initialize the centroids and recent signatures refresh
-them asynchronously through the same balanced K-means stage. Its router box is
+One "Expert signatures" input covers both calibration and recent signatures;
+initial fitting and asynchronous refitting share one balanced K-means stage.
+Only the centroid-to-router state arrow is drawn; the collection of signatures
+for background fitting is explained in the paper text. Its router box is
 labeled only "ELDR Router". IDF and the fixed layer mask are described in
 the paper text rather than inside that box.
 ACM class settings and document float/caption spacing are not changed.
