@@ -1,0 +1,36 @@
+{
+  "sources": {
+    "fig13_signature/task": [
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig13_signature/task",
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig13_signature/task"
+    ],
+    "fig13_signature/language": [
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig13_signature/language",
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig13_signature/language"
+    ],
+    "fig14_cluster_balance/task": [
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig14_cluster_balance/task",
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig14_cluster_balance/task"
+    ],
+    "fig14_cluster_balance/language": [
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig14_cluster_balance/language",
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig14_cluster_balance/language"
+    ],
+    "fig15_locality_band/task": [
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig15_locality_band/task",
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig15_locality_band/task"
+    ],
+    "fig15_locality_band/language": [
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig15_locality_band/language",
+      "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig15_locality_band/language"
+    ]
+  },
+  "rates": [
+    20,
+    40,
+    60,
+    80,
+    100
+  ],
+  "aggregation": "Equal-weight mean of matched RR-relative percentage changes at each rate; no pooled requests."
+}

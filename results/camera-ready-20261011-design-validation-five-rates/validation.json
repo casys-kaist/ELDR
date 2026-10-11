@@ -1,0 +1,72 @@
+{
+  "measurements": 360,
+  "added_measurements": 288,
+  "preserved_rate60_measurements": 72,
+  "rates": [
+    20,
+    40,
+    60,
+    80,
+    100
+  ],
+  "per_rate_comparisons": 240,
+  "mean_comparisons": 48,
+  "aggregation": "mean over five matched per-rate 100*(candidate/RR - 1); negative is faster",
+  "prior_raw_revalidation": "All 360 raw hashes, counts and metrics were independently rechecked at 2026-10-11 22:45 KST.",
+  "input_sha256": {
+    "/mnt/md0/eldr-paper-language-20261010.LGCjeK/plots/figstyle.py": "40734bf1d58a33ca5a610aaa841a4d40fdaa1554d078984cbdf74e9fa3c08ef1",
+    "/mnt/md0/eldr-paper-language-20261010.LGCjeK/plots/plot_signature_ablation.py": "1bfe547b09900e01730ceed58df48d4ead916fcc8b002483c5cdce8ccf1f86b4",
+    "/mnt/md0/eldr-paper-language-20261010.LGCjeK/plots/plot_cluster_balance.py": "1196bf747d64a819bc9f67175b1ba7607558aafa791a8a20a2d8f34b48bd8512",
+    "/mnt/md0/eldr-paper-language-20261010.LGCjeK/plots/plot_locality_band.py": "332cf5d016b69ac31394458ce5650912d14bc0e7b02a2332c31b226bdd2580b1",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/figures-five-rates/complete.json": "23d1a7bdb28e811c0cc9d106e05d4f1d62bade40ea7d73e0054df4d60f134412",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/figures-five-rates/source_runs.json": "0ff4ed90003738d6e76bb663f5ca54033bb9023623cf2e512cb8d7c6e025e960",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/figures-five-rates/fig13_signature-task.json": "27e925639135922e7eda5b47060f657bf280a3fd00b0771b12f7080f114353e1",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/figures-five-rates/fig13_signature-language.json": "302bf20d6dcbf441e50795028b522ccb372ae54b821b023e1174c95ef50c9010",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/figures-five-rates/fig14_cluster_balance-task.json": "d5a670828444401f32e0b75f902d350a22d912bf31316f08914f7210cf283a7b",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/figures-five-rates/fig14_cluster_balance-language.json": "43463478aa5b4151d4bad736df1dedff52e7897d3af836725d0173ecd6ffcc09",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/figures-five-rates/fig15_locality_band-task.json": "c0f3c7218631e261a8e6619b8f162f17f98248b42ad3b4a012c541c70507ad76",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/figures-five-rates/fig15_locality_band-language.json": "442405c85f12bc967324649a6b6edda0373b91aac921075bcdc4bf7b5f4cd893"
+  },
+  "source_runs": {
+    "sources": {
+      "fig13_signature/task": [
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig13_signature/task",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig13_signature/task"
+      ],
+      "fig13_signature/language": [
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig13_signature/language",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig13_signature/language"
+      ],
+      "fig14_cluster_balance/task": [
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig14_cluster_balance/task",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig14_cluster_balance/task"
+      ],
+      "fig14_cluster_balance/language": [
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig14_cluster_balance/language",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig14_cluster_balance/language"
+      ],
+      "fig15_locality_band/task": [
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig15_locality_band/task",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig15_locality_band/task"
+      ],
+      "fig15_locality_band/language": [
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig15_locality_band/language",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig15_locality_band/language"
+      ]
+    },
+    "rates": [
+      20,
+      40,
+      60,
+      80,
+      100
+    ],
+    "aggregation": "Equal-weight mean of matched RR-relative percentage changes at each rate; no pooled requests."
+  },
+  "layout_checks": [
+    "signature: exact bar heights; no overlapping or clipped value labels",
+    "cluster_balance: exact bar heights; no overlapping or clipped value labels"
+  ],
+  "paper_modified": false,
+  "github_pushed": false
+}
