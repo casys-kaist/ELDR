@@ -1,0 +1,290 @@
+[
+  {
+    "model": "Qwen3-30B",
+    "workload": "task",
+    "variant": "count",
+    "rho": 0.8112551375837308,
+    "L": 48,
+    "N": 970
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "task",
+    "variant": "binary",
+    "rho": 0.5178133336678875,
+    "L": 48,
+    "N": 970
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "task",
+    "variant": "sqrt",
+    "rho": 0.7452895971999095,
+    "L": 48,
+    "N": 970
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "task",
+    "variant": "count_idf",
+    "rho": 0.784710580154513,
+    "L": 48,
+    "N": 970
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "task",
+    "variant": "gate_prob_all",
+    "rho": 0.7870346043930544,
+    "L": 48,
+    "N": 970
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "task",
+    "variant": "gate_logit_all",
+    "rho": 0.7349650450921713,
+    "L": 48,
+    "N": 970
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "lang",
+    "variant": "count",
+    "rho": 0.7367512088889205,
+    "L": 48,
+    "N": 999
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "lang",
+    "variant": "binary",
+    "rho": 0.5121414218862963,
+    "L": 48,
+    "N": 999
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "lang",
+    "variant": "sqrt",
+    "rho": 0.7288222204018124,
+    "L": 48,
+    "N": 999
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "lang",
+    "variant": "count_idf",
+    "rho": 0.7489878030785575,
+    "L": 48,
+    "N": 999
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "lang",
+    "variant": "gate_prob_all",
+    "rho": 0.6680578775354039,
+    "L": 48,
+    "N": 999
+  },
+  {
+    "model": "Qwen3-30B",
+    "workload": "lang",
+    "variant": "gate_logit_all",
+    "rho": 0.6708724869373354,
+    "L": 48,
+    "N": 999
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "task",
+    "variant": "count",
+    "rho": 0.8693349224329404,
+    "L": 30,
+    "N": 971
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "task",
+    "variant": "binary",
+    "rho": 0.4230554781547702,
+    "L": 30,
+    "N": 971
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "task",
+    "variant": "sqrt",
+    "rho": 0.7864950032100169,
+    "L": 30,
+    "N": 971
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "task",
+    "variant": "count_idf",
+    "rho": 0.8658270820714473,
+    "L": 30,
+    "N": 971
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "task",
+    "variant": "gate_prob_all",
+    "rho": 0.800083024207477,
+    "L": 30,
+    "N": 971
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "task",
+    "variant": "gate_logit_all",
+    "rho": 0.7622050765433831,
+    "L": 30,
+    "N": 971
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "lang",
+    "variant": "count",
+    "rho": 0.7443904798363896,
+    "L": 30,
+    "N": 999
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "lang",
+    "variant": "binary",
+    "rho": 0.5215625147204512,
+    "L": 30,
+    "N": 999
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "lang",
+    "variant": "sqrt",
+    "rho": 0.7414370497668021,
+    "L": 30,
+    "N": 999
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "lang",
+    "variant": "count_idf",
+    "rho": 0.716412407421667,
+    "L": 30,
+    "N": 999
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "lang",
+    "variant": "gate_prob_all",
+    "rho": 0.6673984681752612,
+    "L": 30,
+    "N": 999
+  },
+  {
+    "model": "Gemma-4-26B",
+    "workload": "lang",
+    "variant": "gate_logit_all",
+    "rho": 0.6345024176201925,
+    "L": 30,
+    "N": 999
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "task",
+    "variant": "count",
+    "rho": 0.6982158904024478,
+    "L": 36,
+    "N": 972
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "task",
+    "variant": "binary",
+    "rho": 0.49629585511093816,
+    "L": 36,
+    "N": 972
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "task",
+    "variant": "sqrt",
+    "rho": 0.6820715200324272,
+    "L": 36,
+    "N": 972
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "task",
+    "variant": "count_idf",
+    "rho": 0.7869339196005573,
+    "L": 36,
+    "N": 972
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "task",
+    "variant": "gate_prob_all",
+    "rho": 0.6539522974989498,
+    "L": 36,
+    "N": 972
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "task",
+    "variant": "gate_logit_all",
+    "rho": 0.5767985077988489,
+    "L": 36,
+    "N": 972
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "lang",
+    "variant": "count",
+    "rho": 0.6321153282598038,
+    "L": 36,
+    "N": 999
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "lang",
+    "variant": "binary",
+    "rho": 0.3464202364206552,
+    "L": 36,
+    "N": 999
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "lang",
+    "variant": "sqrt",
+    "rho": 0.5661044299934171,
+    "L": 36,
+    "N": 999
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "lang",
+    "variant": "count_idf",
+    "rho": 0.6810892614789622,
+    "L": 36,
+    "N": 999
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "lang",
+    "variant": "gate_prob_all",
+    "rho": 0.46060662447347656,
+    "L": 36,
+    "N": 999
+  },
+  {
+    "model": "GPT-OSS-120B",
+    "workload": "lang",
+    "variant": "gate_logit_all",
+    "rho": 0.3536779934876717,
+    "L": 36,
+    "N": 999
+  }
+]

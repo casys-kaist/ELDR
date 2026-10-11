@@ -1,0 +1,8 @@
+{
+  "validated_at_utc": "2026-10-11T07:24:17.191932+00:00",
+  "measurements": 150,
+  "preserved_60_req_s": 30,
+  "fresh_other_rates": 120,
+  "raw_counts_metrics_hashes_sources_inputs_runtime_flags_cleanup": "passed",
+  "validation_script_sha256": "17adfbb00bc71a5b229c9ffc439d1efc9ccd014dd703716ba0c9f2b8a12b3158"
+}

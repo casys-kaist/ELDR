@@ -1,0 +1,1938 @@
+[
+  {
+    "figure": 1,
+    "path": "figure/03_motivation/domain_2x3_layer.pdf",
+    "paper_page": 3,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 15728
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 27,
+    "raster_images": 7,
+    "paper_width_pt": 443.52000000000004,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.97,
+        "count": 20
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 7.67,
+        "count": 7
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.597,
+        "count": 25
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.682,
+        "count": 14
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 8
+      }
+    ]
+  },
+  {
+    "figure": 2,
+    "path": "figure/03_motivation/moe_latency.pdf",
+    "paper_page": 3,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 15064
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 28,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.85,
+        "count": 23
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.68,
+        "count": 5
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.6196078658103943, 0.7921568751335144, 0.8823529481887817)",
+        "fill": "(0.6196078658103943, 0.7921568751335144, 0.8823529481887817)",
+        "paper_width_pt": 0.418,
+        "count": 25
+      },
+      {
+        "stroke": "(0.25882354378700256, 0.572549045085907, 0.7764706015586853)",
+        "fill": "(0.25882354378700256, 0.572549045085907, 0.7764706015586853)",
+        "paper_width_pt": 0.418,
+        "count": 25
+      },
+      {
+        "stroke": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "fill": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "paper_width_pt": 0.418,
+        "count": 25
+      },
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.209,
+        "count": 20
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.334,
+        "count": 20
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.292,
+        "count": 12
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 4
+      },
+      {
+        "stroke": "(0.6196078658103943, 0.7921568751335144, 0.8823529481887817)",
+        "fill": "None",
+        "paper_width_pt": 0.668,
+        "count": 4
+      },
+      {
+        "stroke": "(0.25882354378700256, 0.572549045085907, 0.7764706015586853)",
+        "fill": "None",
+        "paper_width_pt": 0.668,
+        "count": 4
+      },
+      {
+        "stroke": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "fill": "None",
+        "paper_width_pt": 0.668,
+        "count": 4
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.418,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 3,
+    "path": "figure/03_motivation/pd_scatter.pdf",
+    "paper_page": 4,
+    "fonts": [
+      {
+        "name": "GCWXDV+DejaVuSans-Oblique",
+        "type": "Type0",
+        "embedded_program_bytes": 3248
+      },
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 12984
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 28,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.83,
+        "count": 12
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.25,
+        "count": 4
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.67,
+        "count": 9
+      },
+      {
+        "font": "DejaVuSans-Oblique",
+        "size_pt": 6.67,
+        "count": 3
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "None",
+        "fill": "(0.12156862765550613, 0.30588236451148987, 0.5490196347236633)",
+        "paper_width_pt": 0.0,
+        "count": 4992
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.333,
+        "count": 18
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.292,
+        "count": 12
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 4
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.333,
+        "count": 3
+      }
+    ]
+  },
+  {
+    "figure": 4,
+    "path": "figure/03_motivation/active_experts_sweep.pdf",
+    "paper_page": 4,
+    "fonts": [
+      {
+        "name": "EVICAO+DejaVuSans-Bold",
+        "type": "Type0",
+        "embedded_program_bytes": 6080
+      },
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 13188
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 60,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.42,
+        "count": 19
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.04,
+        "count": 18
+      },
+      {
+        "font": "DejaVuSans-Bold",
+        "size_pt": 5.04,
+        "count": 18
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 7.33,
+        "count": 3
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.88,
+        "count": 2
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.229,
+        "count": 30
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.367,
+        "count": 30
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.321,
+        "count": 24
+      },
+      {
+        "stroke": "(0.9098039269447327, 0.43921568989753723, 0.16470588743686676)",
+        "fill": "(0.9098039269447327, 0.43921568989753723, 0.16470588743686676)",
+        "paper_width_pt": 0.458,
+        "count": 19
+      },
+      {
+        "stroke": "(0.12156862765550613, 0.30588236451148987, 0.5490196347236633)",
+        "fill": "(0.12156862765550613, 0.30588236451148987, 0.5490196347236633)",
+        "paper_width_pt": 0.458,
+        "count": 19
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 7
+      },
+      {
+        "stroke": "(0.9098039269447327, 0.43921568989753723, 0.16470588743686676)",
+        "fill": "None",
+        "paper_width_pt": 0.917,
+        "count": 7
+      },
+      {
+        "stroke": "(0.12156862765550613, 0.30588236451148987, 0.5490196347236633)",
+        "fill": "None",
+        "paper_width_pt": 0.917,
+        "count": 7
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.458,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 5,
+    "path": "figure/03_motivation/wc_langdist.pdf",
+    "paper_page": 5,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 13172
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 21,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.27,
+        "count": 13
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 7.17,
+        "count": 1
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.82,
+        "count": 7
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(1.0, 1.0, 1.0)",
+        "fill": "(0.25882354378700256, 0.572549045085907, 0.7764706015586853)",
+        "paper_width_pt": 0.448,
+        "count": 7
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.358,
+        "count": 6
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 2
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.313,
+        "count": 2
+      }
+    ]
+  },
+  {
+    "figure": 6,
+    "path": "figure/04_design/fig_overview.pdf",
+    "paper_page": 5,
+    "fonts": [
+      {
+        "name": "UWGIWA+DejaVu-Sans-Bold",
+        "type": "Type0",
+        "embedded_program_bytes": 34024
+      },
+      {
+        "name": "XKQQSR+DejaVu-Sans",
+        "type": "Type0",
+        "embedded_program_bytes": 33932
+      },
+      {
+        "name": "XVXMKB+DejaVu-Sans-Italic",
+        "type": "Type0",
+        "embedded_program_bytes": 1480
+      },
+      {
+        "name": "EUDWSU+DejaVu-Sans-Bold-Italic",
+        "type": "Type0",
+        "embedded_program_bytes": 1860
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 33,
+    "raster_images": 0,
+    "paper_width_pt": 240.04483188044836,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVu-Sans-Bold",
+        "size_pt": 7.13,
+        "count": 2
+      },
+      {
+        "font": "DejaVu-Sans",
+        "size_pt": 8.25,
+        "count": 4
+      },
+      {
+        "font": "DejaVu-Sans-Italic",
+        "size_pt": 8.25,
+        "count": 1
+      },
+      {
+        "font": "DejaVu-Sans",
+        "size_pt": 7.5,
+        "count": 12
+      },
+      {
+        "font": "DejaVu-Sans-Italic",
+        "size_pt": 7.5,
+        "count": 1
+      },
+      {
+        "font": "DejaVu-Sans-Bold",
+        "size_pt": 8.25,
+        "count": 3
+      },
+      {
+        "font": "DejaVu-Sans-Bold-Italic",
+        "size_pt": 8.25,
+        "count": 2
+      },
+      {
+        "font": "DejaVu-Sans",
+        "size_pt": 6.75,
+        "count": 2
+      },
+      {
+        "font": "DejaVu-Sans",
+        "size_pt": 4.86,
+        "count": 1
+      },
+      {
+        "font": "DejaVu-Sans-Bold",
+        "size_pt": 6.0,
+        "count": 5
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "None",
+        "fill": "(0.1333329975605011, 0.1647060066461563, 0.20000000298023224)",
+        "paper_width_pt": 0.0,
+        "count": 13
+      },
+      {
+        "stroke": "(0.6039220094680786, 0.6509799957275391, 0.6980389952659607)",
+        "fill": "None",
+        "paper_width_pt": 0.75,
+        "count": 8
+      },
+      {
+        "stroke": "(0.1333329975605011, 0.1647060066461563, 0.20000000298023224)",
+        "fill": "None",
+        "paper_width_pt": 0.75,
+        "count": 7
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 5
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.9686269760131836, 0.9725490212440491, 0.9803919792175293)",
+        "paper_width_pt": 0.0,
+        "count": 4
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.6823530197143555, 0.7254899740219116, 0.7686269879341125)",
+        "paper_width_pt": 0.0,
+        "count": 4
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.8313729763031006, 0.9019610285758972, 0.9607840180397034)",
+        "paper_width_pt": 0.0,
+        "count": 3
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.18431399762630463, 0.4352940022945404, 0.6588240265846252)",
+        "paper_width_pt": 0.0,
+        "count": 3
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.9333329796791077, 0.9450979828834534, 0.9568629860877991)",
+        "paper_width_pt": 0.0,
+        "count": 3
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.35686299204826355, 0.4196079969406128, 0.48235300183296204)",
+        "paper_width_pt": 0.0,
+        "count": 3
+      },
+      {
+        "stroke": "(0.1333329975605011, 0.1647060066461563, 0.20000000298023224)",
+        "fill": "None",
+        "paper_width_pt": 0.825,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 7,
+    "path": "figure/04_design/sig_transform.pdf",
+    "paper_page": 7,
+    "fonts": [
+      {
+        "name": "GCWXDV+DejaVuSans-Oblique",
+        "type": "Type0",
+        "embedded_program_bytes": 3072
+      },
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 10336
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 20,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.06,
+        "count": 12
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.63,
+        "count": 6
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.93,
+        "count": 1
+      },
+      {
+        "font": "DejaVuSans-Oblique",
+        "size_pt": 6.93,
+        "count": 1
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.346,
+        "count": 12
+      },
+      {
+        "stroke": "(0.06668192893266678, 0.06668192893266678, 0.06668192893266678)",
+        "fill": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
+        "paper_width_pt": 0.736,
+        "count": 12
+      },
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.217,
+        "count": 6
+      },
+      {
+        "stroke": "(0.06668192893266678, 0.06668192893266678, 0.06668192893266678)",
+        "fill": "None",
+        "paper_width_pt": 0.736,
+        "count": 6
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.41960784792900085, 0.6823529601097107, 0.8392156958580017)",
+        "paper_width_pt": 0.346,
+        "count": 5
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.303,
+        "count": 4
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 2
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.0,
+        "count": 1
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "paper_width_pt": 0.346,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 8,
+    "path": "figure/04_design/sig_layers.pdf",
+    "paper_page": 7,
+    "fonts": [
+      {
+        "name": "GCWXDV+DejaVuSans-Oblique",
+        "type": "Type0",
+        "embedded_program_bytes": 3072
+      },
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 12060
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 20,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.83,
+        "count": 12
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.66,
+        "count": 7
+      },
+      {
+        "font": "DejaVuSans-Oblique",
+        "size_pt": 6.66,
+        "count": 1
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.25,
+        "count": 16
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.333,
+        "count": 16
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.292,
+        "count": 12
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 4
+      },
+      {
+        "stroke": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "fill": "None",
+        "paper_width_pt": 0.75,
+        "count": 4
+      },
+      {
+        "stroke": "(0.9019607901573181, 0.3333333432674408, 0.05098039284348488)",
+        "fill": "None",
+        "paper_width_pt": 0.75,
+        "count": 4
+      },
+      {
+        "stroke": "(1.0, 1.0, 1.0)",
+        "fill": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "paper_width_pt": 0.417,
+        "count": 3
+      },
+      {
+        "stroke": "(1.0, 1.0, 1.0)",
+        "fill": "(0.9019607901573181, 0.3333333432674408, 0.05098039284348488)",
+        "paper_width_pt": 0.417,
+        "count": 3
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.417,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 9,
+    "path": "figure/04_design/cluster_pca.pdf",
+    "paper_page": 8,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 12208
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 17,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 7.28,
+        "count": 3
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.37,
+        "count": 14
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "None",
+        "fill": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "paper_width_pt": 0.0,
+        "count": 2091
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.9098039269447327, 0.43921568989753723, 0.16470588743686676)",
+        "paper_width_pt": 0.0,
+        "count": 1581
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.5803921818733215, 0.40392157435417175, 0.7411764860153198)",
+        "paper_width_pt": 0.0,
+        "count": 960
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "paper_width_pt": 0.0,
+        "count": 912
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.7999237179756165, 0.800030529499054, 0.7998932003974915)",
+        "paper_width_pt": 0.0,
+        "count": 366
+      },
+      {
+        "stroke": "(1.0, 1.0, 1.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.364,
+        "count": 48
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.319,
+        "count": 24
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 7
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.455,
+        "count": 2
+      },
+      {
+        "stroke": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "fill": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "paper_width_pt": 0.455,
+        "count": 2
+      },
+      {
+        "stroke": "(0.9098039269447327, 0.43921568989753723, 0.16470588743686676)",
+        "fill": "(0.9098039269447327, 0.43921568989753723, 0.16470588743686676)",
+        "paper_width_pt": 0.455,
+        "count": 2
+      },
+      {
+        "stroke": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "fill": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "paper_width_pt": 0.455,
+        "count": 2
+      },
+      {
+        "stroke": "(0.5803921818733215, 0.40392157435417175, 0.7411764860153198)",
+        "fill": "(0.5803921818733215, 0.40392157435417175, 0.7411764860153198)",
+        "paper_width_pt": 0.455,
+        "count": 2
+      },
+      {
+        "stroke": "(1.0, 1.0, 1.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.455,
+        "count": 1
+      },
+      {
+        "stroke": "(0.7999237179756165, 0.800030529499054, 0.7998932003974915)",
+        "fill": "(0.7999237179756165, 0.800030529499054, 0.7998932003974915)",
+        "paper_width_pt": 0.455,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 10,
+    "path": "figure/04_design/fig_prefix_coherence.pdf",
+    "paper_page": 9,
+    "fonts": [
+      {
+        "name": "XKQQSR+DejaVu-Sans",
+        "type": "Type0",
+        "embedded_program_bytes": 34280
+      },
+      {
+        "name": "UWGIWA+DejaVu-Sans-Bold",
+        "type": "Type0",
+        "embedded_program_bytes": 3604
+      },
+      {
+        "name": "XKQQSR+DejaVu-Sans",
+        "type": "Type0",
+        "embedded_program_bytes": 34280
+      },
+      {
+        "name": "UWGIWA+DejaVu-Sans-Bold",
+        "type": "Type0",
+        "embedded_program_bytes": 3604
+      },
+      {
+        "name": "XKQQSR+DejaVu-Sans",
+        "type": "Type0",
+        "embedded_program_bytes": 34280
+      },
+      {
+        "name": "UWGIWA+DejaVu-Sans-Bold",
+        "type": "Type0",
+        "embedded_program_bytes": 3604
+      },
+      {
+        "name": "XKQQSR+DejaVu-Sans",
+        "type": "Type0",
+        "embedded_program_bytes": 34280
+      },
+      {
+        "name": "UWGIWA+DejaVu-Sans-Bold",
+        "type": "Type0",
+        "embedded_program_bytes": 3604
+      },
+      {
+        "name": "XKQQSR+DejaVu-Sans",
+        "type": "Type0",
+        "embedded_program_bytes": 34280
+      },
+      {
+        "name": "UWGIWA+DejaVu-Sans-Bold",
+        "type": "Type0",
+        "embedded_program_bytes": 3604
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 18,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVu-Sans",
+        "size_pt": 7.13,
+        "count": 3
+      },
+      {
+        "font": "DejaVu-Sans-Bold",
+        "size_pt": 6.13,
+        "count": 4
+      },
+      {
+        "font": "DejaVu-Sans",
+        "size_pt": 6.77,
+        "count": 4
+      },
+      {
+        "font": "DejaVu-Sans-Bold",
+        "size_pt": 7.84,
+        "count": 1
+      },
+      {
+        "font": "DejaVu-Sans-Bold",
+        "size_pt": 6.41,
+        "count": 4
+      },
+      {
+        "font": "DejaVu-Sans",
+        "size_pt": 9.98,
+        "count": 1
+      },
+      {
+        "font": "DejaVu-Sans",
+        "size_pt": 6.41,
+        "count": 1
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "None",
+        "fill": "(0.35686299204826355, 0.4196079969406128, 0.48235300183296204)",
+        "paper_width_pt": 0.0,
+        "count": 16
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.18431399762630463, 0.4352940022945404, 0.6588240265846252)",
+        "paper_width_pt": 0.0,
+        "count": 16
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.9176470041275024, 0.9333329796791077, 0.9490200281143188)",
+        "paper_width_pt": 0.0,
+        "count": 4
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.8117650151252747, 0.8862749934196472, 0.9490200281143188)",
+        "paper_width_pt": 0.0,
+        "count": 4
+      },
+      {
+        "stroke": "(0.6823530197143555, 0.7254899740219116, 0.7686269879341125)",
+        "fill": "None",
+        "paper_width_pt": 0.641,
+        "count": 4
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.1333329975605011, 0.1647060066461563, 0.20000000298023224)",
+        "paper_width_pt": 0.0,
+        "count": 2
+      },
+      {
+        "stroke": "(0.35686299204826355, 0.4196079969406128, 0.48235300183296204)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.713,
+        "count": 2
+      },
+      {
+        "stroke": "(0.18431399762630463, 0.4352940022945404, 0.6588240265846252)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.713,
+        "count": 2
+      },
+      {
+        "stroke": "(0.1333329975605011, 0.1647060066461563, 0.20000000298023224)",
+        "fill": "None",
+        "paper_width_pt": 0.641,
+        "count": 2
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.9333329796791077, 0.9450979828834534, 0.9568629860877991)",
+        "paper_width_pt": 0.0,
+        "count": 1
+      },
+      {
+        "stroke": "(0.35686299204826355, 0.4196079969406128, 0.48235300183296204)",
+        "fill": "None",
+        "paper_width_pt": 0.641,
+        "count": 1
+      },
+      {
+        "stroke": "(0.18431399762630463, 0.4352940022945404, 0.6588240265846252)",
+        "fill": "None",
+        "paper_width_pt": 0.641,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 11,
+    "path": "figure/06_evaluation/fig_main_task.pdf",
+    "paper_page": 10,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 12940
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 53,
+    "raster_images": 0,
+    "paper_width_pt": 246.96000000000004,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.18,
+        "count": 38
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.21,
+        "count": 12
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.73,
+        "count": 3
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.259,
+        "count": 56
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.414,
+        "count": 56
+      },
+      {
+        "stroke": "(0.49800869822502136, 0.49808499217033386, 0.49797818064689636)",
+        "fill": "(0.49800869822502136, 0.49808499217033386, 0.49797818064689636)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "fill": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
+        "fill": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.5803921818733215, 0.40392157435417175, 0.7411764860153198)",
+        "fill": "(0.5803921818733215, 0.40392157435417175, 0.7411764860153198)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.311,
+        "count": 36
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 10
+      },
+      {
+        "stroke": "(0.49800869822502136, 0.49808499217033386, 0.49797818064689636)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.5803921818733215, 0.40392157435417175, 0.7411764860153198)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.518,
+        "count": 1
+      },
+      {
+        "stroke": "(0.49800869822502136, 0.49808499217033386, 0.49797818064689636)",
+        "fill": "None",
+        "paper_width_pt": 0.828,
+        "count": 1
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "None",
+        "paper_width_pt": 0.828,
+        "count": 1
+      },
+      {
+        "stroke": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "fill": "None",
+        "paper_width_pt": 0.828,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 12,
+    "path": "figure/06_evaluation/fig_main_lang.pdf",
+    "paper_page": 10,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 12940
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 55,
+    "raster_images": 0,
+    "paper_width_pt": 246.96000000000004,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.18,
+        "count": 40
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.21,
+        "count": 12
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.73,
+        "count": 3
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.259,
+        "count": 58
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.414,
+        "count": 58
+      },
+      {
+        "stroke": "(0.49800869822502136, 0.49808499217033386, 0.49797818064689636)",
+        "fill": "(0.49800869822502136, 0.49808499217033386, 0.49797818064689636)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "fill": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
+        "fill": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.5803921818733215, 0.40392157435417175, 0.7411764860153198)",
+        "fill": "(0.5803921818733215, 0.40392157435417175, 0.7411764860153198)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "paper_width_pt": 0.259,
+        "count": 46
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.311,
+        "count": 36
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 10
+      },
+      {
+        "stroke": "(0.49800869822502136, 0.49808499217033386, 0.49797818064689636)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.12156862765550613, 0.46666666865348816, 0.7058823704719543)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.5803921818733215, 0.40392157435417175, 0.7411764860153198)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "None",
+        "paper_width_pt": 0.777,
+        "count": 9
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.518,
+        "count": 1
+      },
+      {
+        "stroke": "(0.49800869822502136, 0.49808499217033386, 0.49797818064689636)",
+        "fill": "None",
+        "paper_width_pt": 0.828,
+        "count": 1
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "None",
+        "paper_width_pt": 0.828,
+        "count": 1
+      },
+      {
+        "stroke": "(0.1725490242242813, 0.6274510025978088, 0.1725490242242813)",
+        "fill": "None",
+        "paper_width_pt": 0.828,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 13,
+    "path": "figure/06_evaluation/fig_expert_reduction.pdf",
+    "paper_page": 11,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 9796
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 15,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.9,
+        "count": 13
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.32,
+        "count": 2
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.211,
+        "count": 11
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.337,
+        "count": 11
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.295,
+        "count": 4
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 2
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "None",
+        "paper_width_pt": 0.843,
+        "count": 2
+      },
+      {
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "None",
+        "paper_width_pt": 0.843,
+        "count": 2
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.422,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 14,
+    "path": "figure/06_evaluation/fig_transform_ablation.pdf",
+    "paper_page": 11,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 15120
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 43,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.61,
+        "count": 4
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.01,
+        "count": 12
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.21,
+        "count": 24
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.41,
+        "count": 3
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.321,
+        "count": 24
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.28,
+        "count": 24
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "paper_width_pt": 0.2,
+        "count": 13
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.41960784792900085, 0.6823529601097107, 0.8392156958580017)",
+        "paper_width_pt": 0.2,
+        "count": 13
+      },
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.321,
+        "count": 12
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 7
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.24,
+        "count": 6
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.401,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 15,
+    "path": "figure/06_evaluation/fig_cluster_ablation.pdf",
+    "paper_page": 12,
+    "fonts": [
+      {
+        "name": "GCWXDV+DejaVuSans-Oblique",
+        "type": "Type0",
+        "embedded_program_bytes": 3248
+      },
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 13280
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 47,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.61,
+        "count": 5
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.01,
+        "count": 13
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.21,
+        "count": 24
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.41,
+        "count": 3
+      },
+      {
+        "font": "DejaVuSans-Oblique",
+        "size_pt": 6.01,
+        "count": 2
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.321,
+        "count": 27
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.28,
+        "count": 24
+      },
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.321,
+        "count": 15
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0313725471496582, 0.3176470696926117, 0.6117647290229797)",
+        "paper_width_pt": 0.2,
+        "count": 13
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.41960784792900085, 0.6823529601097107, 0.8392156958580017)",
+        "paper_width_pt": 0.2,
+        "count": 13
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 7
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.24,
+        "count": 6
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.401,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 16,
+    "path": "figure/06_evaluation/fig_tau_ablation.pdf",
+    "paper_page": 12,
+    "fonts": [
+      {
+        "name": "GCWXDV+DejaVuSans-Oblique",
+        "type": "Type0",
+        "embedded_program_bytes": 3020
+      },
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 13920
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 75,
+    "raster_images": 3,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.65,
+        "count": 20
+      },
+      {
+        "font": "DejaVuSans-Oblique",
+        "size_pt": 5.65,
+        "count": 2
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.22,
+        "count": 48
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 4.78,
+        "count": 5
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.348,
+        "count": 25
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.304,
+        "count": 9
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 4
+      }
+    ]
+  },
+  {
+    "figure": 17,
+    "path": "figure/06_evaluation/fig_prefix_cache_gptoss_task.pdf",
+    "paper_page": 12,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 11624
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 40,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.68,
+        "count": 19
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.09,
+        "count": 9
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 4.87,
+        "count": 12
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.325,
+        "count": 19
+      },
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.325,
+        "count": 13
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.284,
+        "count": 12
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "paper_width_pt": 0.203,
+        "count": 7
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "paper_width_pt": 0.203,
+        "count": 7
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 4
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.406,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "figure": 18,
+    "path": "figure/06_evaluation/fig_workload_drift.pdf",
+    "paper_page": 13,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 12244
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 22,
+    "raster_images": 0,
+    "paper_width_pt": 240.04483188044836,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.31,
+        "count": 19
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.76,
+        "count": 3
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "paper_width_pt": 0.316,
+        "count": 25
+      },
+      {
+        "stroke": "(0.3489890992641449, 0.3490501344203949, 0.3489738404750824)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.316,
+        "count": 25
+      },
+      {
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "paper_width_pt": 0.316,
+        "count": 25
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.361,
+        "count": 12
+      },
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.27,
+        "count": 10
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.316,
+        "count": 8
+      },
+      {
+        "stroke": "(0.46662089228630066, 0.46671244502067566, 0.46662089228630066)",
+        "fill": "None",
+        "paper_width_pt": 0.361,
+        "count": 4
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 3
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.41960784792900085, 0.6823529601097107, 0.8392156958580017)",
+        "paper_width_pt": 0.0,
+        "count": 2
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.9921568632125854, 0.6823529601097107, 0.41960784792900085)",
+        "paper_width_pt": 0.0,
+        "count": 2
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.6313725709915161, 0.8509804010391235, 0.6078431606292725)",
+        "paper_width_pt": 0.0,
+        "count": 2
+      },
+      {
+        "stroke": "None",
+        "fill": "(0.7372549176216125, 0.7411764860153198, 0.8627451062202454)",
+        "paper_width_pt": 0.0,
+        "count": 2
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.451,
+        "count": 2
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "None",
+        "paper_width_pt": 0.721,
+        "count": 2
+      },
+      {
+        "stroke": "(0.3489890992641449, 0.3490501344203949, 0.3489738404750824)",
+        "fill": "None",
+        "paper_width_pt": 0.721,
+        "count": 2
+      },
+      {
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "None",
+        "paper_width_pt": 0.902,
+        "count": 2
+      }
+    ]
+  },
+  {
+    "figure": 19,
+    "path": "figure/06_evaluation/fig_qwen235_2p8d.pdf",
+    "paper_page": 13,
+    "fonts": [
+      {
+        "name": "BMQQDV+DejaVuSans",
+        "type": "Type0",
+        "embedded_program_bytes": 10424
+      }
+    ],
+    "has_type3": false,
+    "text_spans": 24,
+    "raster_images": 0,
+    "paper_width_pt": 228.0425902864259,
+    "font_spans_at_paper_scale": [
+      {
+        "font": "DejaVuSans",
+        "size_pt": 5.88,
+        "count": 19
+      },
+      {
+        "font": "DejaVuSans",
+        "size_pt": 6.3,
+        "count": 5
+      }
+    ],
+    "drawing_styles": [
+      {
+        "stroke": "(0.6901198029518127, 0.6902418732643127, 0.6901045441627502)",
+        "fill": "None",
+        "paper_width_pt": 0.21,
+        "count": 17
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "(0.0, 0.0, 0.0)",
+        "paper_width_pt": 0.336,
+        "count": 17
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "paper_width_pt": 0.21,
+        "count": 11
+      },
+      {
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "paper_width_pt": 0.21,
+        "count": 11
+      },
+      {
+        "stroke": "(0.0, 0.0, 0.0)",
+        "fill": "None",
+        "paper_width_pt": 0.294,
+        "count": 8
+      },
+      {
+        "stroke": "None",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.0,
+        "count": 3
+      },
+      {
+        "stroke": "(1.0, 0.49803921580314636, 0.054901961237192154)",
+        "fill": "None",
+        "paper_width_pt": 0.841,
+        "count": 3
+      },
+      {
+        "stroke": "(0.8392156958580017, 0.15294118225574493, 0.1568627506494522)",
+        "fill": "None",
+        "paper_width_pt": 0.841,
+        "count": 3
+      },
+      {
+        "stroke": "(0.850904107093811, 0.851026177406311, 0.850873589515686)",
+        "fill": "(1.0, 1.0, 1.0)",
+        "paper_width_pt": 0.42,
+        "count": 1
+      }
+    ]
+  }
+]

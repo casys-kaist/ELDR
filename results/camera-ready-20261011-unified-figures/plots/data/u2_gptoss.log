@@ -1,0 +1,101 @@
+INFO 05-25 04:53:33 [utils.py:240] non-default args: {'max_model_len': 2048, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.9, 'disable_log_stats': True, 'enforce_eager': True, 'model': '/mnt/md0/models/gpt-oss-120b'}
+WARNING 05-25 04:53:33 [envs.py:1866] Unknown vLLM environment variable detected: VLLM_USE_V1
+WARNING 05-25 04:53:33 [arg_utils.py:1503] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.
+INFO 05-25 04:53:40 [model.py:568] Resolved architecture: GptOssForCausalLM
+INFO 05-25 04:53:40 [model.py:1697] Using max model len 2048
+[aiter] import [module_aiter_core] under /usr/local/lib/python3.12/dist-packages/aiter/jit/module_aiter_core.so
+INFO 05-25 04:53:42 [scheduler.py:239] Chunked prefill is enabled with max_num_batched_tokens=16384.
+INFO 05-25 04:53:42 [config.py:170] Overriding max cuda graph capture size to 1024 for performance.
+INFO 05-25 04:53:42 [vllm.py:886] Asynchronous scheduling is enabled.
+WARNING 05-25 04:53:42 [vllm.py:942] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+WARNING 05-25 04:53:42 [vllm.py:960] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+INFO 05-25 04:53:42 [kernel.py:212] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'])
+INFO 05-25 04:53:42 [vllm.py:1135] Cudagraph is disabled under eager mode
+INFO 05-25 04:53:42 [compilation.py:303] Enabled custom fusions: norm_quant, act_quant
+INFO 05-25 04:53:46 [core.py:109] Initializing a V1 LLM engine (v0.21.0rc1) with config: model='/mnt/md0/models/gpt-oss-120b', speculative_config=None, tokenizer='/mnt/md0/models/gpt-oss-120b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=2048, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=gpt_oss_mxfp4, quantization_config=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='openai_gptoss', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=/mnt/md0/models/gpt-oss-120b, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['+sparse_attn_indexer', 'all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [16384], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'fuse_act_padding': False, 'fuse_mla_dual_rms_norm': False, 'fuse_rope_kvcache': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native']), enable_flashinfer_autotune=False, moe_backend='auto')
+INFO 05-25 04:53:46 [parallel_state.py:1410] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://10.11.0.9:36443 backend=nccl
+INFO 05-25 04:53:46 [parallel_state.py:1723] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank 0, EPLB rank N/A
+INFO 05-25 04:53:47 [gpu_model_runner.py:4882] Starting to load model /mnt/md0/models/gpt-oss-120b...
+INFO 05-25 04:53:48 [rocm.py:546] Found incompatible backend(s) [ROCM_ATTN, TURBOQUANT] with AttentionType.DECODER. Overriding with ROCM_AITER_UNIFIED_ATTN out of potential backends: ['ROCM_AITER_UNIFIED_ATTN', 'TRITON_ATTN'].
+INFO 05-25 04:53:48 [rocm_aiter_unified_attn.py:132] Using aiter unified attention for RocmAiterUnifiedAttentionImpl
+INFO 05-25 04:53:48 [mxfp4.py:443] Using 'TRITON' Mxfp4 MoE backend.
+WARNING 05-25 04:53:48 [compilation.py:1286] Op 'sparse_attn_indexer' not present in model, enabling with '+sparse_attn_indexer' has no effect
+INFO 05-25 04:53:48 [weight_utils.py:938] Filesystem type for checkpoints: EXT4. Checkpoint size: 60.77 GiB. Available RAM: 1773.82 GiB.
+INFO 05-25 04:53:48 [weight_utils.py:961] Auto-prefetch is disabled because the filesystem (EXT4) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+Loading safetensors checkpoint shards:   0% Completed | 0/15 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:   7% Completed | 1/15 [00:02<00:28,  2.06s/it]
+Loading safetensors checkpoint shards:  13% Completed | 2/15 [00:04<00:26,  2.03s/it]
+Loading safetensors checkpoint shards:  20% Completed | 3/15 [00:06<00:24,  2.07s/it]
+Loading safetensors checkpoint shards:  27% Completed | 4/15 [00:08<00:22,  2.02s/it]
+Loading safetensors checkpoint shards:  33% Completed | 5/15 [00:10<00:20,  2.05s/it]
+Loading safetensors checkpoint shards:  40% Completed | 6/15 [00:12<00:18,  2.01s/it]
+Loading safetensors checkpoint shards:  47% Completed | 7/15 [00:14<00:16,  2.05s/it]
+Loading safetensors checkpoint shards:  53% Completed | 8/15 [00:16<00:14,  2.00s/it]
+Loading safetensors checkpoint shards:  60% Completed | 9/15 [00:18<00:12,  2.04s/it]
+Loading safetensors checkpoint shards:  67% Completed | 10/15 [00:20<00:10,  2.03s/it]
+Loading safetensors checkpoint shards:  73% Completed | 11/15 [00:22<00:08,  2.07s/it]
+Loading safetensors checkpoint shards:  80% Completed | 12/15 [00:24<00:06,  2.04s/it]
+Loading safetensors checkpoint shards:  87% Completed | 13/15 [00:26<00:04,  2.01s/it]
+Loading safetensors checkpoint shards:  93% Completed | 14/15 [00:28<00:02,  2.05s/it]
+Loading safetensors checkpoint shards: 100% Completed | 15/15 [00:30<00:00,  2.02s/it]
+Loading safetensors checkpoint shards: 100% Completed | 15/15 [00:30<00:00,  2.03s/it]
+
+INFO 05-25 04:54:19 [default_loader.py:397] Loading weights took 30.74 seconds
+INFO 05-25 04:54:19 [mxfp4.py:1497] Using MoEPrepareAndFinalizeNoDPEPMonolithic
+INFO 05-25 04:54:19 [gpu_model_runner.py:4985] Model loading took 68.7 GiB memory and 31.476613 seconds
+WARNING 05-25 04:54:19 [rocm_aiter_unified_attn.py:33] [ROCM_AITER_UNIFIED_ATTN]: Setting kv cache block size to 64.
+INFO 05-25 04:54:19 [interface.py:492] Setting kv cache block size to 64 for ROCM_AITER_UNIFIED_ATTN backend.
+INFO 05-25 04:54:30 [gpu_worker.py:462] Available KV cache memory: 100.1 GiB
+INFO 05-25 04:54:30 [kv_cache_utils.py:1710] GPU KV cache size: 1,435,301 tokens
+INFO 05-25 04:54:30 [kv_cache_utils.py:1711] Maximum concurrency for 2,048 tokens per request: 700.83x
+INFO 05-25 04:54:30 [kernel_warmup.py:44] Skipping FlashInfer autotune because it is disabled.
+INFO 05-25 04:54:31 [jit_monitor.py:54] Kernel JIT monitor activated — Triton JIT compilations during inference will be logged as warnings.
+INFO 05-25 04:54:31 [core.py:312] init engine (profile, create kv cache, warmup model) took 11.84 s
+Rendering prompts:   0%|          | 0/1 [00:00<?, ?it/s]Rendering prompts: 100%|██████████| 1/1 [00:00<00:00, 130.64it/s]
+Processed prompts:   0%|          | 0/1 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]WARNING 05-25 04:54:32 [jit_monitor.py:103] Triton kernel JIT compilation during inference: _compute_slot_mapping_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+WARNING 05-25 04:54:32 [jit_monitor.py:103] Triton kernel JIT compilation during inference: kernel_unified_attention_2d. This causes a latency spike; consider extending warmup to cover this shape/config.
+WARNING 05-25 04:54:33 [jit_monitor.py:103] Triton kernel JIT compilation during inference: _topk_forward. This causes a latency spike; consider extending warmup to cover this shape/config.
+WARNING 05-25 04:54:33 [jit_monitor.py:103] Triton kernel JIT compilation during inference: _sum_bitmatrix_rows. This causes a latency spike; consider extending warmup to cover this shape/config.
+WARNING 05-25 04:54:34 [jit_monitor.py:103] Triton kernel JIT compilation during inference: _bitmatrix_metadata_compute_stage1. This causes a latency spike; consider extending warmup to cover this shape/config.
+WARNING 05-25 04:54:34 [jit_monitor.py:103] Triton kernel JIT compilation during inference: _bitmatrix_metadata_compute_stage2. This causes a latency spike; consider extending warmup to cover this shape/config.
+WARNING 05-25 04:54:35 [jit_monitor.py:103] Triton kernel JIT compilation during inference: pack_bitmatrix. This causes a latency spike; consider extending warmup to cover this shape/config.
+WARNING 05-25 04:54:36 [jit_monitor.py:103] Triton kernel JIT compilation during inference: define_kernel.<locals>._empty_fn. This causes a latency spike; consider extending warmup to cover this shape/config.
+Processed prompts: 100%|██████████| 1/1 [00:05<00:00,  5.87s/it, est. speed input: 0.17 toks/s, output: 0.68 toks/s]Processed prompts: 100%|██████████| 1/1 [00:05<00:00,  5.87s/it, est. speed input: 0.17 toks/s, output: 0.68 toks/s]Processed prompts: 100%|██████████| 1/1 [00:05<00:00,  5.87s/it, est. speed input: 0.17 toks/s, output: 0.68 toks/s]
+gpt-oss mxfp4  E=128 top4 H=2880  B=64  (exact FusedMoE.forward)
+--- B=16 ---   Ureq Uact  eager_ms  graph_ms
+B   16   16   16     1.364     0.304
+B   16   32   26     1.357     0.447
+B   16   48   37     1.370     0.496
+B   16   64   44     1.363     0.558
+B   16   80   43     1.375     0.554
+B   16   96   52     1.359     0.714
+B   16  112   46     1.358     0.568
+B   16  128   50     1.358     0.589
+--- B=32 ---   Ureq Uact  eager_ms  graph_ms
+B   32   16   16     1.360     0.309
+B   32   32   31     1.359     0.481
+B   32   48   43     1.359     0.563
+B   32   64   56     1.359     0.738
+B   32   80   63     1.357     0.758
+B   32   96   73     1.362     0.851
+B   32  112   73     1.367     0.851
+B   32  128   82     1.381     0.968
+--- B=64 ---   Ureq Uact  eager_ms  graph_ms
+B   64   16   16     1.379     0.318
+B   64   32   32     1.378     0.492
+B   64   48   48     1.377     0.592
+B   64   64   63     1.375     0.766
+B   64   80   80     1.382     0.953
+B   64   96   88     1.380     0.999
+B   64  112  104     1.384     1.220
+B   64  128  112     1.382     1.261
+--- B=128 ---   Ureq Uact  eager_ms  graph_ms
+B  128   16   16     1.398     0.363
+B  128   32   32     1.393     0.494
+B  128   48   48     1.396     0.596
+B  128   64   64     1.395     0.808
+B  128   80   80     1.401     0.958
+B  128   96   95     1.397     1.049
+B  128  112  110     1.402     1.260
+B  128  128  127     1.438     1.446
+[rank0]:[W525 04:54:50.626023558 ProcessGroupNCCL.cpp:1576] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())

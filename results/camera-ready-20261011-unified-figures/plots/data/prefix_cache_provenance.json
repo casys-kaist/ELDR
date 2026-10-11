@@ -1,0 +1,23 @@
+{
+  "source_run": "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations100/fig16_prefix_cache",
+  "request_rate": 100,
+  "measurements": 4,
+  "requests_per_measurement": 12000,
+  "plan_sha256": "ba5013ce95449e0cfa6cb86644c51e8892ff5b0756b461e08dc82c47e9998be4",
+  "source_manifest_sha256": "2ccc0ea5065fe5007b76a54d32a339347c02622db24325901bea6c09be2afa4e",
+  "inputs": {
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/gptoss-task-prefix.json": "671758eead845e2360e025edc0186d88d3141b33324506d205e025989117a3d1",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/data/task/evaluation.json": "c3f93d3798e4aa96d5b20dc2371ecdee4f7e04d6433432845955f404df7bbaa8",
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/gptoss-task/centroids.json": "60a06cb40f3723cf23187ad2ee1df648377aa07521a0f744b13e2132a787572a"
+  },
+  "raw_sha256": {
+    "gptoss-cache-0/run/r100-rr/measure/raw.json": "629bc5988a8d4d444e9c3f0f3be49012876b430074cebbc685708ff457cfd80e",
+    "gptoss-cache-0/run/r100-eldr/measure/raw.json": "48f4cef793ed059a620d8ffae6f0596945e60d46846420b458314e976f9b6c30",
+    "gptoss-cache-1/run/r100-rr/measure/raw.json": "552999214d9621b503031493ba5d743c9f86c410027b2377fa8cabdd8ea12f85",
+    "gptoss-cache-1/run/r100-eldr/measure/raw.json": "2af08a5a56c33323f2c8d357e2b11512e0dbf5ccb3da1b993ca77c4bfd1af432"
+  },
+  "renderer_sha256": "392ca7d5fcfb8048c4aa994d3c84db10efff962bacff7ba1825ec43ffb992887",
+  "plot_style_sha256": "f3f1eee50e59bf6491563d63f2f57ca7366c2b9fbb341d84d2d75660bffa28d7",
+  "adapter_sha256": "53783450a695f7a05125c29d70b2b49bc9dd143f398070af3397bc4dd4ca8f18",
+  "presentation": "Original paper renderer; TTFT axis 0\u2013240 ms with 60-ms ticks. TPOT axes, fonts, colors, layout and measured values unchanged."
+}

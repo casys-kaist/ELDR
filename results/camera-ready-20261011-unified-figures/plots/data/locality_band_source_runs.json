@@ -1,0 +1,107 @@
+{
+  "sources": {
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig15_locality_band/task": {
+      "measurements": 15,
+      "rates": [
+        60
+      ],
+      "inputs": {
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/qwen-task.json": "4f32f9f6387d97567b3489866e9892a33e7d7da571c618556d4fa3dd939d6993",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/data/task/evaluation.json": "c3f93d3798e4aa96d5b20dc2371ecdee4f7e04d6433432845955f404df7bbaa8",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/qwen-task/centroids.json": "12b0af5da8cd07b2c26f4821a2b1eb95cde2eb1611de0f08689e7d2cb581d856",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/gptoss-task.json": "3e94ea0e5803f5050c8060d56c21030f27061a65a7d4db80663294b2091eb1a0",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/gptoss-task/centroids.json": "60a06cb40f3723cf23187ad2ee1df648377aa07521a0f744b13e2132a787572a",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/gemma-task.json": "973e93bdc49f36ecd4c375681db7aa06b1454d6c70b7997797ee7a7536c16dda",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/gemma-task/centroids.json": "cb87c19c2657d2f1ee58071aa8bd03253f242a1d4647e91281f2c76b5db6fd51"
+      },
+      "manifest_sha256": {
+        "plan.json": "783dc6dd5107617cb355aef1c78631df83cc00d71910f813673c77dc83a55e94",
+        "sources.json": "2ccc0ea5065fe5007b76a54d32a339347c02622db24325901bea6c09be2afa4e",
+        "summary.json": "5fab3c6bf5a1f43499d79f78a4f34fa4affeb2921d84dc7fa45c11c3883b189c",
+        "complete.json": "ed2f5548ea37a3e11841572c197843abb1740baa0da7d2fc80897f702996cf46"
+      }
+    },
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig15_locality_band/task": {
+      "measurements": 60,
+      "rates": [
+        20,
+        40,
+        80,
+        100
+      ],
+      "inputs": {
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/qwen-task.json": "4f32f9f6387d97567b3489866e9892a33e7d7da571c618556d4fa3dd939d6993",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/data/task/evaluation.json": "c3f93d3798e4aa96d5b20dc2371ecdee4f7e04d6433432845955f404df7bbaa8",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/qwen-task/centroids.json": "12b0af5da8cd07b2c26f4821a2b1eb95cde2eb1611de0f08689e7d2cb581d856",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/gptoss-task.json": "3e94ea0e5803f5050c8060d56c21030f27061a65a7d4db80663294b2091eb1a0",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/gptoss-task/centroids.json": "60a06cb40f3723cf23187ad2ee1df648377aa07521a0f744b13e2132a787572a",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/gemma-task.json": "973e93bdc49f36ecd4c375681db7aa06b1454d6c70b7997797ee7a7536c16dda",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/gemma-task/centroids.json": "cb87c19c2657d2f1ee58071aa8bd03253f242a1d4647e91281f2c76b5db6fd51"
+      },
+      "manifest_sha256": {
+        "plan.json": "942103d32d0272ecc2976a1275ae504742db7acb8c1e8e70227e29e45f8e77f3",
+        "sources.json": "2ccc0ea5065fe5007b76a54d32a339347c02622db24325901bea6c09be2afa4e",
+        "summary.json": "1f5aba3a205c89c81b16074b227ab1faba56a1c493f435c8519be05c3934a692",
+        "complete.json": "174deea41cd6e6fb68d2d49a37236d94654b19e1d3e3b34d6316c3d3698babaa"
+      }
+    },
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/fig15_locality_band/language": {
+      "measurements": 15,
+      "rates": [
+        60
+      ],
+      "inputs": {
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/qwen-language.json": "cdbab6e13a911f3d0c2faaf0f6cb7ea40cbc97b9486a8073615fd7b572edca17",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/data/language/evaluation.json": "d7ca50add97e2dccec32597e2f86e92545755ad00ab3ea58393e536ee4255e06",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/qwen-language/centroids.json": "4002b1b7fed42c44ee25c3005c3229224099e47f344b7e5830dab2e89384d0f3",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/gptoss-language.json": "1247498051a7e31667b2ed36ee0fc1726a640b06ae4868e170044e981d1d10aa",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/gptoss-language/centroids.json": "a00bcad84ce28b8b9ea222d38315622139d3ff37ed0ac26c3bf3a4f9129dee42",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/gemma-language.json": "62ffbea6774ab90907c4b1e30561003829989b152d5983a2a8854a5c22f8c563",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/gemma-language/centroids.json": "8c7d686f94ef4d1237d2d2442e3276d771cf7a1ed0b3c5336b21ba0114c6d7b1"
+      },
+      "manifest_sha256": {
+        "plan.json": "803a4300e52254e878e39b85de8daf01a99574764e9f9aea75e094765bf155a3",
+        "sources.json": "2ccc0ea5065fe5007b76a54d32a339347c02622db24325901bea6c09be2afa4e",
+        "summary.json": "de0de8f3b947c6dfc51bb8c4d4d4a677ad0d126f922cd9adfa5d0b2815bb74c0",
+        "complete.json": "ed2f5548ea37a3e11841572c197843abb1740baa0da7d2fc80897f702996cf46"
+      }
+    },
+    "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-ablations-rates/fig15_locality_band/language": {
+      "measurements": 60,
+      "rates": [
+        20,
+        40,
+        80,
+        100
+      ],
+      "inputs": {
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/qwen-language.json": "cdbab6e13a911f3d0c2faaf0f6cb7ea40cbc97b9486a8073615fd7b572edca17",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/data/language/evaluation.json": "d7ca50add97e2dccec32597e2f86e92545755ad00ab3ea58393e536ee4255e06",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/qwen-language/centroids.json": "4002b1b7fed42c44ee25c3005c3229224099e47f344b7e5830dab2e89384d0f3",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/gptoss-language.json": "1247498051a7e31667b2ed36ee0fc1726a640b06ae4868e170044e981d1d10aa",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/gptoss-language/centroids.json": "a00bcad84ce28b8b9ea222d38315622139d3ff37ed0ac26c3bf3a4f9129dee42",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/run-2cpu-rr-eldr/configs/gemma-language.json": "62ffbea6774ab90907c4b1e30561003829989b152d5983a2a8854a5c22f8c563",
+        "/mnt/md0/eldr-camera-ready-20261008.mXxy7s/eldr/eldr/inputs/calibration/gemma-language/centroids.json": "8c7d686f94ef4d1237d2d2442e3276d771cf7a1ed0b3c5336b21ba0114c6d7b1"
+      },
+      "manifest_sha256": {
+        "plan.json": "7404169204e5677c2378826a887e52c3b939b7a505fafa842d2dead771ad0979",
+        "sources.json": "2ccc0ea5065fe5007b76a54d32a339347c02622db24325901bea6c09be2afa4e",
+        "summary.json": "deb4d82a5bcd00c151a216daaf10115fab3c9792ea3b94f28d406cd7c7cc896e",
+        "complete.json": "174deea41cd6e6fb68d2d49a37236d94654b19e1d3e3b34d6316c3d3698babaa"
+      }
+    }
+  },
+  "rates": [
+    20,
+    40,
+    60,
+    80,
+    100
+  ],
+  "measurements": 150,
+  "aggregation": "Equal-weight mean of per-rate matched RR-relative percentage changes; no pooled requests.",
+  "renderer_sha256": {
+    "plots.py": "392ca7d5fcfb8048c4aa994d3c84db10efff962bacff7ba1825ec43ffb992887",
+    "plot_style.py": "f3f1eee50e59bf6491563d63f2f57ca7366c2b9fbb341d84d2d75660bffa28d7"
+  }
+}
