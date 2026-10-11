@@ -37,7 +37,7 @@ The figure is about 10% shorter without reducing font sizes;
 the signature-return and KV-transfer labels are separated. The fixed transform
 is explained in the paper text, not inside the router box.
 Paper update:
-[`21e209e`](https://github.com/fzheart/ELDR-ATC26/commit/21e209e394426a6a58e81b8266f54eab1cdf4780).
+[`9ba1407`](https://github.com/fzheart/ELDR-ATC26/commit/9ba1407fae73b146383a65a3b0e7e40f21502e4b).
 
 ## Locality band: newly validated five-rate results
 
