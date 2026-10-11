@@ -5,18 +5,27 @@ embedded DejaVu Sans text. No PDF-to-vector conversion or text outlining is used
 RR is blue (`#1f77b4`) and ELDR is red (`#d62728`) in policy comparisons;
 P2C is orange (`#ff7f0e`) in the main figures. The approved main-result
 axes are preserved: matching P50/P99 axes per model, and at least three integer
-TTFT ticks. ACM document spacing is unchanged.
+TTFT ticks. RR curves and markers are drawn above overlapping baseline curves.
+ELDR configurations are red/right and comparison configurations blue/left in
+the signature and cluster-balance bar charts and legends. The signature-quality
+chart also places count·idf last in red. Locality-band heatmap colors retain
+their signed-value meaning; the default 0.1 tick alone is highlighted in red.
+ACM document spacing is unchanged.
 
 The PDFs below are the paper assets; the PNGs are previews rendered from those
 exact PDFs. Plotting sources, compact inputs and font-license notices are in
 [`plots/`](plots/README.md). See [`font-audit.json`](font-audit.json): all 19
 figures have embedded, searchable text and no Type 3 fonts. The updated paper
 also compiled successfully to 16 pages with no Type 3 or unembedded fonts.
-The palette revision was checked against the previous PDFs: all drawing
-geometry, labels and ticks are identical, with only the requested RR/P2C
-colors changed. Clustering and signed heatmap palettes are unchanged.
+The main-curve revision was checked against the previous PDFs: all drawing
+geometry, labels, ticks and colors are identical; only stacking order changed.
+Ablation checks confirm unchanged measurements, bar heights, whiskers, axes
+and heatmap cells despite the color/order updates. No new results are substituted.
+Fig. 6 separates initialization, the numbered request path and asynchronous
+background centroid refitting. Its fixed IDF/layer-mask transform and state
+flow are explicit, and the signature-return and KV-transfer labels are separated.
 Paper update:
-[`ed04802`](https://github.com/fzheart/ELDR-ATC26/commit/ed048021983ee5ac74ab7dfaa99bcd5af6fa81aa).
+[`7844139`](https://github.com/fzheart/ELDR-ATC26/commit/7844139476388dcca2888ef6925ce316879b2713).
 
 ## Locality band: newly validated five-rate results
 

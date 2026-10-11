@@ -3,7 +3,7 @@
 Same format as plot_sig_transform_ablation.py:
   Rows = dataset (Task, Lang). Cols = model (Qwen, GPT-OSS, Gemma).
   Each panel: Δ vs RR (%) for TPOT P50 and TPOT P99.
-  Two bars per metric: kmbal (dark) vs kmpure (light).
+  Two bars per metric: vanilla (blue, left) vs balanced ELDR (red, right).
 
 Source: 90 validated October cells; matched RR controls at every rate.
 """
@@ -11,7 +11,7 @@ import json
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 import numpy as np
-from figstyle import apply, save, BLUES, WIDTH, DATA, OUTPUT
+from figstyle import apply, save, WIDTH, DATA, OUTPUT, RR_COLOR, ELDR_COLOR
 
 MODELS = ["qwen", "gptoss", "gemma"]
 DATASETS = ["task", "lang"]
@@ -46,7 +46,7 @@ def main():
         figsize=(WIDTH, 4.6), sharey="row", squeeze=False,
     )
 
-    c_kmbal, c_kmpure = BLUES[0], BLUES[2]
+    c_kmbal, c_kmpure = ELDR_COLOR, RR_COLOR
     bar_w = 0.55
     x = np.array([0.0, 1.55])
     off_l = -bar_w / 2 - 0.03
@@ -81,18 +81,18 @@ def main():
                 continue
 
             vb, vp = d                        # kmbal, kmpure
-            ax.bar(x + off_l, vb, bar_w, color=c_kmbal,
+            ax.bar(x + off_r, vb, bar_w, color=c_kmbal,
                    edgecolor="black", linewidth=0.5, zorder=2)
-            ax.bar(x + off_r, vp, bar_w, color=c_kmpure,
+            ax.bar(x + off_l, vp, bar_w, color=c_kmpure,
                    edgecolor="black", linewidth=0.5, zorder=2)
-            for xi, v in zip(x + off_l, vb):
+            for xi, v in zip(x + off_r, vb):
                 ax.annotate(f"{v:+.1f}", xy=(xi, v), xycoords="data",
                             xytext=(0, 2 if v >= 0 else -2),
                             textcoords="offset points",
                             ha="center",
                             va="bottom" if v >= 0 else "top",
                             fontsize=13, clip_on=False)
-            for xi, v in zip(x + off_r, vp):
+            for xi, v in zip(x + off_l, vp):
                 ax.annotate(f"{v:+.1f}", xy=(xi, v), xycoords="data",
                             xytext=(0, 2 if v >= 0 else -2),
                             textcoords="offset points",
@@ -122,10 +122,10 @@ def main():
     fig.align_ylabels(axes[:, 0])
 
     handles = [
-        Patch(facecolor=c_kmbal,  edgecolor="black", linewidth=0.5,
-              label="balanced $K$-means"),
         Patch(facecolor=c_kmpure, edgecolor="black", linewidth=0.5,
               label="$K$-means"),
+        Patch(facecolor=c_kmbal,  edgecolor="black", linewidth=0.5,
+              label="balanced $K$-means (ELDR)"),
     ]
     plt.tight_layout()
     plt.subplots_adjust(top=0.80, bottom=0.10,

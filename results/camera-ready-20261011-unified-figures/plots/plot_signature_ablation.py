@@ -1,14 +1,14 @@
 """§Expert Signature Transform ablation — paper-ready 2×3 figure at r=60.
 
 Layout: rows = dataset (Task, Lang). Cols = model (Qwen, GPT-OSS, Gemma).
-Each panel plots Δ vs RR (%) for TPOT P50 and TPOT P99, with a count·idf
-(dark) and gate-prob (light) bar per metric. Uses figstyle.py conventions.
+Each panel plots Δ vs RR (%) for TPOT P50 and TPOT P99, with gate-prob
+(blue, left) and count·idf ELDR (red, right). Uses figstyle.py conventions.
 """
 import json
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 import numpy as np
-from figstyle import apply, save, BLUES, WIDTH, DATA, OUTPUT
+from figstyle import apply, save, WIDTH, DATA, OUTPUT, RR_COLOR, ELDR_COLOR
 
 MODELS = ["qwen", "gptoss", "gemma"]
 DATASETS = ["task", "lang"]
@@ -23,7 +23,7 @@ DATASET_PRETTY = {"lang": "Language", "task": "Task"}
 def main():
     apply()
     metrics = [("median_tpot_ms", "P50"), ("p99_tpot_ms", "P99")]
-    c_count, c_gate = BLUES[0], BLUES[2]
+    c_count, c_gate = ELDR_COLOR, RR_COLOR
 
     stored = json.loads((DATA / "signature_ablation.json").read_text())
     data = {(m, d): stored[d][m] for m in MODELS for d in DATASETS}
@@ -71,23 +71,23 @@ def main():
                 continue
 
             vc, vg = d
-            bars_c = ax.bar(x + off_l, vc, bar_w, color=c_count,
+            bars_c = ax.bar(x + off_r, vc, bar_w, color=c_count,
                             edgecolor="black", linewidth=0.5, zorder=2)
-            bars_g = ax.bar(x + off_r, vg, bar_w, color=c_gate,
+            bars_g = ax.bar(x + off_l, vg, bar_w, color=c_gate,
                             edgecolor="black", linewidth=0.5, zorder=2)
 
             # Value labels: offset 3 points OUTSIDE the bar tip (in display
             # space, not data) so a label is always at a fixed visual distance
             # from the bar regardless of bar height, and the row's vmin/vmax
             # headroom guarantees it never touches the axes frame.
-            for xi, v in zip(x + off_l, vc):
+            for xi, v in zip(x + off_r, vc):
                 ax.annotate(f"{v:+.1f}", xy=(xi, v), xycoords="data",
                             xytext=(0, 2 if v >= 0 else -2),
                             textcoords="offset points",
                             ha="center",
                             va="bottom" if v >= 0 else "top",
                             fontsize=13, clip_on=False)
-            for xi, v in zip(x + off_r, vg):
+            for xi, v in zip(x + off_l, vg):
                 ax.annotate(f"{v:+.1f}", xy=(xi, v), xycoords="data",
                             xytext=(0, 2 if v >= 0 else -2),
                             textcoords="offset points",
@@ -123,10 +123,10 @@ def main():
 
     # Legend boxed, snug on top.
     handles = [
-        Patch(facecolor=c_count, edgecolor="black", linewidth=0.5,
-              label=r"count$\cdot$idf"),
         Patch(facecolor=c_gate, edgecolor="black", linewidth=0.5,
               label="gate-prob"),
+        Patch(facecolor=c_count, edgecolor="black", linewidth=0.5,
+              label=r"count$\cdot$idf (ELDR)"),
     ]
     # Compute layout with tight_layout first, then explicitly nudge the axes
     # top down and anchor the legend just above it — this guarantees the

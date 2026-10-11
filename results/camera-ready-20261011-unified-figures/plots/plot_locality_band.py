@@ -3,7 +3,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-from figstyle import apply, save, WIDTH, DATA, OUTPUT
+from figstyle import apply, save, WIDTH, DATA, OUTPUT, ELDR_COLOR
 
 
 # (cell_dir_name, display_label) — 6 cells in figure order.
@@ -57,6 +57,9 @@ def plot(data, outpath):
                             color="white" if abs(v) > 0.5 * vmax else "black")
         ax.set_xticks(range(len(TAUS)))
         ax.set_xticklabels([f"{t}" for t in TAUS], fontsize=13)
+        default_tick = ax.get_xticklabels()[TAUS.index(0.1)]
+        default_tick.set_color(ELDR_COLOR)
+        default_tick.set_fontweight("bold")
         ax.set_xlabel(r"Locality band width ($\tau$)", fontsize=13)
         ax.set_yticks(range(len(CELLS)))
         if mi == 0:

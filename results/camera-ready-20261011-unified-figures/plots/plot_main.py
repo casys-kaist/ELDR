@@ -54,7 +54,7 @@ def plot_dataset(dataset, out_basename):
                     any_data = True
                 ax.plot(RATES, ys, color=color, ls=ls, marker=mk,
                         markersize=5.0, lw=1.5, label=rlabel,
-                        markeredgewidth=0.5)
+                        markeredgewidth=0.5, zorder=3 if rkey == "rr" else 2)
             if any_data:
                 all_ys = [y for rkey, *_ in ROUTERS for y in data[model][rkey][m]
                           if not np.isnan(y)]
@@ -104,6 +104,10 @@ def plot_dataset(dataset, out_basename):
         ticks = [v for v in ttft.get_yticks() if lo <= v <= hi]
         assert len(ticks) >= 3 and all(float(t).is_integer() for t in ticks)
     for ax in fig.axes:
+        data_lines = [line for line in ax.lines if len(line.get_xdata())]
+        rr = next(line for line in data_lines if line.get_label() == "RR")
+        assert all(rr.get_zorder() > line.get_zorder()
+                   for line in data_lines if line is not rr)
         lo, hi = ax.get_ylim()
         for line in ax.lines:
             values = line.get_ydata()

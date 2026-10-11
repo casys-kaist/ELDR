@@ -28,11 +28,20 @@ Overleaf compiles the generated PDFs; Python runs locally, not inside Overleaf.
 `figstyle.py` defines typography, palette and legend styling. RR is blue
 (`#1f77b4`) and ELDR is red (`#d62728`) in policy comparisons. P2C is orange
 (`#ff7f0e`) in the main figures so each policy has a distinct color. Blue
-shades distinguish signature/clustering variants; blue/red in the locality
-heatmap denotes signed improvement/regression, not policy identity. Legends
+and red distinguish ablation alternatives and the ELDR configuration,
+respectively. ELDR bars and legend entries are on the right in the signature
+and cluster-balance comparisons; the signature-quality chart also places
+ELDR's count·idf transform last. Blue/red cell colors in the locality
+heatmap denote signed improvement/regression, not policy identity; only
+the default 0.1 tick is highlighted in red. Task/Language and domain colors
+retain their separate meanings. Legends
 use square light-gray frames. Dense multipanel figures retain compact text
 sizes, while titles, labels and ticks keep a consistent hierarchy. The main
 figures retain their approved shared P50/P99 axes and integer TTFT ticks.
+RR curves and markers are drawn above the other policies without changing
+the legend order, line widths, colors or data.
+The overview separates initialization, the numbered request path and
+asynchronous background refitting; IDF and the layer mask stay fixed.
 ACM class settings and document float/caption spacing are not changed.
 
 | Figure content | Source | Input in `data/` |

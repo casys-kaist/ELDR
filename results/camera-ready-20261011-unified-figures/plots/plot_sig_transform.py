@@ -20,14 +20,14 @@ fs.apply()
 IN = fs.DATA / "rho_transform.json"
 OUT = fs.OUTPUT / "04_design/sig_transform"
 
-# Display order: our choice (count·idf) leftmost, others descending. Highlighted.
+# Comparison transforms first; ELDR's choice is red and rightmost.
 VARIANTS = [
-    ("count_idf",      "count$\\cdot$idf"),
     ("count",          "count"),
     ("sqrt",           "$\\sqrt{\\,}$count"),
     ("gate_prob_all",  "gate prob"),
     ("gate_logit_all", "gate logit"),
     ("binary",         "binary"),
+    ("count_idf",      "count$\\cdot$idf"),
 ]
 
 
@@ -46,7 +46,7 @@ def main():
              if not (isinstance(x, float) and np.isnan(x))]
             for name, _ in VARIANTS]
 
-    # Sort by mean ρ, descending. Keep count first regardless to highlight choice.
+    # Preserve every transform's values while following the display order above.
     means = [np.mean(d) if d else float("nan") for d in data]
     # Compute mean/min/max for the bar chart
     mean = np.array(means)
@@ -55,7 +55,7 @@ def main():
 
     fig, ax = plt.subplots(figsize=(fs.WIDTH, 2.8))
     x = np.arange(len(names))
-    cols = [fs.BLUES[0] if names[i] == "count$\\cdot$idf" else fs.BLUES[2]
+    cols = [fs.ELDR_COLOR if names[i] == "count$\\cdot$idf" else fs.RR_COLOR
             for i in range(len(names))]
     ax.bar(x, mean, color=cols, edgecolor="k", lw=0.8, width=0.66, zorder=3)
     ax.errorbar(x, mean, yerr=[mean - lo, hi - mean], fmt="none",

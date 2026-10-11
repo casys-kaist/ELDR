@@ -2,14 +2,14 @@
 <html><head><meta charset="utf-8"><style>
   @import url("fonts.css");
   /* Original ELDR diagram; direct HTML rendering with embedded fonts. */
-  @page { size: 240pt 184.08pt; margin: 0; }
+  @page { size: 240pt 244.5pt; margin: 0; }
   html,body { margin:0; padding:0; }
   :root{
     --ink:#222A33; --cedge:#5B6B7B; --cfill:#EEF1F4;
     --aedge:#2F6FA8; --afill:#D4E6F5;
     --gedge:#AEB9C4; --gfill:#F7F8FA; --panel:#9AA6B2; --subc:#34536B;
   }
-  #cv{ position:relative; width:320px; height:246px;
+  #cv{ position:relative; width:320px; height:326px;
        font-family:"DejaVu Sans",sans-serif; color:var(--ink);
        font-size:11px; }
   .b{ position:absolute; box-sizing:border-box; border:1px solid var(--cedge);
@@ -20,19 +20,16 @@
   .ghost{ position:absolute; box-sizing:border-box; border:1px solid var(--gedge);
           background:var(--gfill); }
   .sub{ font-size:9px; color:var(--subc); margin-top:1px; }
-  sub{ font-size:0.72em; line-height:0; position:relative; bottom:-0.22em; vertical-align:baseline; }
+  .note{ font-size:8.5px; }
   .ttl{ font-weight:bold; }
   .phase{ position:absolute; box-sizing:border-box; border:1px dashed var(--panel);
           background:transparent; }
   .tab{ position:absolute; font-size:9.5px; font-weight:bold; letter-spacing:.5px;
         color:#3A4651; }
-  .lab{ position:absolute; font-size:10px; color:var(--ink); white-space:nowrap; }
+  .lab{ position:absolute; font-size:9.5px; line-height:1.1;
+        color:var(--ink); white-space:nowrap; }
   .labc{ transform:translateX(-50%); text-align:center; }
   .labr{ transform:translateX(-100%); text-align:right; }
-  .ibadge{ display:inline-flex; width:12px; height:12px; border-radius:50%;
-           background:var(--ink); color:#fff; font-size:7px; font-weight:bold;
-           align-items:center; justify-content:center; vertical-align:middle;
-           margin-right:3px; }
   .badge{ position:absolute; width:13px; height:13px; border-radius:50%;
           background:var(--ink); color:#fff; font-size:8px; font-weight:bold;
           display:flex; align-items:center; justify-content:center;
@@ -42,77 +39,88 @@
 <body>
 <div id="cv">
 
-  <!-- ===== OFFLINE phase ===== -->
-  <div class="phase" style="left:4px;top:6px;width:312px;height:54px;"></div>
-  <div class="tab" style="left:11px;top:10px;">OFFLINE&nbsp;&nbsp;(once / deployment)</div>
-  <div class="b acc" style="left:32px;top:24px;width:96px;height:30px;"><span>Calibration<br>Signatures</span></div>
-  <div class="b acc" style="left:192px;top:24px;width:96px;height:30px;"><span><i>K</i></span><span>Centroids</span></div>
-  <div class="lab labc" style="left:160px;top:27px;">balanced</div>
-  <div class="lab labc" style="left:160px;top:39px;"><i>K</i>-means</div>
+  <!-- Initialization: the transform is calibrated once and then held fixed. -->
+  <div class="phase" style="left:4px;top:4px;width:312px;height:61px;"></div>
+  <div class="tab" style="left:11px;top:9px;">INITIALIZATION&nbsp;&nbsp;(once)</div>
+  <div class="b acc" style="left:18px;top:27px;width:98px;height:30px;">
+      <span>Calibration<br>signatures</span></div>
+  <div class="b acc" style="left:206px;top:27px;width:96px;height:30px;">
+      <span><i>K</i> centroids</span><span class="sub note">one per decoder</span></div>
+  <div class="lab labc" style="left:161px;top:27px;">balanced</div>
+  <div class="lab labc" style="left:161px;top:45px;"><i>K</i>-means</div>
 
-  <!-- ===== ONLINE phase ===== -->
-  <div class="phase" style="left:4px;top:68px;width:312px;height:172px;"></div>
-  <div class="tab" style="left:11px;top:72px;">ONLINE&nbsp;&nbsp;(per request)</div>
-
-  <!-- client talks ONLY to the router (tight gap) -->
-  <div class="b" style="left:115px;top:86px;width:90px;height:22px;">Client</div>
-  <div class="b acc" style="left:100px;top:122px;width:120px;height:36px;">
-      <span class="ttl">ELDR Router</span></div>
+  <!-- Foreground request path: step numbers match the five steps in the text. -->
+  <div class="phase" style="left:4px;top:74px;width:312px;height:174px;"></div>
+  <div class="tab" style="left:11px;top:78px;">REQUEST PATH&nbsp;&nbsp;(per request)</div>
+  <div class="b" style="left:115px;top:95px;width:90px;height:22px;">Client</div>
+  <div class="b acc" style="left:82px;top:137px;width:156px;height:40px;">
+      <span class="ttl">ELDR Router</span>
+      <span class="sub note">Fixed transform: IDF + layer mask</span></div>
 
   <!-- Prefill stack (xP), left -->
-  <div class="ghost" style="left:26px;top:184px;width:108px;height:42px;"></div>
-  <div class="ghost" style="left:22px;top:188px;width:108px;height:42px;"></div>
-  <div class="b" style="left:18px;top:192px;width:108px;height:42px;">
+  <div class="ghost" style="left:26px;top:203px;width:108px;height:31px;"></div>
+  <div class="ghost" style="left:22px;top:207px;width:108px;height:31px;"></div>
+  <div class="b" style="left:18px;top:211px;width:108px;height:31px;">
       <span class="ttl">Prefill &times;&nbsp;<i>x</i></span><span class="sub">signature cache</span></div>
 
   <!-- Decode stack (yD), right -->
-  <div class="ghost" style="left:202px;top:184px;width:108px;height:42px;"></div>
-  <div class="ghost" style="left:198px;top:188px;width:108px;height:42px;"></div>
-  <div class="b" style="left:194px;top:192px;width:108px;height:42px;">
-      <span class="ttl">Decode &times;&nbsp;<i>y</i></span><span class="sub">centroid c<sub>k</sub> each</span></div>
+  <div class="ghost" style="left:202px;top:203px;width:108px;height:31px;"></div>
+  <div class="ghost" style="left:198px;top:207px;width:108px;height:31px;"></div>
+  <div class="b" style="left:194px;top:211px;width:108px;height:31px;">
+      <span class="ttl">Decode &times;&nbsp;<i>y</i></span><span class="sub">generate tokens</span></div>
 
-  <!-- ===== arrows (all ink; distinguished by line style) ===== -->
-  <svg width="320" height="246">
+  <!-- Background work only refreshes centroids, not the fixed transform. -->
+  <div class="phase" style="left:4px;top:261px;width:312px;height:58px;"></div>
+  <div class="tab" style="left:11px;top:265px;">BACKGROUND REFITTING&nbsp;&nbsp;(async)</div>
+  <div class="b acc" style="left:18px;top:284px;width:98px;height:28px;">
+      <span style="font-size:10px;">Recent signatures</span><span class="sub note">transformed</span></div>
+  <div class="b acc" style="left:210px;top:284px;width:92px;height:28px;">
+      <span>Updated</span><span><i>K</i> centroids</span></div>
+  <div class="lab labc" style="left:163px;top:285px;">balanced</div>
+  <div class="lab labc" style="left:163px;top:303px;"><i>K</i>-means</div>
+
+  <!-- Solid: foreground; dashed: KV; blue dotted: routing-state updates. -->
+  <svg width="320" height="326">
     <defs>
       <marker id="mf" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#222A33"/></marker>
+      <marker id="ms" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2F6FA8"/></marker>
     </defs>
     <!-- request / response flow: solid -->
     <g stroke="#222A33" stroke-width="1" fill="none">
-      <line x1="128" y1="39"  x2="192" y2="39"  marker-end="url(#mf)"/>   <!-- offline k-means -->
-      <line x1="150" y1="108" x2="150" y2="122" marker-end="url(#mf)"/>   <!-- client to router: request -->
-      <line x1="170" y1="122" x2="170" y2="108" marker-end="url(#mf)"/>   <!-- router to client: response -->
-      <line x1="108" y1="158" x2="72"  y2="192" marker-end="url(#mf)"/>   <!-- 1 prompt -->
-      <line x1="120" y1="192" x2="116" y2="158" marker-end="url(#mf)"/>   <!-- 2 signature -->
-      <line x1="204" y1="158" x2="228" y2="192" marker-end="url(#mf)"/>   <!-- 4 route -->
-
+      <line x1="116" y1="42" x2="206" y2="42" marker-end="url(#mf)"/>
+      <line x1="150" y1="117" x2="150" y2="137" marker-end="url(#mf)"/>
+      <line x1="170" y1="137" x2="170" y2="117" marker-end="url(#mf)"/>
+      <line x1="93" y1="177" x2="67" y2="211" marker-end="url(#mf)"/>
+      <line x1="118" y1="211" x2="124" y2="177" marker-end="url(#mf)"/>
+      <line x1="218" y1="177" x2="249" y2="211" marker-end="url(#mf)"/>
+      <line x1="116" y1="298" x2="210" y2="298" marker-end="url(#mf)"/>
     </g>
     <!-- KV transfer: dashed -->
     <g stroke="#222A33" stroke-width="1" fill="none" stroke-dasharray="4,2">
-      <line x1="126" y1="213" x2="194" y2="213" marker-end="url(#mf)"/>
+      <line x1="126" y1="232" x2="194" y2="232" marker-end="url(#mf)"/>
     </g>
-    <!-- centroid assignment (offline to decoders): dotted, exits the right side of
-         K-Centroids and drops down the clear right channel, one c_k per worker -->
-    <g stroke="#222A33" stroke-width="1.1" fill="none" stroke-dasharray="1,2.5" stroke-linecap="round">
-      <path d="M288,39 H296 V192" marker-end="url(#mf)"/>
+    <!-- The router reads current centroids without waiting for refitting. -->
+    <g stroke="#2F6FA8" stroke-width="1.1" fill="none" stroke-dasharray="1,2.5" stroke-linecap="round">
+      <path d="M302,42 H308 V146 H238" marker-end="url(#ms)"/>
+      <path d="M82,157 H10 V298 H18" marker-end="url(#ms)"/>
+      <path d="M302,298 H312 V165 H238" marker-end="url(#ms)"/>
     </g>
   </svg>
 
   <!-- client I/O -->
-  <div class="lab labr" style="left:142px;top:108px;">request</div>
-  <div class="lab" style="left:178px;top:108px;">response</div>
-  <!-- dispatch policies: prefill = round-robin (step 1), decode = load-aware locality routing (step 4) -->
-  <div class="lab labc" style="left:62px;top:160px;line-height:1.05;">prefix-aware<br>routing</div>
-  <div class="lab" style="left:124px;top:164px;">expert signature</div>
-  <div class="lab labc" style="left:250px;top:160px;line-height:1.05;">locality-band<br>routing</div>
-  <div class="lab labc" style="left:162px;top:193px;">KV transfer</div>
-  <div class="lab labr" style="left:290px;top:112px;line-height:1.05;">one centroid<br>per decoder</div>
+  <div class="lab labr" style="left:142px;top:121px;">request</div>
+  <div class="lab" style="left:178px;top:121px;">response</div>
+  <div class="lab labc" style="left:44px;top:179px;">prefix-aware<br>routing</div>
+  <div class="lab labc" style="left:161px;top:183px;">expert<br>signature</div>
+  <div class="lab labc" style="left:278px;top:179px;">locality-band<br>routing</div>
+  <div class="lab labc" style="left:163px;top:214px;">KV transfer</div>
 
   <!-- step badges (all ink), numbered to match the text's 5 online steps -->
-  <div class="badge" style="left:87px;top:178px;">1</div>     <!-- 1 request: router->prefill (prefix-aware routing) -->
-  <div class="badge" style="left:25px;top:220px;">2</div>     <!-- 2 record signature (next to signature cache) -->
-  <div class="badge" style="left:118px;top:178px;">3</div>    <!-- 3 return signature: prefill->router -->
-  <div class="badge" style="left:218px;top:178px;">4</div>    <!-- 4 route: router->decode -->
-  <div class="badge" style="left:162px;top:213px;">5</div>    <!-- 5 pull KV + generate, on the KV transfer -->
+  <div class="badge" style="left:81px;top:193px;">1</div>
+  <div class="badge" style="left:25px;top:234px;">2</div>
+  <div class="badge" style="left:121px;top:193px;">3</div>
+  <div class="badge" style="left:233px;top:193px;">4</div>
+  <div class="badge" style="left:160px;top:232px;">5</div>
 
 </div>
 </body></html>
