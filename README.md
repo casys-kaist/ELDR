@@ -1,16 +1,28 @@
-# ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving
-
-ACM SIGOPS Annual Technical Conference (ATC) 2026
+# ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving [ACM ATC 2026]
 
 ## Overview
 
-In mixture-of-experts (MoE) serving, equally loaded decode workers can have
-different latency because their requests activate different numbers of experts.
-ELDR uses prefill expert activations to predict which requests will share experts
-during decode, then combines balanced clustering with load-aware routing to place
-them together. It changes only request placement, preserving model weights,
-token-to-expert assignments, and model outputs. A block-level signature cache
-keeps this routing signal complete when prefix caching skips part of prefill.
+In prefill–decode (PD) disaggregated LLM serving, each request is
+assigned to a decode worker after prefill. Existing decode routers
+balance only load; for mixture-of-experts (MoE) models this is
+incomplete: equally loaded workers can differ in latency, since each
+decode step loads the weights of every distinct expert its batch
+activates.
+We present ELDR, an expert-locality-aware decode router for
+PD-disaggregated MoE serving. From a request's prefill expert
+activations, ELDR builds an expert signature predicting the experts it
+will activate during generation. Balanced K-means initializes one
+centroid per decode worker and refits the centroids in the background
+using recent signatures. Locality-band routing sends each request to
+the least-loaded worker among those best matching its signature.
+A signature cache, co-indexed with the KV cache at
+KV-block granularity, keeps signatures exact under prefix caching.
+Implemented in vLLM, ELDR is evaluated on deployments of up to 40 GPUs
+using a mixture of 12 public task benchmarks and real-world multilingual
+WildChat traffic. Across three MoE models, it reduces median TPOT by
+5.4–14.5% on average across request rates and by up to 17.8% relative
+to the strongest of four load-balancing baselines, while preserving
+model outputs and token-to-expert assignments.
 
 This repository is a vLLM fork with ELDR's serving integration and eight evaluation
 experiments. See [Experiments](#experiments) for coverage. To explore the code
