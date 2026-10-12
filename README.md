@@ -10,18 +10,15 @@ and a block-level signature cache keeps signatures exact under prefix caching.
 ELDR changes only request placement, preserving model weights, token-to-expert
 assignments, and model outputs.
 
-This repository is a vLLM fork with ELDR's serving integration and eight evaluation
-experiments. See [Experiments](#experiments) for coverage. To explore the code
-without a GPU cluster, start with [Code and CPU tests](#code-and-cpu-tests).
-
 ## Requirements
 
-For GPU experiments, prepare:
-
-- A Linux controller with `uv`, Docker, `rsync`, and `flock`.
-- Dedicated, idle worker nodes with configured GPU and RDMA drivers. The reference
-  configuration uses 24 AMD MI300X GPUs: eight prefill workers and 16 decode
-  workers (8P16D), one GPU per worker.
+- Three GPU nodes, each with eight AMD MI300X GPUs (192 GB HBM per GPU),
+  connected via RDMA-capable InfiniBand. The default 8P16D configuration uses one
+  node for prefill and two for decode, with one GPU per worker. Nodes must be idle
+  and dedicated to the experiment, with GPU and RDMA drivers configured.
+- A Linux host for running the experiment scripts, routing proxy, and load
+  generator, with `uv`, Docker, `rsync`, and `flock` installed. This host is
+  referred to as the controller below.
 - The [pinned serving image](#tested-environment) on the controller and workers,
   and model weights at the paths specified in the cluster configuration.
 - SSH host aliases with existing persistent connections to the workers. The
