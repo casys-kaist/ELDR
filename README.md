@@ -1,4 +1,4 @@
-# ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving [ACM ATC 2026]
+# ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving [SIGOPS ATC 2026]
 
 ELDR is a lossless, expert-locality-aware decode router for prefill–decode (PD)
 disaggregated MoE serving. Equally loaded decode workers can have different
