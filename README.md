@@ -23,10 +23,6 @@ assignments, and model outputs.
   and model weights at the paths specified in the cluster configuration.
 - SSH host aliases with existing persistent connections to the workers. The
   runner reuses these connections; it does not establish or repair them.
-- Internet access for dataset preparation and dependency installation.
-
-GPU calibration is part of input preparation. The CPU test environment alone
-cannot run or validate the serving experiments.
 
 ## Quick start
 
@@ -40,10 +36,8 @@ cd eldr
 ```
 
 Update [eldr/experiments/cluster.json](eldr/experiments/cluster.json) for your
-cluster before running anything. Check the controller address, model and tokenizer
-cache paths, worker SSH aliases and addresses, GPU IDs, CPU masks, RDMA interfaces,
-and ports. The supplied values describe the reference cluster, not an automatic
-hardware discovery configuration.
+cluster: controller address, model and tokenizer cache paths, worker SSH aliases
+and addresses, GPU IDs, CPU masks, RDMA interfaces, and ports.
 
 To keep your configuration in a separate file, pass `--config /path/to/cluster.json`
 to both preparation and experiment scripts.
@@ -72,23 +66,21 @@ bash eldr/scripts/run_all.sh
 
 `--plan` checks the prepared inputs and writes configurations and experiment plans
 without deploying sources or launching GPU work. It requires all six shared
-model/workload input sets from Step 2, even when selecting one experiment. It is
-not a GPU validation run.
+model/workload input sets from Step 2, even when selecting one experiment.
 
-The second command runs all eight experiments and generates their figures and
-table. It prints the output directory and log paths. Use `--output NEW_DIR` to
-choose a new destination; an existing directory is not overwritten.
+`run_all.sh` runs all eight experiments and generates their figures and table.
+Use `--output NEW_DIR` to choose a new destination; an existing directory is not
+overwritten.
 
 Preparation and execution share `/tmp/eldr-ae.lock` to prevent overlapping jobs on
-the controller. Execution stops on failure. Runtime includes model loading,
-compilation, warmup, and request completion, not just measurement traffic.
+the controller. Execution stops on failure.
 
 ## Experiments
 
-Each script runs one study and generates its figures or table. The main and three
-design-ablation studies cover Qwen3-30B-A3B, GPT-OSS-120B, and Gemma-4-26B-A4B.
-The ablations cover both Task and Language workloads. Prefix cache uses GPT-OSS
-Task; single-category and drift use Qwen. Run counts exclude warmup and calibration.
+The main and three design-ablation studies cover Qwen3-30B-A3B, GPT-OSS-120B, and
+Gemma-4-26B-A4B. The ablations cover both Task and Language workloads. Prefix
+cache uses GPT-OSS Task; single-category and drift use Qwen. Run counts exclude
+warmup and calibration.
 
 | Paper item | Script | Request rates (req/s) | Measured runs |
 | --- | --- | --- | --- |
@@ -101,16 +93,16 @@ Task; single-category and drift use Qwen. Run counts exclude warmup and calibrat
 | Table 2: Math-only / English-only | `tab2_single_category.sh` | 20, 40, 60, 80, 100 | 20 |
 | 17: Workload drift | `fig17_workload_drift.sh` | 100 | 3 |
 
-To run a single experiment, use its script, for example:
+Run a single experiment:
 
 ```bash
 bash eldr/scripts/fig10_main_task.sh
 ```
 
-Each script supports `--help`. For a shorter end-to-end check, use
-`--profile smoke`; it reduces request rates/counts and output lengths but still
-requires prepared inputs and GPUs. Drift smoke retains the 120-second analysis
-interval, and single-category still performs both fresh calibration captures.
+For a shorter end-to-end check, use `--profile smoke`; it reduces request
+rates/counts and output lengths but still requires prepared inputs and GPUs.
+Drift smoke retains the 120-second analysis interval, and single-category still
+performs both fresh calibration captures.
 Smoke results are not paper measurements.
 
 ### Default protocol
@@ -133,8 +125,7 @@ fixed-centroid control; it is not the default ELDR configuration.
 Single-category performs two fresh category-only calibration captures, separate
 from its 20 measurements. Calibration and evaluation prompts are disjoint. The
 Full signature's IDF weights and layer mask remain fixed; only centroids are
-fitted to each category. The output is a native LaTeX table, plus CSV/JSON with
-every rate retained, including regressions.
+fitted to each category.
 
 Drift compares RR, static ELDR, and online ELDR from the same initial centroids.
 It changes the combined code/math share from 49% to 80% and back, with 10-second
@@ -146,28 +137,24 @@ interval as the other experiments.
 
 ## Results and replay
 
-Results are saved in `eldr/artifacts/runs/<run>/`; the script prints the exact path.
+Results are saved in `eldr/artifacts/runs/<run>/`.
 Each experiment produces CSV/JSON summaries and PDF/PNG plots, except Table 2,
 which produces native LaTeX (`.tex`) instead of an image. Raw request measurements
 are saved in `<worker-group>/run/<trial>/measure/raw.json`.
 
 Metrics are TPOT P50/P95/P99 and TTFT P50. TTFT ends when the prefill-generated
-first token reaches the client. Tail latency may vary across runs and system
-conditions.
+first token reaches the client.
 
 Signature, cluster-balance, and locality-band plots show mean per-rate percentage
 changes relative to RR; negative values indicate lower latency.
 
-Redraw saved results without GPU access:
+Redraw saved results using the [CPU environment](#code-and-cpu-tests):
 
 ```bash
 bash eldr/scripts/plot_all.sh RUN_DIR --output NEW_PLOT_DIR
 bash eldr/scripts/plot_tab2_single_category.sh RUN_DIR/tab2_single_category --output NEW_TABLE_DIR
 bash eldr/scripts/plot_fig17_workload_drift.sh RUN_DIR/fig17_workload_drift --output NEW_DRIFT_DIR
 ```
-
-Replace `RUN_DIR` with the path printed by the experiment runner. Plotting uses
-the CPU environment below and does not launch serving workers.
 
 `plot_all.sh` requires all eight experiments by default. For a partial or older
 six-experiment suite, add `--available`; missing studies are skipped, but an
