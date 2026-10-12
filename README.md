@@ -1,54 +1,102 @@
-# ELDR Artifact Evaluation
+# ELDR
 
-Artifact for “ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated
-MoE Serving” (ACM ATC 2026). This repository provides eight experiments covering
-Task and Language performance, expert signatures, balanced clustering,
-locality-band routing, prefix-cache compatibility, single-category workloads,
-and workload drift.
+Implementation and experiment scripts for “ELDR: Expert-Locality-Aware Decode
+Routing for PD-Disaggregated MoE Serving” (SIGOPS ATC 2026).
 
-## Run
+## Overview
 
-Clone the repository on the controller node of a prepared GPU cluster.
-Prerequisites are `uv`, Docker, `rsync`, configured GPU/RDMA drivers, and
-persistent SSH connections to worker nodes.
+In mixture-of-experts (MoE) serving, equally loaded decode workers can have
+different latency because their requests activate different numbers of experts.
+ELDR uses prefill expert activations to predict which requests will share experts
+during decode, then combines balanced clustering with load-aware routing to place
+them together. It changes only request placement, preserving model weights,
+token-to-expert assignments, and model outputs. A block-level signature cache
+keeps this routing signal complete when prefix caching skips part of prefill.
+
+This repository is a vLLM fork with ELDR's serving integration and eight evaluation
+experiments. See [Experiments](#experiments) for coverage. To explore the code
+without a GPU cluster, start with [Code and CPU tests](#code-and-cpu-tests).
+
+## Requirements
+
+For GPU experiments, prepare:
+
+- A Linux controller with `uv`, Docker, `rsync`, and `flock`.
+- Dedicated, idle worker nodes with configured GPU and RDMA drivers. The reference
+  configuration uses 24 AMD MI300X GPUs: eight prefill workers and 16 decode
+  workers (8P16D), one GPU per worker.
+- The [pinned serving image](#tested-environment) on the controller and workers,
+  and model weights at the paths specified in the cluster configuration.
+- SSH host aliases with existing persistent connections to the workers. The
+  runner reuses these connections; it does not establish or repair them.
+- Internet access for dataset preparation and dependency installation.
+
+GPU calibration is part of input preparation. The CPU test environment alone
+cannot run or validate the serving experiments.
+
+## Quick start
+
+Run the following commands from the repository root on the controller.
+
+### 1. Clone and configure
 
 ```bash
 git clone https://github.com/casys-kaist/ELDR.git eldr
 cd eldr
 ```
 
-Prepare inputs, then run all eight experiments and generate their figures/tables:
+Update [eldr/experiments/cluster.json](eldr/experiments/cluster.json) for your
+cluster before running anything. Check the controller address, model and tokenizer
+cache paths, worker SSH aliases and addresses, GPU IDs, CPU masks, RDMA interfaces,
+and ports. The supplied values describe the reference cluster, not an automatic
+hardware discovery configuration.
+
+To keep your configuration in a separate file, pass `--config /path/to/cluster.json`
+to both preparation and experiment scripts.
+
+### 2. Prepare data and calibration
 
 ```bash
 bash eldr/scripts/prepare_data.sh
+```
+
+This installs dependencies, downloads pinned public datasets, creates disjoint
+calibration/evaluation splits, and collects GPU activations to fit the signature
+transform and centroids. Serving sources are synchronized to worker nodes.
+
+Inputs are saved in `eldr/inputs/`; preparation logs are saved in
+`eldr/artifacts/preparation/`. Rerunning the command verifies and reuses completed
+inputs. After an interrupted capture, resolve the error and confirm worker cleanup
+before rerunning; keep the previous attempt's logs.
+
+### 3. Check the plan and run
+
+```bash
+bash eldr/scripts/run_all.sh --plan
 bash eldr/scripts/run_all.sh
 ```
 
-The scripts install CPU dependencies, verify inputs, and automatically synchronize
-serving code across worker nodes. Runtime depends on model loading, compilation,
-and request latency in addition to the measurement and warmup traffic.
+`--plan` checks the prepared inputs and writes configurations and experiment plans
+without deploying sources or launching GPU work. It requires all six shared
+model/workload input sets from Step 2, even when selecting one experiment. It is
+not a GPU validation run.
 
-## Prepare inputs
+The second command runs all eight experiments and generates their figures and
+table. It prints the output directory and log paths. Use `--output NEW_DIR` to
+choose a new destination; an existing directory is not overwritten.
 
-`prepare_data.sh` downloads pinned public datasets, deduplicates and filters
-prompts, and creates disjoint calibration and evaluation splits. It then collects
-expert activations to fit the signature transform and centroids.
-
-Newly generated datasets, calibration activations, and fitted centroids are saved
-in `eldr/inputs/`; preparation logs are saved in `eldr/artifacts/preparation/`.
-Preparation requires internet access and the configured GPUs and models.
-
-Rerunning `prepare_data.sh` verifies and reuses completed inputs. If preparation is
-interrupted, rerun the same command.
+Preparation and execution share `/tmp/eldr-ae.lock` to prevent overlapping jobs on
+the controller. Execution stops on failure. Runtime includes model loading,
+compilation, warmup, and request completion, not just measurement traffic.
 
 ## Experiments
 
-Each experiment has a script in `eldr/scripts/` that runs the experiment and
-generates its figures or table. Main experiments use all three models. Signature,
-cluster-balance, and locality-band experiments cover both Task and Language;
-prefix cache uses GPT-OSS Task. Single-category and drift use Qwen.
+Each script runs one study and generates its figures or table. The main and three
+design-ablation studies cover Qwen3-30B-A3B, GPT-OSS-120B, and Gemma-4-26B-A4B.
+The ablations cover both Task and Language workloads. Prefix cache uses GPT-OSS
+Task; single-category and drift use Qwen. Run counts exclude warmup and calibration.
 
-| Figure | Script | Requests/s | Measurement cells |
+| Paper item | Script | Request rates (req/s) | Measured runs |
 | --- | --- | --- | --- |
 | 10: Main Task | `fig10_main_task.sh` | 20, 40, 60, 80, 100 | 90 |
 | 11: Main Language | `fig11_main_language.sh` | 20, 40, 60, 80, 100 | 90 |
@@ -59,11 +107,22 @@ prefix cache uses GPT-OSS Task. Single-category and drift use Qwen.
 | Table 2: Math-only / English-only | `tab2_single_category.sh` | 20, 40, 60, 80, 100 | 20 |
 | 17: Workload drift | `fig17_workload_drift.sh` | 100 | 3 |
 
+The paper's active-expert-count, topology, and 235B experiments are not covered by
+these scripts.
+
 To run a single experiment, use its script, for example:
 
 ```bash
 bash eldr/scripts/fig10_main_task.sh
 ```
+
+Each script supports `--help`. For a shorter end-to-end check, use
+`--profile smoke`; it reduces request rates/counts and output lengths but still
+requires prepared inputs and GPUs. Drift smoke retains the 120-second analysis
+interval, and single-category still performs both fresh calibration captures.
+Smoke results are not paper measurements.
+
+### Default protocol
 
 Default settings are counts × IDF, a fixed layer mask, global L2 normalization,
 online centroid refitting with a 5-second history and a 1-second interval, and
@@ -94,39 +153,12 @@ using actual request arrival times; the saved comparison retains each policy's
 observed domain mix. Online refitting uses the same 5-second history/1-second
 interval as the other experiments.
 
-The final paper's active-expert-count, topology, and 235B experiments are not
-covered by these scripts.
-
-Use `--output NEW_DIR` to choose an output directory and `--plan` to check the
-experiment plan without launching GPU experiments. For another cluster, adapt
-`eldr/experiments/cluster.json` and pass `--config CLUSTER_JSON` to both preparation
-and experiment scripts. Models, the serving image, and worker SSH access must be
-prepared. Each script supports `--help`.
-
-`--profile smoke` reduces traffic and output lengths; it is not a paper result.
-Drift smoke still covers the full 120-second analysis interval (300 requests at
-2 req/s including guards). Single-category still needs both fresh calibration
-captures. Execution takes the shared `/tmp/eldr-ae.lock` and stops on failure;
-`--plan` does not deploy code or launch GPU work.
-
-## Results
+## Results and replay
 
 Results are saved in `eldr/artifacts/runs/<run>/`; the script prints the exact path.
 Each experiment produces CSV/JSON summaries and PDF/PNG plots, except Table 2,
-which produces `.tex` instead of an image. Raw request
-measurements are saved in `<worker-group>/run/<trial>/measure/raw.json`.
-
-After resolving an error, resume using the original run directory:
-
-```bash
-bash eldr/scripts/run_all.sh --resume RUN_DIR
-```
-
-Completed experiments are skipped; the interrupted experiment restarts from
-warmup. Resume requires unchanged code and inputs and successful worker cleanup.
-Use the original checkout to resume an older run; updated protocols require a
-new output directory. Plot replay still accepts completed static-centroid runs
-and preserves their saved measurements.
+which produces native LaTeX (`.tex`) instead of an image. Raw request measurements
+are saved in `<worker-group>/run/<trial>/measure/raw.json`.
 
 Metrics are TPOT P50/P95/P99 and TTFT P50. TTFT ends when the prefill-generated
 first token reaches the client. Tail latency may vary across runs and system
@@ -143,26 +175,48 @@ bash eldr/scripts/plot_tab2_single_category.sh RUN_DIR/tab2_single_category --ou
 bash eldr/scripts/plot_fig17_workload_drift.sh RUN_DIR/fig17_workload_drift --output NEW_DRIFT_DIR
 ```
 
+Replace `RUN_DIR` with the path printed by the experiment runner. Plotting uses
+the CPU environment below and does not launch serving workers.
+
 `plot_all.sh` requires all eight experiments by default. For a partial or older
-six-experiment suite, pass `--available` explicitly; this validates only the
-recognized experiments present in `RUN_DIR`. An incomplete experiment directory
-still fails validation. Replay recomputes metrics from raw
-requests and checks them against saved summaries. Generalization additionally
-checks calibration/input/source provenance, routing/refit/cache flags, cleanup,
-and the saved comparison. Keep the original input bundle and source snapshots
-alongside results for these checks. Outputs are never overwritten.
+six-experiment suite, add `--available`; missing studies are skipped, but an
+incomplete study still fails validation. Replay recomputes metrics from raw
+requests and checks saved summaries. Single-category and drift also validate
+input/source provenance, routing/refit/cache settings, cleanup, and saved
+comparisons. Keep the input bundle and source snapshots with the raw results.
+Completed static-centroid runs remain replayable with their original measurements.
 
-## Code and tests
+### Resume after a failure
 
-```text
-eldr/scripts/       Experiment and plotting entry points
-eldr/serving/       Proxy, signatures, clustering and routing
-eldr/experiments/   Experiment definitions, datasets and shared runner
-eldr/tests/         CPU and opt-in GPU tests
-vllm/eldr/          Gate capture, block counts and signature transport
+Resolve the error and confirm worker cleanup before resuming:
+
+```bash
+bash eldr/scripts/run_all.sh --resume RUN_DIR
 ```
 
-Other source directories are from upstream vLLM.
+Resume validates the saved configuration, code, and inputs. Completed experiments
+are skipped; an incomplete experiment is archived and restarted from warmup.
+This is experiment-level recovery, not continuation from an individual measured
+request or trial. Use the original checkout for an older run; a changed protocol
+or source requires a new run directory. Do not delete raw results or bypass a
+failed cleanup/provenance check to force a retry.
+
+## Code and CPU tests
+
+```text
+eldr/
+  serving/              Routing proxy, clustering and centroid refitting
+  experiments/          Experiment definitions and figure/table generation
+    datasets/           Public-dataset preprocessing
+    runner/             Shared configuration, execution and result validation
+  scripts/              Shell entry points for preparation, runs and replay
+  tests/                CPU tests and opt-in GPU integration checks
+vllm/eldr/              Gate capture, block counts and signature transport
+```
+
+The repository retains the upstream vLLM layout. Engine integration hooks call
+the helpers in `vllm/eldr/`; experiment orchestration and routing live under
+`eldr/`.
 
 To run CPU tests without GPUs or generated inputs:
 
@@ -172,7 +226,10 @@ uv pip install --python .venv/bin/python -r eldr/requirements.txt
 OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s eldr/tests -q
 ```
 
-## Environment and license
+This environment supports CPU tests and result replay, not GPU serving. The GPU
+runner uses the pinned container and this repository's ELDR-modified vLLM source.
+
+## Tested environment
 
 The supplied cluster uses 24 AMD MI300X GPUs across three worker nodes, plus a
 controller: Ubuntu 22.04.5, kernel 5.15.0-1041-azure, Intel Xeon 8480C, 96 logical
@@ -190,7 +247,11 @@ rocm/vllm-dev@sha256:411f7ca9abeb57f69064e8bf60f46b5cd0b67f26264af0fc831f124fbc2
 ```
 
 Based on [vLLM](https://github.com/vllm-project/vllm) commit
-`d801ae8c2650b590438f3d9794dd7a47abd86c9a`, under [Apache 2.0](LICENSE).
+`d801ae8c2650b590438f3d9794dd7a47abd86c9a`.
+
+## License
+
+The code is distributed under [Apache 2.0](LICENSE).
 Original license and copyright notices are retained; modified upstream files are
 marked. Please also cite the [vLLM paper](https://arxiv.org/abs/2309.06180).
 Models and datasets retain their own licenses. Dataset sources, pinned revisions,
