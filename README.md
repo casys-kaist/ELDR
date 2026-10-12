@@ -1,7 +1,6 @@
-# ELDR
+# ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving
 
-Implementation and experiment scripts for “ELDR: Expert-Locality-Aware Decode
-Routing for PD-Disaggregated MoE Serving” (SIGOPS ATC 2026).
+ACM SIGOPS Annual Technical Conference (ATC) 2026
 
 ## Overview
 
