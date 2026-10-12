@@ -104,9 +104,6 @@ Task; single-category and drift use Qwen. Run counts exclude warmup and calibrat
 | Table 2: Math-only / English-only | `tab2_single_category.sh` | 20, 40, 60, 80, 100 | 20 |
 | 17: Workload drift | `fig17_workload_drift.sh` | 100 | 3 |
 
-The paper's active-expert-count, topology, and 235B experiments are not covered by
-these scripts.
-
 To run a single experiment, use its script, for example:
 
 ```bash
