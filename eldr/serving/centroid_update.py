@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
-"""Background balanced centroid updates for locality-band JSQ.
+"""Background centroid updates for locality-band JSQ and its balance ablation.
 
 Recent normalized signature vectors form a rolling window. One fit at a time runs off
 the request thread; completed, decoder-aligned centroids are installed there.
@@ -15,11 +15,11 @@ from concurrent.futures import Future, ThreadPoolExecutor
 
 import numpy as np
 
-from eldr.serving.clustering import balanced_spherical_kmeans
+from eldr.serving.clustering import balanced_spherical_kmeans, vanilla_spherical_kmeans
 from eldr.serving.routing import locality_candidates
 
 WINDOW_SECONDS = 5.0
-REFIT_SECONDS = 2.5
+REFIT_SECONDS = 1.0
 _EPS = 1e-9
 _LOG = logging.getLogger(__name__)
 
@@ -27,12 +27,14 @@ _LOG = logging.getLogger(__name__)
 def _run_refit(
     signature_rows: Sequence[np.ndarray],
     centroids: np.ndarray,
+    balanced: bool = True,
 ) -> np.ndarray:
     signatures = np.stack(signature_rows).astype(
         np.float32,
         copy=False,
     )
-    fitted = balanced_spherical_kmeans(
+    fit = balanced_spherical_kmeans if balanced else vanilla_spherical_kmeans
+    fitted = fit(
         signatures,
         centroids,
     ).astype(
@@ -76,11 +78,14 @@ class CentroidUpdater:
         *,
         window_seconds: float = WINDOW_SECONDS,
         refit_seconds: float = REFIT_SECONDS,
+        balanced: bool = True,
     ):
         if not np.isfinite(window_seconds) or window_seconds <= 0:
             raise ValueError("window_seconds must be positive and finite")
         if not np.isfinite(refit_seconds) or refit_seconds <= 0:
             raise ValueError("refit_seconds must be positive and finite")
+        if type(balanced) is not bool:
+            raise ValueError("balanced must be boolean")
 
         seeds = np.asarray(seed_centroids, dtype=np.float32)
         if seeds.ndim != 2 or not len(seeds) or seeds.shape[1] < 1:
@@ -91,6 +96,7 @@ class CentroidUpdater:
         self.dim = int(seeds.shape[1])
         self.window_seconds = float(window_seconds)
         self.refit_seconds = float(refit_seconds)
+        self.balanced = balanced
 
         norms = np.linalg.norm(seeds, axis=1, keepdims=True)
         if np.any(norms <= _EPS):
@@ -104,7 +110,7 @@ class CentroidUpdater:
         self._fit_future: Future[np.ndarray] | None = None
         self._executor = ThreadPoolExecutor(
             max_workers=1,
-            thread_name_prefix="eldr-balanced-refit",
+            thread_name_prefix="eldr-refit",
         )
         self._closed = False
         self.refits_started = 0
@@ -134,6 +140,7 @@ class CentroidUpdater:
 
     def status(self):
         return dict(
+            balanced=self.balanced,
             window_seconds=self.window_seconds,
             refit_seconds=self.refit_seconds,
             refits_started=self.refits_started,
@@ -173,6 +180,7 @@ class CentroidUpdater:
             _run_refit,
             signature_rows,
             self._centroids,
+            self.balanced,
         )
         self._last_refit_started_at = now
         self.refits_started += 1
@@ -187,7 +195,7 @@ class CentroidUpdater:
             fitted = future.result()
         except Exception as error:
             self.last_refit_error = repr(error)
-            _LOG.exception("ELDR background balanced refit failed")
+            _LOG.exception("ELDR background refit failed")
             return
 
         if self._closed:

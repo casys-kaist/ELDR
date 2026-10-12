@@ -10,7 +10,7 @@ from eldr.serving.centroid_update import (
     OnlineJSQRouter,
     _align_centroids,
 )
-from eldr.serving.clustering import build_signature
+from eldr.serving.clustering import build_signature, vanilla_spherical_kmeans
 from eldr.serving.routing import route_jsq as route
 
 
@@ -168,6 +168,8 @@ class CentroidUpdateTests(unittest.TestCase):
         )
 
     def test_validation(self) -> None:
+        with self.assertRaisesRegex(ValueError, "balanced"):
+            OnlineJSQRouter(["d0"], [[1, 0]], balanced="false")
         with self.assertRaisesRegex(ValueError, "window_seconds"):
             OnlineJSQRouter(
                 ["d0"],
@@ -186,6 +188,27 @@ class CentroidUpdateTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "finite"):
             router.route([np.nan, 0.0], [0])
+
+    def test_vanilla_refit_keeps_ablation_algorithm(self) -> None:
+        router = self._router(["d0", "d1"], np.eye(2, dtype=np.float32), balanced=False)
+        with (
+            patch(
+                "eldr.serving.centroid_update.balanced_spherical_kmeans",
+                side_effect=AssertionError("Vanilla ablation must not refit balanced"),
+            ),
+            patch(
+                "eldr.serving.centroid_update.vanilla_spherical_kmeans",
+                wraps=vanilla_spherical_kmeans,
+            ) as fit,
+        ):
+            router.route([1, 0], [0, 0])
+            self._advance(5)
+            router.route([0, 1], [0, 0])
+            self._finish_refit(router)
+        fit.assert_called_once()
+        self.assertFalse(router.status()["balanced"])
+        self.assertEqual(router.refits_completed, 1)
+        np.testing.assert_allclose(router._centroids, np.eye(2))
 
     def test_transformed_route_matches_static_policy(self) -> None:
         rng = np.random.default_rng(42)

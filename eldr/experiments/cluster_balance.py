@@ -16,8 +16,11 @@ def configure(config, output, policies):
     training_dataset(Path(config["training_prompts"]), Path(config["dataset"]))
     folder = output / config["model"]
     variants = [("rr", "rr", {})] + [
-        # Freeze both fits: balanced online refits would erase this distinction.
-        (name, "eldr-static", dict(centroids=str(folder / f"{name}.json")))
+        (
+            name,
+            "eldr",
+            dict(centroids=str(folder / f"{name}.json"), balanced=name == "balanced"),
+        )
         for name in CLUSTERINGS
     ]
     worker_group = plan_worker_group(

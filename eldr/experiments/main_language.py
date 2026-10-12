@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
 """Language main evaluation with load-balancing and Domain baselines."""
 
 from eldr.experiments.runner.experiment import (
@@ -7,7 +9,7 @@ from eldr.experiments.runner.experiment import (
     prepare_domain_baseline,
 )
 
-POLICIES = BASELINES  # Same policies/protocol as Task, with Language inputs.
+POLICIES = BASELINES
 RATES = (20, 40, 60, 80, 100)
 configure = main_worker_group
 prepare = prepare_domain_baseline

@@ -347,6 +347,7 @@ def create_app(args):
                 args.eldr_tau,
                 window_seconds=args.eldr_online_window_seconds,
                 refit_seconds=args.eldr_online_refit_seconds,
+                balanced=app["centroid_data"].get("algo", "kmbal") == "kmbal",
             )
     elif args.decode_router == "domain":
         if not args.domain_mapping:

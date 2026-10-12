@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
-"""RR -> JSQ -> ELDR, once each, on one shared worker group."""
+"""Run calibration captures or measurement trials on one shared worker group."""
 
 import json
 import os
@@ -147,7 +147,7 @@ def start_proxy(worker_group, policy, stage, *, label=None, protocol=None):
             "--eldr-online-window-seconds",
             str(protocol.get("window_seconds", 5.0)),
             "--eldr-online-refit-seconds",
-            str(protocol.get("refit_seconds", 2.5)),
+            str(protocol.get("refit_seconds", 1.0)),
         ]
     if policy == "domain":
         args += ["--domain-mapping", protocol["domain_artifact"]]
@@ -223,8 +223,7 @@ def benchmark(worker_group, policy, stage, protocol, *, label=None):
         "--metric-percentiles",
         "50,95,99",
     ]
-    # Match the final comparison: seeded shuffled traffic, no hidden readiness
-    # generation. Captures preserve their input order.
+    # Disable extra readiness generation; captures preserve their input order.
     args += ["--ready-check-timeout-sec", "0"]
     if capture or not protocol.get("shuffle", True):
         args += ["--disable-shuffle"]
@@ -346,6 +345,7 @@ def execute(output, *, trials=None):
                         refit = status["refit"]
                         if (
                             refit["last_error"]
+                            or refit["balanced"] != trial_protocol.get("balanced", True)
                             or refit["window_seconds"]
                             != trial_protocol["window_seconds"]
                             or refit["refit_seconds"] != trial_protocol["refit_seconds"]

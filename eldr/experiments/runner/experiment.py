@@ -21,7 +21,7 @@ from eldr.experiments.runner.results import (
 from eldr.experiments.runner.run import execute
 from eldr.experiments.runner.workers import prepare, source_files, write_new_json
 
-BASELINES = ("rr", "random", "jsq", "p2c", "domain", "eldr-static")
+BASELINES = ("rr", "random", "jsq", "p2c", "domain", "eldr")
 EXPERIMENTS = (
     "main_task",
     "main_language",
@@ -29,6 +29,8 @@ EXPERIMENTS = (
     "cluster_balance",
     "prefix_cache",
     "signature_ablation",
+    "single_category",
+    "workload_drift",
 )
 
 
@@ -133,7 +135,7 @@ def plan_experiment(experiment, configs, output, profile, rates, policies):
     if (
         not policies
         or len(set(policies)) != len(policies)
-        or set(policies) - {*BASELINES, "eldr"}
+        or set(policies) - {*BASELINES, "eldr-static"}
     ):
         raise ValueError("Known, distinct policies required")
     plan = dict(study=experiment, profile=profile, fleets=[], inputs={})
@@ -155,11 +157,13 @@ def plan_experiment(experiment, configs, output, profile, rates, policies):
                     protocol = dict(RUN_PROFILES[profile], **options)
                     protocol.update(
                         request_rate=rate,
-                        requests=120 * rate
+                        requests=options.get("requests", 120 * rate)
                         if profile == "paper"
                         else RUN_PROFILES[profile]["requests"],
                         variant=variant,
                     )
+                    if "traffic_seconds" in options:
+                        protocol["requests"] = rate * options["traffic_seconds"]
                     if not trials:
                         protocol["warmup_requests"] = protocol.get(
                             "initial_warmup_requests", protocol["warmup_requests"]
@@ -171,6 +175,9 @@ def plan_experiment(experiment, configs, output, profile, rates, policies):
     keys = [f["key"] for f in plan["fleets"]]
     if not keys or len(keys) != len(set(keys)):
         raise ValueError("Supply distinct model configs")
+    validate_plan = getattr(experiment_module, "validate_plan", None)
+    if validate_plan is not None:
+        validate_plan(plan)
     return plan
 
 
@@ -202,17 +209,18 @@ def check_resume(plan, output):
     if json.loads((output / "sources.json").read_text()) != source_hashes(plan):
         raise ValueError("Source changed; use a new run instead of mixing versions")
     for group in plan["fleets"]:
-        run = output / group["key"] / "run"
-        cleanup = run / "cleanup.json"
-        if ((run / "started.json").exists() or cleanup.exists()) and (
-            not cleanup.is_file() or json.loads(cleanup.read_text())["remaining"]
-        ):
-            raise ValueError(
-                f"Cleanup is not confirmed: {run}. Contact the authors before resuming."
-            )
+        for name in ("run", "capture"):
+            run = output / group["key"] / name
+            cleanup = run / "cleanup.json"
+            if ((run / "started.json").exists() or cleanup.exists()) and (
+                not cleanup.is_file() or json.loads(cleanup.read_text())["remaining"]
+            ):
+                raise ValueError(
+                    f"Cleanup is not confirmed: {run}. "
+                    "Contact the authors before resuming."
+                )
     if (output / "complete.json").is_file():
-        if collect(plan, output) != json.loads((output / "summary.json").read_text()):
-            raise ValueError("Raw data or metrics changed since completion")
+        read_panels(output, plan["study"])
         print(f"SKIP (validated): {output}")
         return True
     return False
@@ -234,6 +242,9 @@ def run_experiment(plan, output):
         run = Path(worker_group["directory"]) / "run"
         prepare(config, run, plan["profile"])
         execute(run, trials=worker_group["trials"])
+    for path, expected in (sources | plan["inputs"]).items():
+        if file_sha256(path) != expected:
+            raise ValueError("Source/input changed during experiment: " + path)
     rows = collect(plan, output)
     write_report({workload_label(plan): rows}, output, plan["study"])
     write_new_json(output / "complete.json", dict(measurements=len(rows)))
@@ -265,8 +276,8 @@ def main(experiment):
         parser.add_argument(
             "--policies",
             nargs="+",
-            choices=(*BASELINES, "eldr"),
-            help="Policy subset; default uses static ELDR ('eldr' opts into online)",
+            choices=(*BASELINES, "eldr-static"),
+            help="Default: online ELDR; 'eldr-static' freezes centroids",
         )
     action = parser.add_mutually_exclusive_group()
     action.add_argument(

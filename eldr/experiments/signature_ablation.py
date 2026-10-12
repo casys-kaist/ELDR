@@ -5,8 +5,8 @@
 from eldr.experiments.runner.experiment import main, plan_worker_group
 from eldr.experiments.runner.fit import fit_signature
 
-RATES = (60,)
-POLICIES = ("rr", "eldr-static")
+RATES = (20, 40, 60, 80, 100)
+POLICIES = ("rr", "eldr")
 VARIANTS = ("count_idf", "gate_prob_all")
 
 
@@ -19,7 +19,7 @@ def configure(config, output, policies):
         group = plan_worker_group(
             config,
             folder,
-            [("rr", "rr", {}), (variant, "eldr-static", {})],
+            [("rr", "rr", {}), (variant, "eldr", {})],
             inputs=("activations",),
         )
         group["site"].update(

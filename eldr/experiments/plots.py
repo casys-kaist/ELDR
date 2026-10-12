@@ -1,13 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
-"""Paper renderers, reused with validated AE measurements.
-
-Main, signature/cluster and tau layouts come from the submission plotters
-plot_iter1_main.py, plot_sig_transform_ablation.py,
-plot_cluster_ablation_6cell.py and plot_tau_new.py (c1e8ac22d).
-Prefix cache uses the paper's updated 1P16D plot_prefix_cache.py.
-The two original bar layouts share one renderer; no historical run selection.
-"""
+"""Render main and ablation figures from validated, matched measurements."""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -37,7 +30,6 @@ MAIN_METRICS = [
 ]
 TPOT_METRICS = [("tpot50_ms", "P50"), ("tpot99_ms", "P99")]
 TAUS = [0.0, 0.1, 0.2, 0.3]
-PREFIX_POLICIES = (("rr", "RR", "#08519c"), ("eldr-static", "ELDR", "#6baed6"))
 PREFIX_METRICS = (
     ("ttft50_ms", "TTFT P50", 300, (0, 100, 200, 300), "%.0f"),
     ("tpot50_ms", "TPOT P50", 68, (0, 20, 40, 60), "%.0f"),
@@ -82,7 +74,7 @@ def draw(panels, outpath, experiment):
                         "eldr",
                         "ELDR (online)" if "eldr-static" in variants else "ELDR",
                         "#d62728",
-                        "--",
+                        "--" if "eldr-static" in variants else "-",
                         "o",
                     )
                 )
@@ -101,16 +93,26 @@ def draw(panels, outpath, experiment):
             plot_main(data, outpath, rates, models, routers)
             return
         if experiment == "prefix_cache":
+            eldr_policy = "eldr" if "eldr" in variants else "eldr-static"
+            prefix_policies = (
+                ("rr", "RR", "#1f77b4"),
+                (
+                    eldr_policy,
+                    "ELDR" if eldr_policy == "eldr" else "Static ELDR",
+                    "#d62728",
+                ),
+            )
             expected = {
                 (f"gptoss-cache-{cache}", policy, rates[0])
                 for cache in (0, 1)
-                for policy, _, _ in PREFIX_POLICIES
+                for policy, _, _ in prefix_policies
             }
             if len(panels) != 1 or len(rates) != 1 or set(table) != expected:
                 raise ValueError("Prefix plot requires four GPT-OSS cells at one rate")
             plot_prefix_cache(
                 {(setting, policy): row for (setting, policy, _), row in table.items()},
                 outpath,
+                prefix_policies,
             )
             return
         for model in models:
@@ -135,7 +137,7 @@ def draw(panels, outpath, experiment):
             (
                 (m, w),
                 f"{dict(qwen='Qwen', gptoss='GPT-OSS', gemma='Gemma')[m]} "
-                f"{'lang' if w == 'language' else w}",
+                f"{'Lang.' if w == 'language' else WORKLOAD_NAMES.get(w, w)}",
             )
             for m in models
             for w in panels
@@ -175,6 +177,7 @@ def plot_main(data, outpath, rates, models, routers):
                     lw=1.5,
                     label=rlabel,
                     markeredgewidth=0.5,
+                    zorder=4 if rkey == "rr" else 3 if rkey.startswith("eldr") else 2,
                 )
             all_ys = [y for rkey, *_ in routers for y in data[model][rkey][m]]
             mn, mx = min(all_ys), max(all_ys)
@@ -240,7 +243,7 @@ def plot_ablation(data, outpath, models, workloads, signature):
         squeeze=False,
     )
 
-    c_first, c_second = plot_style.BLUES[0], plot_style.BLUES[2]
+    c_first, c_second = "#d62728", "#1f77b4"
     bar_w = 0.55
     x = np.array([0.0, 1.55])
     off_l = -bar_w / 2 - 0.03
@@ -323,7 +326,7 @@ def plot_ablation(data, outpath, models, workloads, signature):
         top=0.80, bottom=0.10, left=0.085, right=0.99, wspace=0.08, hspace=0.12
     )
     fig.legend(
-        handles=handles,
+        handles=handles[::-1],
         ncol=2,
         fontsize=15,
         frameon=True,
@@ -389,7 +392,7 @@ def plot_locality_band(data, outpath, cells):
     plt.close(fig)
 
 
-def plot_prefix_cache(cells, outpath):
+def plot_prefix_cache(cells, outpath, policies):
     plot_style.apply()
     plt.rcParams.update(
         {
@@ -405,7 +408,7 @@ def plot_prefix_cache(cells, outpath):
     x = np.array([0.0, 2.4])
     bar_width = 0.85
     for ax, (key, title, limit, ticks, fmt) in zip(axes, PREFIX_METRICS):
-        for i, (policy, label, color) in enumerate(PREFIX_POLICIES):
+        for i, (policy, label, color) in enumerate(policies):
             values = [float(cells[f"gptoss-cache-{c}", policy][key]) for c in (0, 1)]
             bars = ax.bar(
                 x + (2 * i - 1) * (bar_width / 2 + 0.04),

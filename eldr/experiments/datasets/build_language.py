@@ -24,7 +24,7 @@ MODEL = ARGS.tokenizer
 WILDCHAT_REVISION = "7d6490e462285cf85d91eabea0f9a954fbddcd1f"
 MAXCH = 6000
 CALIB_N = 1000
-SERVE_N = 13000  # cap serve (avoid huge eval.json)
+SERVE_N = 13000
 MAX_PROMPT = 1024
 TOK = AutoTokenizer.from_pretrained(MODEL)
 rng = random.Random(0)
@@ -88,7 +88,7 @@ for lang in LANG_ORDER:
     fullitems += by_lang[lang]
 # Sidecar -- positional partition matching the file's lang order.
 write_json([[lang, lang_counts[lang]] for lang in LANG_ORDER], D / "lang.counts.json")
-# Preserve source order in the hash sidecar; prompt selection is unchanged.
+# Preserve source order in the hash sidecar.
 write_json(
     {hashlib.md5(p.encode()).hexdigest()[:16]: lang for p, lang in pool},
     CAPTURE_DIR / "wildchat_full_hash2lang.json",
@@ -115,7 +115,6 @@ write_json(
     ],
     D / "lang.eval.json",
 )
-# Hash -> lang map for the training subset only.
 write_json(
     {hashlib.md5(p.encode()).hexdigest()[:16]: lang for p, lang in calib},
     CAPTURE_DIR / "wildchat_hash2lang.json",

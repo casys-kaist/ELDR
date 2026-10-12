@@ -1,4 +1,6 @@
-"""Prefix cache: RR/static ELDR on/off over a seeded 2,000-prompt pool."""
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+"""Prefix cache: RR/online ELDR on/off over a seeded 2,000-prompt pool."""
 
 import json
 import random
@@ -8,7 +10,7 @@ from eldr.experiments.runner.experiment import main, plan_worker_group
 from eldr.experiments.runner.workers import write_new_json
 
 RATES = (100,)
-POLICIES = ("rr", "eldr-static")
+POLICIES = ("rr", "eldr")
 PREFIX_PROMPTS = 2000
 
 
@@ -17,7 +19,9 @@ def configure(config, output, policies):
     for cache in (False, True):
         folder = output / (config["model"] + f"-cache-{int(cache)}")
         worker_group = plan_worker_group(
-            config, folder, [(p, p, dict(no_oversample=False)) for p in POLICIES]
+            config,
+            folder,
+            [(p, p, dict(no_oversample=False, requests=12000)) for p in POLICIES],
         )
         worker_group["site"].update(
             prefix_cache=cache, dataset=str(folder / "evaluation.json")

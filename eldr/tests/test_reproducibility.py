@@ -120,7 +120,7 @@ class ReproducibilityTests(unittest.TestCase):
             ):
                 output = root / "configs"
                 self.assertEqual(
-                    configure_inputs(inputs, cluster, output)["configs"], 7
+                    configure_inputs(inputs, cluster, output)["configs"], 9
                 )
                 for path in output.glob("*.json"):
                     config = json.loads(path.read_text())
@@ -186,6 +186,8 @@ class ReproducibilityTests(unittest.TestCase):
             "fig14_cluster_balance": "cluster_balance",
             "fig15_locality_band": "locality_band",
             "fig16_prefix_cache": "prefix_cache",
+            "tab2_single_category": "single_category",
+            "fig17_workload_drift": "workload_drift",
         }
         self.assertEqual(
             {p.name for p in scripts.glob("*.sh")},
@@ -447,7 +449,9 @@ class ReproducibilityTests(unittest.TestCase):
                         output = Path(args[args.index('--output') + 1])
                         output.mkdir(parents=True)
                         for model in ('qwen', 'gptoss', 'gemma'):
-                            for workload in ('task', 'language', 'task-prefix'):
+                            for workload in (
+                                'task', 'language', 'task-prefix', 'math', 'english'
+                            ):
                                 (output / f'{model}-{workload}.json').write_text('{}')
                     elif '--execute' in args:
                         output = Path(args[args.index('--output') + 1])
@@ -467,6 +471,8 @@ class ReproducibilityTests(unittest.TestCase):
                 ("locality_band", "task"),
                 ("locality_band", "language"),
                 ("prefix_cache", "task-prefix"),
+                ("single_category", "single-category"),
+                ("workload_drift", "task"),
             ]
             trace = root / "calls.jsonl"
             for mode in (
@@ -549,7 +555,20 @@ class ReproducibilityTests(unittest.TestCase):
                     models = (
                         ("gptoss",)
                         if module == "prefix_cache"
+                        else ("qwen",)
+                        if module == "workload_drift"
                         else ("qwen", "gptoss", "gemma")
+                    )
+                    expected_configs = (
+                        [
+                            str(output / "configs" / f"qwen-{c}.json")
+                            for c in ("math", "english")
+                        ]
+                        if module == "single_category"
+                        else [
+                            str(output / "configs" / f"{model}-{workload}.json")
+                            for model in models
+                        ]
                     )
                     self.assertEqual(
                         [
@@ -557,10 +576,7 @@ class ReproducibilityTests(unittest.TestCase):
                             for i, value in enumerate(args)
                             if value == "--config"
                         ],
-                        [
-                            str(output / "configs" / f"{model}-{workload}.json")
-                            for model in models
-                        ],
+                        expected_configs,
                     )
                     self.assertTrue(
                         Path(args[args.index("--output") + 1]).is_relative_to(output)
@@ -634,7 +650,9 @@ class ReproducibilityTests(unittest.TestCase):
                 launches = [args for args in calls if "--execute" in args]
                 bootstrap = [args for args in calls if "bootstrap" in args]
                 self.assertEqual(len(bootstrap), 1 if mode == "resume" else 0)
-                self.assertEqual(len(launches), 8 if mode == "resume" else 0)
+                self.assertEqual(
+                    len(launches), len(expected) - 1 if mode == "resume" else 0
+                )
                 if mode == "resume":
                     self.assertEqual(
                         [args[1] for args in launches],
@@ -680,10 +698,15 @@ class ReproducibilityTests(unittest.TestCase):
         from eldr.experiments.runner.results import FIGURES, collect
 
         script = Path(__file__).resolve().parents[1] / "scripts/plot_all.sh"
+        legacy_figures = {
+            k: v
+            for k, v in FIGURES.items()
+            if v not in ("single_category", "workload_drift")
+        }
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             source = root / "saved run"
-            for figure, experiment in FIGURES.items():
+            for figure, experiment in legacy_figures.items():
                 workloads = (
                     ("task", "language")
                     if figure.startswith(("fig13", "fig14", "fig15"))
@@ -752,7 +775,7 @@ class ReproducibilityTests(unittest.TestCase):
             before = {p: p.read_bytes() for p in source.rglob("*") if p.is_file()}
             marker = source / "fig16_prefix_cache/complete.json"
             summary = source / "fig11_main_language/summary.json"
-            for mode in ("missing", "changed", "success"):
+            for mode in ("strict", "missing", "changed", "success"):
                 marker.write_bytes(before[marker])
                 summary.write_bytes(before[summary])
                 if mode == "missing":
@@ -761,16 +784,22 @@ class ReproducibilityTests(unittest.TestCase):
                     summary.write_text("[]")
                 output = root / f"plots {mode}"
                 command = ["bash", str(script), str(source), "--output", str(output)]
+                if mode != "strict":
+                    command.append("--available")
                 result = subprocess.run(
                     command, cwd=root, capture_output=True, text=True, timeout=120
                 )
                 self.assertEqual(
-                    result.returncode, 0 if mode == "success" else 1, result.stderr
+                    result.returncode,
+                    0 if mode == "success" else 2 if mode == "strict" else 1,
+                    result.stderr,
                 )
                 if mode != "success":
                     self.assertFalse(output.exists())
                     continue
-                self.assertEqual({p.stem for p in output.glob("*.pdf")}, set(FIGURES))
+                self.assertEqual(
+                    {p.stem for p in output.glob("*.pdf")}, set(legacy_figures)
+                )
                 self.assertEqual(len(list(output.glob("*.png"))), 6)
                 self.assertFalse(any(p.is_dir() for p in output.iterdir()))
                 again = subprocess.run(command, capture_output=True, timeout=20)

@@ -1,9 +1,10 @@
 # ELDR Artifact Evaluation
 
 Artifact for “ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated
-MoE Serving” (ACM ATC 2026). This repository provides six experiments covering
+MoE Serving” (ACM ATC 2026). This repository provides eight experiments covering
 Task and Language performance, expert signatures, balanced clustering,
-locality-band routing, and prefix-cache compatibility.
+locality-band routing, prefix-cache compatibility, single-category workloads,
+and workload drift.
 
 ## Run
 
@@ -16,7 +17,7 @@ git clone https://github.com/casys-kaist/ELDR.git eldr
 cd eldr
 ```
 
-Prepare inputs, then run all six experiments and generate their plots:
+Prepare inputs, then run all eight experiments and generate their figures/tables:
 
 ```bash
 bash eldr/scripts/prepare_data.sh
@@ -24,8 +25,8 @@ bash eldr/scripts/run_all.sh
 ```
 
 The scripts install CPU dependencies, verify inputs, and automatically synchronize
-serving code across worker nodes. Allow 1–2 days for the full suite on the reference
-cluster, including model loading and compilation.
+serving code across worker nodes. Runtime depends on model loading, compilation,
+and request latency in addition to the measurement and warmup traffic.
 
 ## Prepare inputs
 
@@ -43,18 +44,20 @@ interrupted, rerun the same command.
 ## Experiments
 
 Each experiment has a script in `eldr/scripts/` that runs the experiment and
-generates its plots. Main experiments use all three models. Signature,
+generates its figures or table. Main experiments use all three models. Signature,
 cluster-balance, and locality-band experiments cover both Task and Language;
-prefix cache uses GPT-OSS Task.
+prefix cache uses GPT-OSS Task. Single-category and drift use Qwen.
 
-| Figure | Script | Requests/s | Estimated traffic + warmup |
+| Figure | Script | Requests/s | Measurement cells |
 | --- | --- | --- | --- |
-| 10: Main Task | `fig10_main_task.sh` | 20, 40, 60, 80, 100 | 4.6 h |
-| 11: Main Language | `fig11_main_language.sh` | 20, 40, 60, 80, 100 | 4.6 h |
-| 13: Signature | `fig13_signature.sh` | 60 | 1.8 h |
-| 14: Cluster balance | `fig14_cluster_balance.sh` | 20, 40, 60, 80, 100 | 4.8 h |
-| 15: Locality band | `fig15_locality_band.sh` | 20, 40, 60, 80, 100 | 7.8 h |
-| 16: Prefix cache | `fig16_prefix_cache.sh` | 100 | 18 min |
+| 10: Main Task | `fig10_main_task.sh` | 20, 40, 60, 80, 100 | 90 |
+| 11: Main Language | `fig11_main_language.sh` | 20, 40, 60, 80, 100 | 90 |
+| 13: Signature | `fig13_signature.sh` | 20, 40, 60, 80, 100 | 120 |
+| 14: Cluster balance | `fig14_cluster_balance.sh` | 20, 40, 60, 80, 100 | 90 |
+| 15: Locality band | `fig15_locality_band.sh` | 20, 40, 60, 80, 100 | 150 |
+| 16: Prefix cache | `fig16_prefix_cache.sh` | 100 | 4 |
+| Table 2: Math-only / English-only | `tab2_single_category.sh` | 20, 40, 60, 80, 100 | 20 |
+| 17: Workload drift | `fig17_workload_drift.sh` | 100 | 3 |
 
 To run a single experiment, use its script, for example:
 
@@ -63,9 +66,36 @@ bash eldr/scripts/fig10_main_task.sh
 ```
 
 Default settings are counts × IDF, a fixed layer mask, global L2 normalization,
-static centroids, and locality-band JSQ (τ=0.1). Fitting uses seed 1; traffic uses
-seed 1234 and 512 output tokens. Prefill routing is prefix-hash based. Deployments
-use 8P16D, except prefix cache (1P16D).
+online centroid refitting with a 5-second history and a 1-second interval, and
+locality-band JSQ (τ=0.1). IDF weights and the layer mask remain fixed during
+serving. Both cluster-balance variants retain their initial clustering algorithm
+during refits. Fitting uses seed 1; traffic uses seed 1234 and 512 output tokens.
+Prefill routing is prefix-hash based. Deployments use 8P16D, except prefix cache
+(1P16D); the reference proxy uses CPU cores 4–5.
+
+Each rate measures 120 seconds of offered traffic after warmup: 14,400 requests
+for the first trial in each worker group, then 3,840 per trial, at 64 req/s.
+Signature ablation keeps a separate matched RR control for each signature
+representation. Prefix-cache trials each use 12,000 requests at 100 req/s from
+the same seeded 2,000-prompt pool. `eldr-static` remains available as an explicit
+fixed-centroid control; it is not the default ELDR configuration.
+
+Single-category performs two fresh category-only calibration captures, separate
+from its 20 measurements. Calibration and evaluation prompts are disjoint. The
+Full signature's IDF weights and layer mask remain fixed; only centroids are
+fitted to each category. The output is a native LaTeX table, plus CSV/JSON with
+every rate retained, including regressions.
+
+Drift compares RR, static ELDR, and online ELDR from the same initial centroids.
+It changes the combined code/math share from 49% to 80% and back, with 10-second
+ramps. Each trial sends 15,000 ordered requests: 120 seconds of analysis plus
+15-second guards on each side. Whole-request TPOT is grouped into 5-second bins
+using actual request arrival times; the saved comparison retains each policy's
+observed domain mix. Online refitting uses the same 5-second history/1-second
+interval as the other experiments.
+
+The final paper's active-expert-count, topology, and 235B experiments are not
+covered by these scripts.
 
 Use `--output NEW_DIR` to choose an output directory and `--plan` to check the
 experiment plan without launching GPU experiments. For another cluster, adapt
@@ -73,10 +103,17 @@ experiment plan without launching GPU experiments. For another cluster, adapt
 and experiment scripts. Models, the serving image, and worker SSH access must be
 prepared. Each script supports `--help`.
 
+`--profile smoke` reduces traffic and output lengths; it is not a paper result.
+Drift smoke still covers the full 120-second analysis interval (300 requests at
+2 req/s including guards). Single-category still needs both fresh calibration
+captures. Execution takes the shared `/tmp/eldr-ae.lock` and stops on failure;
+`--plan` does not deploy code or launch GPU work.
+
 ## Results
 
 Results are saved in `eldr/artifacts/runs/<run>/`; the script prints the exact path.
-Each experiment produces CSV/JSON summaries and PDF/PNG plots. Raw request
+Each experiment produces CSV/JSON summaries and PDF/PNG plots, except Table 2,
+which produces `.tex` instead of an image. Raw request
 measurements are saved in `<worker-group>/run/<trial>/measure/raw.json`.
 
 After resolving an error, resume using the original run directory:
@@ -87,6 +124,9 @@ bash eldr/scripts/run_all.sh --resume RUN_DIR
 
 Completed experiments are skipped; the interrupted experiment restarts from
 warmup. Resume requires unchanged code and inputs and successful worker cleanup.
+Use the original checkout to resume an older run; updated protocols require a
+new output directory. Plot replay still accepts completed static-centroid runs
+and preserves their saved measurements.
 
 Metrics are TPOT P50/P95/P99 and TTFT P50. TTFT ends when the prefill-generated
 first token reaches the client. Tail latency may vary across runs and system
@@ -94,6 +134,23 @@ conditions.
 
 Signature, cluster-balance, and locality-band plots show mean per-rate percentage
 changes relative to RR; negative values indicate lower latency.
+
+Redraw saved results without GPU access:
+
+```bash
+bash eldr/scripts/plot_all.sh RUN_DIR --output NEW_PLOT_DIR
+bash eldr/scripts/plot_tab2_single_category.sh RUN_DIR/tab2_single_category --output NEW_TABLE_DIR
+bash eldr/scripts/plot_fig17_workload_drift.sh RUN_DIR/fig17_workload_drift --output NEW_DRIFT_DIR
+```
+
+`plot_all.sh` requires all eight experiments by default. For a partial or older
+six-experiment suite, pass `--available` explicitly; this validates only the
+recognized experiments present in `RUN_DIR`. An incomplete experiment directory
+still fails validation. Replay recomputes metrics from raw
+requests and checks them against saved summaries. Generalization additionally
+checks calibration/input/source provenance, routing/refit/cache flags, cleanup,
+and the saved comparison. Keep the original input bundle and source snapshots
+alongside results for these checks. Outputs are never overwritten.
 
 ## Code and tests
 

@@ -305,9 +305,10 @@ class RunnerTests(unittest.TestCase):
                         rule="locality_band_jsq_v1",
                         refit=dict(
                             last_error=None,
+                            balanced=protocol.get("balanced", True),
                             refits_completed=int(policy == "eldr"),
                             window_seconds=5.0,
-                            refit_seconds=2.5,
+                            refit_seconds=1.0,
                         ),
                     )
                     return {"policy": policy}

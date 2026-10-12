@@ -49,7 +49,7 @@ else
     fi
 fi
 case "$figure" in
-    all|fig10_main_task|fig11_main_language|fig13_signature|fig14_cluster_balance|fig15_locality_band|fig16_prefix_cache) ;;
+    all|fig10_main_task|fig11_main_language|fig13_signature|fig14_cluster_balance|fig15_locality_band|fig16_prefix_cache|tab2_single_category|fig17_workload_drift) ;;
     *) usage >&2; exit 2 ;;
 esac
 if [[ $profile != paper && $profile != smoke ]]; then usage >&2; exit 2; fi
@@ -94,7 +94,8 @@ for phase in "${phases[@]}"; do
         fig13_signature:task fig13_signature:language \
         fig14_cluster_balance:task fig14_cluster_balance:language \
         fig15_locality_band:task fig15_locality_band:language \
-        fig16_prefix_cache:task-prefix; do
+        fig16_prefix_cache:task-prefix \
+        tab2_single_category:single-category fig17_workload_drift:task; do
         current=${entry%%:*}
         if [[ $figure != all && $figure != "$current" ]]; then continue; fi
         workload=${entry#*:}
@@ -109,11 +110,16 @@ for phase in "${phases[@]}"; do
         configs=()
         models=(qwen gptoss gemma)
         if [[ $current == fig16_prefix_cache ]]; then models=(gptoss); fi
+        if [[ $current == fig17_workload_drift ]]; then models=(qwen); fi
         for model in "${models[@]}"; do
             configs+=(--config "$output/configs/$model-$workload.json")
         done
         module=${current#fig??_}
         if [[ $current == fig13_signature ]]; then module=signature_ablation; fi
+        if [[ $current == tab2_single_category ]]; then
+            module=single_category
+            configs=(--config "$output/configs/qwen-math.json" --config "$output/configs/qwen-english.json")
+        fi
         log="$output/$current-$workload.log"
         options=("${execute[@]}")
         if [[ -n $resume ]]; then options+=(--resume); fi

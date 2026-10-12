@@ -5,8 +5,9 @@
 import hashlib
 import ipaddress
 import json
-import re
 from pathlib import Path
+
+import regex as re
 
 from eldr.serving.clustering import load_centroid_file
 
@@ -33,7 +34,7 @@ RUN_PROFILES = {
         warmup_requests=3840,
         warmup_rate=64,
         window_seconds=5.0,
-        refit_seconds=2.5,
+        refit_seconds=1.0,
     ),
     "smoke": dict(
         recipe="full-jsq-v1",
@@ -45,7 +46,7 @@ RUN_PROFILES = {
         warmup_requests=8,
         warmup_rate=2,
         window_seconds=5.0,
-        refit_seconds=2.5,
+        refit_seconds=1.0,
     ),
 }
 

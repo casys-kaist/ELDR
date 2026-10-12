@@ -148,7 +148,8 @@ class FullSignatureTests(unittest.TestCase):
         router = app["online_jsq_router"]
         self.addCleanup(router.close)
         self.assertNotIn("itl_observer", app)
-        self.assertEqual((router.window_seconds, router.refit_seconds), (5.0, 2.5))
+        self.assertEqual((router.window_seconds, router.refit_seconds), (5.0, 1.0))
+        self.assertTrue(router.balanced)
         app["decode_inflight"].update({"http://one:8001": 2, "http://two:8002": 1})
         counts = np.array([[7, 1, 0], [1, 3, 4]], dtype="<i2")
         payload = pybase64.b64encode(counts).decode()
@@ -156,6 +157,13 @@ class FullSignatureTests(unittest.TestCase):
         frozen = copy.deepcopy(self.data["layer_mask"])
         np.testing.assert_array_equal(app["centroid_data"]["sig_idf"], [2, 0, 0.5])
         self.assertEqual(app["centroid_data"]["layer_mask"], frozen)
+
+        vanilla = full_fit() | {"algo": "km"}
+        self.path.write_text(json.dumps(vanilla))
+        vanilla_app = create_app(args)
+        self.addCleanup(vanilla_app["online_jsq_router"].close)
+        self.assertFalse(vanilla_app["online_jsq_router"].balanced)
+        self.path.write_text(json.dumps(full_fit()))
 
         args.decode_router = "eldr-static"
         with patch("eldr.serving.proxy.OnlineJSQRouter") as updater:

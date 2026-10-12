@@ -81,6 +81,25 @@ def initialize_centroids(X, K, rng=None):
     return X[indices].copy()
 
 
+def vanilla_spherical_kmeans(X, C, iters=50):
+    """Same cosine geometry without capacity constraints; keep empty centers."""
+    C = C.copy()
+    for _ in range(iters):
+        labels = np.argmax(X @ C.T, axis=1)
+        updated = np.stack(
+            [
+                X[labels == i].mean(0) if np.any(labels == i) else center
+                for i, center in enumerate(C)
+            ]
+        )
+        updated /= np.clip(np.linalg.norm(updated, axis=1, keepdims=True), 1e-9, None)
+        converged = np.allclose(updated, C)
+        C = updated
+        if converged:
+            break
+    return C
+
+
 def validate_signature_metadata(centroid_data):
     """Return the packed dimension; reject unsupported or ambiguous transforms."""
     layers = centroid_data["L"]
@@ -145,6 +164,8 @@ def load_centroid_file(path):
     with open(path) as stream:
         centroid_data = json.load(stream)
     dim = validate_signature_metadata(centroid_data)
+    if centroid_data.get("algo", "kmbal") not in ("kmbal", "km"):
+        raise ValueError("Unsupported clustering algorithm")
     # Preserve the geometry and transform of immutable calibration artifacts.
     centroids = np.asarray(
         centroid_data.get("centroids", centroid_data.get("micro_centroids")),

@@ -75,8 +75,6 @@ class PrefixHashRouter:
         self._ring_pos = [p for p, _ in entries]
         self._ring_idx = [i for _, i in entries]
 
-    # ----- core API -----
-
     def select(
         self,
         key: bytes,
@@ -98,12 +96,11 @@ class PrefixHashRouter:
         if not key:
             return min(workers, key=lambda i: (loads[i], i))
 
-        # 1) Hash prefix, 2) ring lookup.
         prefix = bytes(key[: self.prefix_byte_count])
         h = _hash64(prefix)
         initial = self._ring_lookup(h)
 
-        # 3) Load gate. Threshold simulates "one more incoming" via the +1.
+        # Include the incoming request when estimating average load.
         total = sum(loads) + 1
         avg = total / len(workers)
         threshold = avg * self.load_factor
@@ -113,8 +110,6 @@ class PrefixHashRouter:
 
         # The minimum is <= average, and load_factor >= 1 keeps it eligible.
         return min(workers, key=lambda i: (loads[i], i))
-
-    # ----- helpers -----
 
     def _ring_lookup(self, h: int) -> int:
         """First ring entry with position >= h; wrap around if at end."""

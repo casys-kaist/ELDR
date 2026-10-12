@@ -17,6 +17,7 @@ from eldr.serving.clustering import (
     initialize_centroids,
     load_centroid_file,
     normalize_counts,
+    vanilla_spherical_kmeans,
 )
 
 
@@ -210,24 +211,7 @@ def fit_centroids(
     if balanced:
         centroids = balanced_spherical_kmeans(vectors, initial)
     else:
-        # Same cosine geometry and initialization; only the capacity constraint
-        # is removed for the clustering ablation. Empty clusters keep their seed.
-        centroids = initial.copy()
-        for _ in range(50):
-            labels = np.argmax(vectors @ centroids.T, axis=1)
-            updated = np.stack(
-                [
-                    vectors[labels == i].mean(0) if np.any(labels == i) else center
-                    for i, center in enumerate(centroids)
-                ]
-            )
-            updated /= np.clip(
-                np.linalg.norm(updated, axis=1, keepdims=True), 1e-9, None
-            )
-            converged = np.allclose(updated, centroids)
-            centroids = updated
-            if converged:
-                break
+        centroids = vanilla_spherical_kmeans(vectors, initial)
     centroids /= np.linalg.norm(centroids, axis=1, keepdims=True)
     result = dict(
         model=model,

@@ -3,7 +3,7 @@
   "first_token_mode": "prefill",
   "controller_address": "10.11.0.4",
   "proxy_port": 25100,
-  "proxy_cpus": "4",
+  "proxy_cpus": "4-5",
   "client_cpus": "8-15",
   "tiktoken_cache": "/mnt/md0/eldr-rerun-20260917/runtime/harmony",
   "model_paths": {

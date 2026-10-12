@@ -14,7 +14,7 @@ from unittest.mock import patch
 
 import numpy as np
 
-from eldr.experiments import cluster_balance, prefix_cache
+from eldr.experiments import cluster_balance, prefix_cache, signature_ablation
 from eldr.experiments.runner.config import FIT_SEED, RUN_PROFILES, file_sha256
 from eldr.experiments.runner.experiment import (
     BASELINES,
@@ -46,7 +46,7 @@ class ExperimentTests(unittest.TestCase):
                 )
                 self.assertEqual(config, original)
 
-    def test_public_experiments_are_exactly_the_six_ae_experiments(self):
+    def test_public_experiments_include_camera_ready_generalization(self):
         self.assertEqual(
             set(EXPERIMENTS),
             {
@@ -56,6 +56,8 @@ class ExperimentTests(unittest.TestCase):
                 "cluster_balance",
                 "locality_band",
                 "prefix_cache",
+                "single_category",
+                "workload_drift",
             },
         )
         for removed in ("homogeneous", "topology", "drift"):
@@ -64,6 +66,13 @@ class ExperimentTests(unittest.TestCase):
 
     def test_ae_refits_use_seed_one_without_changing_traffic(self):
         self.assertEqual(FIT_SEED, 1)
+        self.assertIn("eldr", BASELINES)
+        self.assertNotIn("eldr-static", BASELINES)
+        self.assertEqual(signature_ablation.RATES, (20, 40, 60, 80, 100))
+        for profile in RUN_PROFILES.values():
+            self.assertEqual(
+                (profile["window_seconds"], profile["refit_seconds"]), (5, 1)
+            )
         self.assertTrue(
             all(profile["seed"] == 1234 for profile in RUN_PROFILES.values())
         )
@@ -247,18 +256,28 @@ class ExperimentTests(unittest.TestCase):
                     )
                     self.assertTrue(
                         all(
-                            p["requests"] == 120 * p["request_rate"]
+                            p["requests"]
+                            == (
+                                12000
+                                if experiment == "prefix_cache"
+                                else 120 * p["request_rate"]
+                            )
                             for _, _, p in trials
                         )
                     )
                     self.assertEqual(
                         {p for _, p, _ in trials if p.startswith("eldr")},
-                        {"eldr-static"},
+                        {"eldr"},
                     )
                     # Each variant reuses its fit across request rates.
                     by_variant = {}
                     for _, policy, protocol in trials:
-                        if policy == "eldr-static":
+                        if policy == "eldr":
+                            if experiment == "cluster_balance":
+                                self.assertEqual(
+                                    protocol["balanced"],
+                                    protocol["variant"] == "balanced",
+                                )
                             by_variant.setdefault(protocol["variant"], set()).add(
                                 protocol.get(
                                     "centroids", worker_group["site"]["centroids"]
@@ -281,7 +300,7 @@ class ExperimentTests(unittest.TestCase):
                     for worker_group in plan["fleets"]:
                         self.assertEqual(
                             {policy for _, policy, _ in worker_group["trials"]},
-                            {"rr", "eldr-static"},
+                            {"rr", "eldr"},
                         )
                         self.assertTrue(
                             all(
@@ -320,6 +339,70 @@ class ExperimentTests(unittest.TestCase):
                 Path(config["dataset"]).write_text(json.dumps(invalid))
                 with self.assertRaisesRegex(ValueError, "2,000"):
                     prefix_cache.prepare(groups[0])
+
+    def test_camera_ready_ablations_cover_five_rates_with_matched_rr(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config, path = self.config(root)
+            for experiment, cells in (
+                ("signature_ablation", 20),
+                ("cluster_balance", 15),
+                ("locality_band", 25),
+            ):
+                with patch(
+                    "eldr.experiments.runner.experiment.load_config",
+                    return_value=config,
+                ):
+                    plan = plan_experiment(
+                        experiment,
+                        [path],
+                        root / experiment,
+                        "paper",
+                        [20, 40, 60, 80, 100],
+                        BASELINES,
+                    )
+                self.assertEqual(sum(len(g["trials"]) for g in plan["fleets"]), cells)
+                for group in plan["fleets"]:
+                    trials = group["trials"]
+                    self.assertEqual(
+                        [
+                            p["request_rate"]
+                            for _, policy, p in trials
+                            if policy == "rr"
+                        ],
+                        [20, 40, 60, 80, 100],
+                    )
+                    for _, _, protocol in trials:
+                        self.assertEqual(protocol["output_tokens"], 512)
+                        self.assertEqual(protocol["seed"], 1234)
+                        self.assertEqual(protocol["warmup_rate"], 64)
+                        self.assertEqual(
+                            protocol["requests"], 120 * protocol["request_rate"]
+                        )
+
+    def test_prefix_plot_replays_online_and_legacy_static_without_mixing(self):
+        from eldr.experiments.plots import draw
+
+        for policy in ("eldr", "eldr-static"):
+            rows = [
+                dict(
+                    setting=f"gptoss-cache-{cache}",
+                    variant=variant,
+                    rate=100,
+                    ttft50_ms=150,
+                    tpot50_ms=50,
+                    tpot99_ms=55,
+                )
+                for cache in (0, 1)
+                for variant in ("rr", policy)
+            ]
+            with patch("eldr.experiments.plot_style.save") as save:
+                draw({"task": rows}, Path("unused"), "prefix_cache")
+            self.assertEqual(len(save.call_args.args[0].axes), 3)
+            mixed = copy.deepcopy(rows)
+            mixed[-1]["variant"] = "eldr-static" if policy == "eldr" else "eldr"
+            with self.assertRaisesRegex(ValueError, "four GPT-OSS cells"):
+                draw({"task": mixed}, Path("unused"), "prefix_cache")
 
     def test_experiment_resume_preserves_failures_and_validates_completed_results(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -535,7 +618,7 @@ class ExperimentTests(unittest.TestCase):
         fig = save.call_args.args[0]
         self.assertEqual(
             [text.get_text() for text in fig.legends[0].get_texts()],
-            [r"count$\cdot$idf", "gate-prob"],
+            ["gate-prob", r"count$\cdot$idf"],
         )
         self.assertEqual(tuple(fig.get_size_inches()), (plot_style.WIDTH, 4.6))
         self.assertEqual(len(fig.axes), 6)

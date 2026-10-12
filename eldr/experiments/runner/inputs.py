@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
-"""Validate supplied inputs and generate the six AE experiment configs."""
+"""Validate supplied inputs and generate experiment configs."""
 
 import hashlib
 import json
@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 def configure_inputs(inputs: Path, cluster: Path, output: Path):
-    """Verify a relocated input bundle; write seven configs without cluster access."""
+    """Verify a relocated input bundle; write configs without cluster access."""
     from eldr.experiments.runner.config import FIT_SEED, MODEL_GEOMETRY, load_config
     from eldr.experiments.runner.experiment import load_labeled_inputs
     from eldr.experiments.runner.fit import read_activations
@@ -85,6 +85,13 @@ def configure_inputs(inputs: Path, cluster: Path, output: Path):
         path = Path(temporary) / "gptoss-task-prefix.json"
         write_new_json(path, prefix)
         configs[path.stem] = load_config(path, prefix_cache_experiment=True)
+        for name, workload, category in (
+            ("math", "task", "math"),
+            ("english", "language", "English"),
+        ):
+            configs[f"qwen-{name}"] = dict(
+                configs[f"qwen-{workload}"], category=category
+            )
     output.mkdir(parents=True)
     for name, config in configs.items():
         write_new_json(output / (name + ".json"), config)
